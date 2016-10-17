@@ -27,9 +27,9 @@ var answers = [
 
 exports.run = (client, msg) => {
   if (msg.content.endsWith("?")) {
-    msg.reply(answers[Math.floor(Math.random() * answers.length)]).catch(error => console.log(error.stack));
+    msg.reply(":8ball:" + answers[Math.floor(Math.random() * answers.length)]).catch(error => console.log(error.stack));
   } else {
-    msg.reply("That doesn't look like a question, try again please.").catch(error => console.log(error.stack));
+    msg.reply(":8ball: That doesn't look like a question, try again please.").catch(error => console.log(error.stack));
   }
 };
 
