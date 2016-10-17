@@ -27,9 +27,9 @@ var answers = [
 
 exports.run = (client, msg) => {
   if (msg.content.endsWith("?")) {
-    msg.channel.sendMessage(answers[Math.floor(Math.random() * answers.length)]).catch(error => console.log(error.stack));
+    msg.reply(answers[Math.floor(Math.random() * answers.length)]).catch(error => console.log(error.stack));
   } else {
-    msg.channel.sendMessage(`${msg.author}, That doesn't look like a question, try again please.`).catch(error => console.log(error.stack));
+    msg.reply("That doesn't look like a question, try again please.").catch(error => console.log(error.stack));
   }
 };
 
