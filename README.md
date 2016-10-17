@@ -29,14 +29,13 @@ are used by commands, so are data providers, etc.
 
 To submit your own pieces for approval (quick steps):
 
-- For this repository
-- Create a new piece in the appropriate folder in `./submitted`
+- Fork this repository
+- Create a new piece in the appropriate folder
 - Create a Pull Request to the repository.
 - Be patient. Someone will approve/deny it as soon as they can.
 
 We will automatically deny PRs that:
 
-- Are not created in the `./submitted`
 - Have identical functionality to an existing *Piece*
 - Have code that breaks/does not catch errors/etc
 - Contain NSFW, NSFL contents or contents we deem to be unacceptable.
@@ -45,4 +44,4 @@ We will automatically deny PRs that:
 - Any reason **WE** feel is valid.
 
 > WE RESERVE THE RIGHT TO REFUSE ANY CONTENTS FOR ANY REASON WHETHER YOU
-ACCEPT THEM OR NOT. 
+ACCEPT THEM OR NOT.
