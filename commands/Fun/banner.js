@@ -7,7 +7,7 @@ exports.run = (client, msg) => {
             console.dir(err);
             return;
         }
-        msg.channel.sendMessage('```' + data + '```');
+        msg.channel.sendCode(``, data);
     });
 
 };
