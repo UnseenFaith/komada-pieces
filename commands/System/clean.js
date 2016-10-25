@@ -5,7 +5,7 @@ exports.run = (client, msg, [type, user, amount]) => {
   }).then(messages => {
     if (type == "prune") {
       let filterBy = user ? user.id : client.user.id;
-      if(client.config.selfBot) amount++;
+      if(client.config.selfbot) amount++;
       messages = message.filter(m => m.author.id === filterBy).array().slice(0, amount);
     }
 
