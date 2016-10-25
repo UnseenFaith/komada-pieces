@@ -54,6 +54,7 @@ exports.run = (client, msg, [type, user]) => {
 
 exports.conf = {
     enabled: true,
+    selfbot: true,
     guildOnly: false,
     aliases: [],
     permLevel: 3,
@@ -65,5 +66,5 @@ exports.help = {
     name: "friend",
     description: "You can 'add', 'remove', 'block' and 'unblock' other users.",
     usage: "<add|remove|block|unblock> <user:mention>",
-    usageDelim: ", "
+    usageDelim: " "
 };

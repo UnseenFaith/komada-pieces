@@ -15,6 +15,7 @@ exports.run = (client, msg, [type, status, game]) => {
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   guildOnly: false,
   aliases: [],
   permLevel: 3,
@@ -26,5 +27,5 @@ exports.help = {
   name: "presence",
   description: "Set either your 'status' or your 'game' by using this command",
   usage: "<status|game> [online|idle|invisible|dnd] [game:str]",
-  usageDelim: ", "
+  usageDelim: " "
 };

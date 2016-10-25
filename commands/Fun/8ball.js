@@ -10,6 +10,7 @@ exports.run = (client, msg) => {
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   guildOnly: false,
   aliases: ["8", "magic", "8ball"],
   permLevel: 0,
