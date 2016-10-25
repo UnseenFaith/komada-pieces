@@ -41,6 +41,6 @@ exports.conf = {
 exports.help = {
     name: "urban",
     description: "Searches the Urban Dictionary library for a definition to the search term.",
-    usage: "<search:str>",
+    usage: "<search:str> [resultNum:int]",
     usageDelim: ", "
 };

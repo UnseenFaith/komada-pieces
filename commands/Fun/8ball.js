@@ -2,9 +2,9 @@ var answers = ["Maybe.", "Certainly not.", "I hope so.", "Not in your wildest dr
 
 exports.run = (client, msg) => {
   if (msg.content.endsWith("?")) {
-    msg.reply(":8ball: " + answers[Math.floor(Math.random() * answers.length)]).catch(error => console.log(error.stack));
+    msg.reply("🎱 " + answers[Math.floor(Math.random() * answers.length)]).catch(error => console.log(error.stack));
   } else {
-    msg.reply(":8ball: That doesn't look like a question, try again please.").catch(error => console.log(error.stack));
+    msg.reply("🎱 That doesn't look like a question, try again please.").catch(error => console.log(error.stack));
   }
 };
 
@@ -12,7 +12,7 @@ exports.conf = {
   enabled: true,
   selfbot: false,
   guildOnly: false,
-  aliases: ["8", "magic", "8ball"],
+  aliases: ["8", "magic", "8ball", "mirror"],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: []
