@@ -11,10 +11,11 @@ exports.run = (client, msg, [user]) => {
 
 exports.conf = {
     enabled: true,
+    selfbot: false,
     guildOnly: false,
     aliases: [],
     permLevel: 0,
-    botPerms: [],
+    botPerms: ["MANAGE_MESSAGES"],
     requiredFuncs: []
 };
 

@@ -10,6 +10,7 @@ exports.run = (client, msg) => {
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   guildOnly: false,
   aliases: ["8", "magic", "8ball"],
   permLevel: 0,
@@ -19,7 +20,7 @@ exports.conf = {
 
 exports.help = {
   name: "magic8",
-  description: "Magic 8-Ball",
+  description: "Magic 8-Ball, does exactly what the toy does. (Results may vary)",
   usage: "<query:str>",
   usageDelim: ""
 };
