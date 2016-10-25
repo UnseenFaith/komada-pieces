@@ -1,5 +1,4 @@
 exports.run = (client, msg, [pref]) => {
-    console.log(pref);
     if (!pref) {
         msg.reply(`Your prefix is ${client.config.prefix}`);
         } else {
