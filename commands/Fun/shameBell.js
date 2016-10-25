@@ -1,5 +1,5 @@
 exports.run = (client, msg, [user]) => {
-  msg.channel.sendMessage(`:bell: SHAME :bell: ${user} :bell: SHAME :bell:`).catch(error => console.log(error.stack));
+  msg.channel.sendMessage(`🔔 SHAME 🔔 ${user} 🔔 SHAME 🔔`).catch(error => console.log(error.stack));
 };
 
 exports.conf = {
