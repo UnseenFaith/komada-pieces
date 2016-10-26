@@ -15,8 +15,7 @@ exports.conf = {
 exports.run = (client, msg, cmd) => {
     return new Promise((resolve, reject) => {
       fs.readJson(`bwd/conf/${msg.guild.id}.json`, (err, guildConf) => {
-        let blacklist = guildConf.blacklist
-          if (blacklist !== undefined && blacklist.indexOf(msg.author.id) !== -1) {
+          if (guildConf.blacklist !== undefined && guildConf.blacklist.indexOf(msg.author.id) !== -1) {
               reject("You are not allowed to use commands on this server.");
           } else {
               resolve();
