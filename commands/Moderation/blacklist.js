@@ -1,41 +1,26 @@
 const fs = require('fs-extra');
 
-/** Runs Blacklist Command
+exports.conf = {
+    enabled: true,
+    spamProtection: false
+};
+
+/** Run Blacklists Inhibitor
   * @param {Object} client - The Discord.js client
   * @param {Object} msg - The command message
-  * @param {(Object|String)} user - The mentioned user or user ID
+  * @param {Object} cmd - The command
+  * @returns Reject() or Resolve(), depending on if the user is blacklisted or not.
   */
 
-exports.run = (client, msg, [user]) => {
-  fs.readJSON('blacklist.json', (err, blacklist) => {
-    if (blacklist != undefined && blacklist.indexOf(user.id) !== -1) {
-      msg.reply("Geez... do you hate that person or something.. They're already blacklisted! :smile:")
-      return;
-    } else {
-      if (blacklist === undefined) {
-        blacklist = [];
-      }
-      blacklist.push(user.id);
-      fs.writeJson('blacklist.json', blacklist, (err) => {
-        if (err) console.log(err);
-        else msg.channel.sendMessage(`You have blacklisted the user: ${user.username}#${user.discriminator}.`);
+exports.run = (client, msg, cmd) => {
+    return new Promise((resolve, reject) => {
+      fs.readJson(`bwd/conf/${msg.guild.id}.json`, (err, guildConf) => {
+        let blacklist = guildConf.blacklist
+          if (blacklist !== undefined && blacklist.indexOf(msg.author.id) !== -1) {
+              reject("You are not allowed to use commands on this server.");
+          } else {
+              resolve();
+          };
+      });
     });
-  }
-  });
-};
-
-exports.conf = {
-  enabled: true,
-  guildOnly: true,
-  aliases: [],
-  permLevel: 10,
-  botPerms: [],
-  requiredFuncs: []
-};
-
-exports.help = {
-  name: "blacklist",
-  description: "Blocks a user from using your bots commands.",
-  usage: "<user:user>",
-  usageDelim: ""
 };
