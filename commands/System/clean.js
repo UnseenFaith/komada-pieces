@@ -10,7 +10,7 @@ exports.run = (client, msg, [type, user, amount]) => {
     }
 
     if (client.config.selfbot) {
-        messages.map(m => m.delete().catch(error => console.log(error.stack)));
+        messages.delete().catch(error => console.log(error.stack)));
     } else {
         msg.channel.bulkDelete(messages).catch(error => console.log(error.stack));
     }
