@@ -14,11 +14,10 @@ exports.conf = {
 
   exports.run = (client, msg, cmd) => {
     return new Promise((resolve, reject) => {
-        let guildConf = client.funcs.confs.get(msg.guild);
-        if (!guildConf.blacklist) {
-            client.funcs.confs.addKey(client, 'blacklist', []);
+        if (!msg.guildConf.blacklist) {
+            client.funcs.confs.addKey('blacklist', []);
           }
-          if (guildConf.blacklist.indexOf(msg.author.id) != -1) {
+          if (msg.guildConf.blacklist && msg.guildConf.blacklist.indexOf(msg.author.id) != -1) {
               reject("You are blacklisted from using commands.");
             } else {
               resolve();
