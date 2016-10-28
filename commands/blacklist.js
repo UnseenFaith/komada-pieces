@@ -7,12 +7,11 @@ const fs = require('fs-extra');
   */
 
 exports.run = (client, msg, [user]) => {
-    let guildConf = client.funcs.confs.get(msg.guild);
-    if (guildConf.blacklist.indexOf(user.id) != -1) {
+    if (msg.guildConf.blacklist.indexOf(user.id) != -1) {
       msg.reply("You've already blacklisted that user silly! :D")
     } else {
-      guildConf.blacklist.push(user.id);
-      client.funcs.confs.set(client, msg.guild, "blacklist", guildConf.blacklist);
+      msg.guildConf.blacklist.push(user.id);
+      client.funcs.confs.set(msg.guild, "blacklist", msg.guildConf.blacklist);
       msg.channel.sendMessage(`You have blacklisted ${user.username}#${user.discriminator} from using any commands on this server.`);
     }
 };
