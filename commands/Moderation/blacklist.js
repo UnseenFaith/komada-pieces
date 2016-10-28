@@ -1,26 +1,33 @@
 const fs = require('fs-extra');
 
-exports.conf = {
-    enabled: true,
-    spamProtection: false
-};
-
-/** Run Blacklists Inhibitor
+/** Runs Blacklist Command
   * @param {Object} client - The Discord.js client
   * @param {Object} msg - The command message
-  * @param {Object} cmd - The command
-  * @returns Reject() or Resolve(), depending on if the user is blacklisted or not.
+  * @param {String} user - The mentioned user or user ID
   */
 
-exports.run = (client, msg, cmd) => {
-    return new Promise((resolve, reject) => {
-      fs.readJson(`bwd/conf/${msg.guild.id}.json`, (err, guildConf) => {
-        let blacklist = guildConf.blacklist
-          if (blacklist !== undefined && blacklist.indexOf(msg.author.id) !== -1) {
-              reject("You are not allowed to use commands on this server.");
-          } else {
-              resolve();
-          };
-      });
-    });
+exports.run = (client, msg, [user]) => {
+    if (msg.guildConf.blacklist.indexOf(user.id) != -1) {
+      msg.reply("You've already blacklisted that user silly! :D")
+    } else {
+      msg.guildConf.blacklist.push(user.id);
+      client.funcs.confs.set(msg.guild, "blacklist", msg.guildConf.blacklist);
+      msg.channel.sendMessage(`You have blacklisted ${user.username}#${user.discriminator} from using any commands on this server.`);
+    }
+};
+
+exports.conf = {
+  enabled: true,
+  guildOnly: true,
+  aliases: [],
+  permLevel: 10,
+  botPerms: [],
+  requiredFuncs: []
+};
+
+exports.help = {
+  name: "blacklist",
+  description: "Blocks a user from using your bots commands.",
+  usage: "<user:user>",
+  usageDelim: ""
 };
