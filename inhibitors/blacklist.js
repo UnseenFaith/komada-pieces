@@ -12,14 +12,16 @@ exports.conf = {
   * @returns Reject() or Resolve(), depending on if the user is blacklisted or not.
   */
 
-exports.run = (client, msg, cmd) => {
+  exports.run = (client, msg, cmd) => {
     return new Promise((resolve, reject) => {
-      fs.readJson(`bwd/conf/${msg.guild.id}.json`, (err, guildConf) => {
-          if (guildConf.blacklist !== undefined && guildConf.blacklist.indexOf(msg.author.id) !== -1) {
-              reject("You are not allowed to use commands on this server.");
-          } else {
+        let guildConf = client.funcs.confs.get(msg.guild);
+        if (!guildConf.blacklist) {
+            client.funcs.confs.addKey(client, 'blacklist', []);
+          }
+          if (guildConf.blacklist.indexOf(msg.author.id) != -1) {
+              reject("You are blacklisted from using commands.");
+            } else {
               resolve();
-          };
-      });
+            }
     });
-};
+  };
