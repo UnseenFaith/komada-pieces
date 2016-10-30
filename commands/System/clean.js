@@ -6,11 +6,11 @@ exports.run = (client, msg, [type, user, amount]) => {
     if (type == "prune") {
       let filterBy = user ? user.id : client.user.id;
       if(client.config.selfbot) amount++;
-      messages = message.filter(m => m.author.id === filterBy).array().slice(0, amount);
+      messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
     }
 
     if (client.config.selfbot) {
-        messages.delete().catch(error => console.log(error.stack));
+        messages.map(m => m.delete().catch(error => console.log(error.stack)));
     } else {
         msg.channel.bulkDelete(messages).catch(error => console.log(error.stack));
     }
