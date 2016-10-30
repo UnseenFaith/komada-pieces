@@ -23,7 +23,7 @@ exports.conf = {
 
 exports.help = {
 	name: "check",
-	description: "Checks the guild for any user accounts less then 30 mins old.",
+	description: "Checks the guild for any user accounts younger then the minimum account age.",
 	usage: "",
 	usageDelim: ""
 };
