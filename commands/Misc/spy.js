@@ -1,6 +1,6 @@
 exports.run = (client, msg, [ugc]) => {
   ugc = require("util").inspect(ugc, { depth: 0 });
-  msg.channel.sendCode("xl",client.funcs.clean(ugc));
+  msg.channel.sendCode("xl",client.funcs.clean(client, ugc));
 };
 
 exports.conf = {
