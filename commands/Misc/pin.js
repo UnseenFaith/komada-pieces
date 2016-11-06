@@ -1,9 +1,16 @@
+exports.init = (client) => {
+  if (!client.funcs.confs.hasKey("pins")) {
+    client.funcs.confs.addKey("pins", "");
+  }
+};
+
+
 exports.run = (client, msg, [message]) => {
   if (!msg.guildConf.pins) {
     if (!msg.guild.channels.exists("name", "pins")) {
       msg.reply("Please create the _pins_ channel and try again.");
     } else {
-      client.funcs.confs.addKey(client, "pins", msg.guild.channels.find("name", "pins").id);
+      client.funcs.confs.set("pins", msg.guild.channels.find("name", "pins").id);
       client.channels.get(msg.guild.channels.find("name", "pins").id).sendMessage(`:pushpin: **${message.author.username}#${message.author.discriminator}** in #${message.channel.name} - ${require("moment")(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`).catch(error => console.log(error.stack));
     }
   } else {
