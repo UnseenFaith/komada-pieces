@@ -5,23 +5,23 @@ const middle = ["douche", "ass", "turd", "rectum", "butt", "cock", "shit", "crot
 const end = ["pilot", "canoe", "captain", "pirate", "hammer", "knob", "box", "jockey", "nazi", "waffle", "goblin", "blossom", "biscuit", "clown", "socket", "monster", "hound", "dragon", "balloon", "apple-john", "baggage", "barnacle", "bladder", "boar-pig", "bugbear", "bum-bailey", "canker-blossom", "clack-dish", "clotpole", "coxcomb", "codpiece", "death-token", "dewberry", "flap-dragon", "flax-wench", "flirt-gill", "foot-licker", "fustilarian", "giglet", "gudgeon", "haggard", "harpy", "hedge-pig", "horn-beast", "hugger-mugger", "joithead", "lewdster", "lout", "maggot-pie", "malt-worm", "mammet", "measle", "minnow", "miscreant", "moldwarp", "mumble-news", "nut-hook", "pigeon-egg", "pignut", "puttock", "pumpion", "ratsbane", "scut", "skinsmate", "strumpet", "varlot", "vassal", "whey-face", "wagtail", "squeegee", "turtle", "cabbage", "bomb", "sniffer", "binkie", "stump", "nugget", "whistle", "twig", "knuckle", "burger", "hotdog", "loaf", "freckle", "soldier", "kernal", "shingle", "warrior", "hemorrhoid", "fuckface", "asshole", "scumbucket", "toerag", "hackwack", "imbecile", "stunodigan", "maggot", "hipster", "gargabe", "jerkstore"];
 
 exports.run = (client, msg, [user]) => {
-    msg.delete().then(() =>
+  msg.delete().then(() =>
         msg.channel.sendMessage(`${user}, you know what? you're nothing but ${start[Math.floor(Math.random() * start.length)]} ${middle[Math.floor(Math.random() * middle.length)]} ${end[Math.floor(Math.random() * end.length)]}.`)).catch(error => console.log(error.stack));
 };
 
 exports.conf = {
-    enabled: true,
-    selfbot: false,
-    guildOnly: false,
-    aliases: [],
-    permLevel: 0,
-    botPerms: ["MANAGE_MESSAGES"],
-    requiredFuncs: []
+  enabled: true,
+  selfbot: false,
+  guildOnly: false,
+  aliases: [],
+  permLevel: 0,
+  botPerms: ["MANAGE_MESSAGES"],
+  requiredFuncs: [],
 };
 
 exports.help = {
-    name: "insult",
-    description: "Insults who you mention",
-    usage: "<user:mention>",
-    usageDelim: ""
+  name: "insult",
+  description: "Insults who you mention",
+  usage: "<user:mention>",
+  usageDelim: "",
 };
