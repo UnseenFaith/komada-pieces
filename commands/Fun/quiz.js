@@ -9,20 +9,21 @@ const quiz = [
 exports.run = (client, msg) => {
   let item = quiz[Math.floor(Math.random() * quiz.length)];
   msg.channel.sendMessage(item.q)
-    .then(() => {
-      msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), {
-        max: 1,
-        time: 30000,
-        errors: ["time"]
+
+  .then(() => {
+    msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), {
+      max: 1,
+      time: 30000,
+      errors: ["time"]
+    })
+      .then(collected => {
+        if (client.funcs.includes("points")) {
+          client.funcs.points(client, collected.first(), "add").catch(console.error);
+        }
+        msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
       })
-        .then(collected => {
-          if(client.funcs.includes("points")) {
-            client.funcs.points(client, collected.first(), "add").catch(console.error);
-          }
-          msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
-        })
-        .catch(() => msg.channel.sendMessage("Seems no one got it! Oh well."));
-    });
+      .catch(() => msg.channel.sendMessage("Seems no one got it! Oh well."));
+  });
 };
 
 exports.conf = {

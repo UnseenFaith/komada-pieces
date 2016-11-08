@@ -41,12 +41,12 @@ const run = (client, msg, action) => {
           break;
       }
       db.update(client, "quiz", ["points"], [points], "userID", msg.author.id)
-      .then(() => resolve(points));
+        .then(() => resolve(points));
     }).catch(e => {
       console.log(e);
       let points = action === "add" ? 1 : 0;
       db.update(client, "quiz", ["points"], [points], "userID", msg.author.id)
-      .then(() => resolve(points));
+        .then(() => resolve(points));
     });
   });
 };
