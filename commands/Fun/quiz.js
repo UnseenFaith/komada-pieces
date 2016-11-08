@@ -3,20 +3,20 @@ const quiz = [
   { q: "Name a soft drink brand", a: ["pepsi", "coke", "rc", "7up", "sprite", "mountain dew"] },
   { q: "Name a programming language", a: ["actionscript", "coffeescript", "c", "c++", "basic", "python", "perl", "javascript", "dotnet", "lua", "crystal", "go", "d", "php", "ruby", "rust", "dart"] },
   { q: "Who's your favourite server owner?", a: ["root", "luckyevie", "evie", "eslachance"] },
-  { q: "Who's a good boy? **Who's a good boy???**", a: ["you are", "i am"] }
+  { q: "Who's a good boy? **Who's a good boy???**", a: ["you are", "i am"] },
 ];
 
 exports.run = (client, msg) => {
-  let item = quiz[Math.floor(Math.random() * quiz.length)];
+  const item = quiz[Math.floor(Math.random() * quiz.length)];
   msg.channel.sendMessage(item.q)
     .then(() => {
       msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), {
         max: 1,
         time: 30000,
-        errors: ["time"]
+        errors: ["time"],
       })
-        .then(collected => {
-          if(client.funcs.includes("points")) {
+        .then((collected) => {
+          if (client.funcs.includes("points")) {
             client.funcs.points(client, collected.first(), "add").catch(console.error);
           }
           msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
@@ -31,12 +31,12 @@ exports.conf = {
   aliases: [],
   permLevel: 0,
   botPerms: [],
-  requiredFuncs: ["points"]
+  requiredFuncs: ["points"],
 };
 
 exports.help = {
   name: "quiz",
   description: "Sends a quiz and expects a correct answer.",
   usage: "",
-  usageDelim: ""
+  usageDelim: "",
 };

@@ -12,12 +12,12 @@ exports.conf = {
   aliases: [],
   permLevel: 0,
   botPerms: [],
-  requiredFuncs: []
+  requiredFuncs: [],
 };
 
 exports.help = {
   name: "test",
   description: "This is a test command. What does it do? ",
   usage: "",
-  usageDelim: ""
+  usageDelim: "",
 };
