@@ -14,6 +14,5 @@ exports.run = (client, msg, cmd) => {
       msg.delete();
     }
       resolve();
-    }
   });
 };
