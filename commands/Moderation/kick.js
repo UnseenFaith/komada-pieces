@@ -1,7 +1,7 @@
 exports.run = (client, msg, [user]) => {
   msg.guild.member(user).kick()
-  .then(() => msg.channel.sendMessage(`${user.username}#${user.discriminator} was kicked.`))
-  .catch(e=>msg.reply(`There was an error trying to kick: ${e}`));
+    .then(() => msg.channel.sendMessage(`${user.username}#${user.discriminator} was kicked.`))
+    .catch(e => msg.reply(`There was an error trying to kick: ${e}`));
 };
 
 exports.conf = {

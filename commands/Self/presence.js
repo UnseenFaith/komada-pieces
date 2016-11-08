@@ -1,8 +1,8 @@
 // Big thanks to AoDude, Faith and cyberiumshadow
-exports.run = (client, msg, [type, status, ... game]) => {
+exports.run = (client, msg, [type, status, ...game]) => {
   game = game.join(" ");
   if (type === "status") {
-    if(!status) status = "online";
+    if (!status) status = "online";
     client.user.setStatus(status).then(() => {
       msg.channel.sendMessage(`Status changed to ***${status}***`);
     }).catch(error => console.log(error.stack));

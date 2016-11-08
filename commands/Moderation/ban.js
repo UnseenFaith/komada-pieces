@@ -1,7 +1,7 @@
 exports.run = (client, msg, [user]) => {
   msg.guild.member(user).ban()
-  .then(() => msg.channel.sendMessage(`${user.username}#${user.discriminator} was banned.`))
-  .catch(e=>msg.reply(`There was an error trying to ban: ${e}`));
+    .then(() => msg.channel.sendMessage(`${user.username}#${user.discriminator} was banned.`))
+    .catch(e => msg.reply(`There was an error trying to ban: ${e}`));
 };
 
 exports.conf = {

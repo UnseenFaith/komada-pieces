@@ -4,7 +4,6 @@ exports.init = (client) => {
   }
 };
 
-
 exports.run = (client, msg, [message]) => {
   if (!msg.guildConf.pins) {
     if (!msg.guild.channels.exists("name", "pins")) {
