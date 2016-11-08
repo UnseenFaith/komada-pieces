@@ -1,0 +1,18 @@
+{
+  "name": "komada-pieces",
+  "description": "This repository contains the various *Pieces* submitted by users and collaborators.",
+  "scripts": {
+    "lint": "eslint commands dataProviders functions inhibitors packages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eslachance/komada-pieces.git"
+  },
+  "license": "ISC",
+  "homepage": "https://github.com/eslachance/komada-pieces#readme",
+  "devDependencies": {
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb-base": "^9.0.0",
+    "eslint-plugin-import": "^2.1.0"
+  }
+}
