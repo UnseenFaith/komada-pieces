@@ -1,3 +1,13 @@
 {
-  "extends": "airbnb-base"
+  "env": {
+    "node": true
+  },
+  "extends": "airbnb-base",
+  "rules": {
+    "no-console": "off",
+    "indent": ["error", 2, { "SwitchCase": 1 } ],
+    "linebreak-style": "off",
+    "quotes": [ "warn", "double" ],
+    "semi": [ "warn", "always" ]
+  }
 }
