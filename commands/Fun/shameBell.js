@@ -1,5 +1,5 @@
 exports.run = (client, msg, [user]) => {
-  msg.channel.sendMessage(`🔔 SHAME 🔔 ${user} 🔔 SHAME 🔔`).catch(error => console.log(error.stack));
+  msg.channel.sendMessage(`🔔 SHAME 🔔 ${user} 🔔 SHAME 🔔`).catch(error => client.funcs.log(error.stack, "error"));
 };
 
 exports.conf = {

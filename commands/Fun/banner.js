@@ -4,7 +4,7 @@ exports.run = (client, msg) => {
   const banner = msg.content.split(" ").slice(1).join(" ");
   figlet(banner, (err, data) => {
     if (err) {
-      console.log("Something went wrong...");
+      client.funcs.log("Something went wrong...", "error");
       console.dir(err);
       return;
     }

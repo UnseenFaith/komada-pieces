@@ -1,6 +1,6 @@
 const run = (client, msg, action) => (
   new Promise((resolve) => {
-    const db = client.databaseModules.get("sqlite");
+    const db = client.dataProviders.get("sqlite");
 
     db.get(client, "quiz", "userID", msg.author.id).then((row) => {
       let points = row.points;
@@ -21,7 +21,7 @@ const run = (client, msg, action) => (
       db.update(client, "quiz", ["points"], [points], "userID", msg.author.id)
         .then(() => resolve(points));
     }).catch((e) => {
-      console.log(e);
+      client.funcs.log(e, "error");
       const points = action === "add" ? 1 : 0;
       db.update(client, "quiz", ["points"], [points], "userID", msg.author.id)
         .then(() => resolve(points));
@@ -31,7 +31,7 @@ const run = (client, msg, action) => (
 
 const init = client => (
   new Promise((resolve, reject) => {
-    if (!client.databaseModules.first()) {
+    if (!client.dataProviders.first()) {
       reject("No Database Found");
     }
     client.databaseModules.get("sqlite").hasTable(client, "quiz")

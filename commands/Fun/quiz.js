@@ -17,7 +17,7 @@ exports.run = (client, msg) => {
       })
         .then((collected) => {
           if (client.funcs.includes("points")) {
-            client.funcs.points(client, collected.first(), "add").catch(console.error);
+            client.funcs.points(client, collected.first(), "add").catch(err => client.funcs.log(err.stack, "error"));
           }
           msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
         })

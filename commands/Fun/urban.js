@@ -22,9 +22,9 @@ exports.run = (client, msg, [search, resultNum]) => {
         `**Example:**\n${result.example}`,
         `<${result.permalink}>`,
       ];
-      msg.channel.sendMessage(definition).catch(error => console.log(error.stack));
+      msg.channel.sendMessage(definition).catch(err => client.funcs.log(err.stack, "error"));
     } else {
-      msg.channel.sendMessage("No entry found.").catch(error => console.log(error.stack));
+      msg.channel.sendMessage("No entry found.").catch(err => client.funcs.log(err.stack, "error"));
     }
   });
 };

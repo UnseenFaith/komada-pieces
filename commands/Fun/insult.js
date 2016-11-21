@@ -6,7 +6,7 @@ const end = ["pilot", "canoe", "captain", "pirate", "hammer", "knob", "box", "jo
 
 exports.run = (client, msg, [user]) => {
   msg.delete().then(() =>
-        msg.channel.sendMessage(`${user}, you know what? you're nothing but ${start[Math.floor(Math.random() * start.length)]} ${middle[Math.floor(Math.random() * middle.length)]} ${end[Math.floor(Math.random() * end.length)]}.`)).catch(error => console.log(error.stack));
+        msg.channel.sendMessage(`${user}, you know what? you're nothing but ${start[Math.floor(Math.random() * start.length)]} ${middle[Math.floor(Math.random() * middle.length)]} ${end[Math.floor(Math.random() * end.length)]}.`)).catch(error => client.funcs.log(error.stack, "error"));
 };
 
 exports.conf = {
