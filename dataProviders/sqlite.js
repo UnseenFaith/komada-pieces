@@ -113,7 +113,11 @@ exports.has = (client, table, key, value) =>
 exports.update = (client, table, keys, values, whereKey, whereValue) =>
    new Promise((resolve, reject) => {
      if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     const schema = schemaCache.get(table);
+     try {
+       const schema = JSON.parse(schemaCache.get(table));
+     } catch (e) {
+       reject("Error parsing schema cache data"); 
+     }
      const filtered = schema.filter(f => keys.includes(f.name));
      client.funcs.validateData(schema, keys, values);
      const inserts = filtered.map((field, index) => `${field.name} = ${dataSchema[field.type].insert(values[index])}`);
