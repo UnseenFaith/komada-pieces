@@ -87,7 +87,11 @@ exports.getAll = (client, table) =>
 exports.insert = (client, table, keys, values) =>
    new Promise((resolve, reject) => {
      if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     const schema = schemaCache.get(table);
+     try {
+       const schema = JSON.parse(schemaCache.get(table));
+     } catch (e) {
+       reject("Error parsing schema cache data"); 
+     }
      client.funcs.validateData(schema, keys, values); // automatically throws error
      const insertValues = schema.map((field, index) => dataSchema[field.type].insert(values[index]));
      const questionMarks = schema.map(() => "?").join(", ");
