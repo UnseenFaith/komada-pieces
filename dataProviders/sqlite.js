@@ -135,7 +135,7 @@ exports.hasTable = (client, table) =>
       if(rows.length > 0) {
         resolve(true);
       } else {
-        reject(false);
+        resolve(false);
       }
     })
     .catch(e => reject(e));
