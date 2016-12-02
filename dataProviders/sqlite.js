@@ -12,6 +12,7 @@ const dataSchema = {
   str: {
     create: "TEXT",
     insert: value => value,
+    update: value => `'` + value + `'`,
     select: value => value,
   },
   int: {
@@ -85,19 +86,22 @@ exports.getAll = (client, table) =>
 ;
 
 exports.insert = (client, table, keys, values) =>
-   new Promise((resolve, reject) => {
-     if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     let schema = null;
-     try {
-       schema = JSON.parse(schemaCache.get(table));
-     } catch (e) {
-       reject("Error parsing schema cache data"); 
-     }
-     client.funcs.validateData(schema, keys, values); // automatically throws error
-     const insertValues = schema.map((field, index) => dataSchema[field.type].insert(values[index]));
-     const questionMarks = schema.map(() => "?").join(", ");
-     client.funcs.log(`Inserting Values: ${insertValues.join(";")}`);
-     db.run(`INSERT INTO ${table}(${keys.join(", ")}) VALUES(${questionMarks});`, insertValues)
+  new Promise((resolve, reject) => {
+    if (!schemaCache.has(table)) reject("Table not found in schema cache");
+    let schema = null;
+    try {
+      schema = JSON.parse(schemaCache.get(table));
+    } catch (e) {
+      reject("Error parsing schema cache data");
+    }
+    client.funcs.validateData(schema, keys, values); // automatically throws error
+    const filtered = schema.filter(f => keys.includes(f.name));
+    const insertValues = filtered.map((field, index) => {
+      return dataSchema[field.type].insert(values[index]);
+    })
+    const questionMarks = filtered.map(() => "?").join(", ");
+    client.funcs.log(`Inserting Values: ${insertValues.join(";")}`);
+    db.run(`INSERT INTO ${table}(${keys.join(", ")}) VALUES(${questionMarks});`, insertValues)
     .then(resolve(true))
     .catch(e => reject(`Error inserting data: ${e}`));
    })
@@ -122,7 +126,7 @@ exports.update = (client, table, keys, values, whereKey, whereValue) =>
      }
      const filtered = schema.filter(f => keys.includes(f.name));
      client.funcs.validateData(schema, keys, values);
-     const inserts = filtered.map((field, index) => `${field.name} = ${dataSchema[field.type].insert(values[index])}`);
+     const inserts = filtered.map((field, index) => `${field.name} = ${(dataSchema[field.type].update())?dataSchema[field.type].update(values[index]):dataSchema[field.type].insert(values[index])}`);
      db.run(`UPDATE ${table} SET ${inserts} WHERE ${whereKey} = '${whereValue}';`)
     .then(resolve(true))
     .catch(e => reject(`Error inserting data: ${e}`));
