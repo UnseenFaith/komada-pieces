@@ -12,7 +12,6 @@ const dataSchema = {
   str: {
     create: "TEXT",
     insert: value => value,
-    update: value => `'` + value + `'`,
     select: value => value,
   },
   int: {
@@ -88,12 +87,7 @@ exports.getAll = (client, table) =>
 exports.insert = (client, table, keys, values) =>
    new Promise((resolve, reject) => {
      if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     let schema = null;
-     try {
-       schema = JSON.parse(schemaCache.get(table));
-     } catch (e) {
-       reject("Error parsing schema cache data"); 
-     }
+     const schema = schemaCache.get(table);
      client.funcs.validateData(schema, keys, values); // automatically throws error
      const insertValues = schema.map((field, index) => dataSchema[field.type].insert(values[index]));
      const questionMarks = schema.map(() => "?").join(", ");
@@ -115,15 +109,10 @@ exports.has = (client, table, key, value) =>
 exports.update = (client, table, keys, values, whereKey, whereValue) =>
    new Promise((resolve, reject) => {
      if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     let schema = null;
-     try {
-       schema = JSON.parse(schemaCache.get(table));
-     } catch (e) {
-       reject("Error parsing schema cache data"); 
-     }
+     const schema = schemaCache.get(table);
      const filtered = schema.filter(f => keys.includes(f.name));
      client.funcs.validateData(schema, keys, values);
-     const inserts = filtered.map((field, index) => `${field.name} = ${(dataSchema[field.type].update())?dataSchema[field.type].update(values[index]):dataSchema[field.type].insert(values[index])}`);
+     const inserts = filtered.map((field, index) => `${field.name} = ${dataSchema[field.type].insert(values[index])}`);
      db.run(`UPDATE ${table} SET ${inserts} WHERE ${whereKey} = '${whereValue}';`)
     .then(resolve(true))
     .catch(e => reject(`Error inserting data: ${e}`));
