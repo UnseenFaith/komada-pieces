@@ -138,7 +138,13 @@ exports.delete = (client, table, key) =>
 exports.hasTable = (client, table) =>
    new Promise((resolve, reject) => {
      db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='${table}';`)
-    .then(() => resolve(true))
+    .then((rows) => {
+      if(rows.length > 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    })
     .catch(e => reject(e));
    })
 ;
