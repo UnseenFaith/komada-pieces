@@ -12,6 +12,7 @@ const dataSchema = {
   str: {
     create: "TEXT",
     insert: value => value,
+    update: value => `'` + value + `'`,
     select: value => value,
   },
   int: {
@@ -125,7 +126,7 @@ exports.update = (client, table, keys, values, whereKey, whereValue) =>
      }
      const filtered = schema.filter(f => keys.includes(f.name));
      client.funcs.validateData(schema, keys, values);
-     const inserts = filtered.map((field, index) => `${field.name} = ${dataSchema[field.type].insert(values[index])}`);
+     const inserts = filtered.map((field, index) => `${field.name} = ${(dataSchema[field.type].update())?dataSchema[field.type].update(values[index]):dataSchema[field.type].insert(values[index])}`);
      db.run(`UPDATE ${table} SET ${inserts} WHERE ${whereKey} = '${whereValue}';`)
     .then(resolve(true))
     .catch(e => reject(`Error inserting data: ${e}`));
