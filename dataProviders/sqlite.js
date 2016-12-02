@@ -87,12 +87,7 @@ exports.getAll = (client, table) =>
 exports.insert = (client, table, keys, values) =>
    new Promise((resolve, reject) => {
      if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     let schema = null;
-     try {
-       schema = JSON.parse(schemaCache.get(table));
-     } catch (e) {
-       reject("Error parsing schema cache data"); 
-     }
+     const schema = schemaCache.get(table);
      client.funcs.validateData(schema, keys, values); // automatically throws error
      const insertValues = schema.map((field, index) => dataSchema[field.type].insert(values[index]));
      const questionMarks = schema.map(() => "?").join(", ");
@@ -114,12 +109,7 @@ exports.has = (client, table, key, value) =>
 exports.update = (client, table, keys, values, whereKey, whereValue) =>
    new Promise((resolve, reject) => {
      if (!schemaCache.has(table)) reject("Table not found in schema cache");
-     let schema = null;
-     try {
-       schema = JSON.parse(schemaCache.get(table));
-     } catch (e) {
-       reject("Error parsing schema cache data"); 
-     }
+     const schema = schemaCache.get(table);
      const filtered = schema.filter(f => keys.includes(f.name));
      client.funcs.validateData(schema, keys, values);
      const inserts = filtered.map((field, index) => `${field.name} = ${dataSchema[field.type].insert(values[index])}`);
@@ -140,8 +130,14 @@ exports.delete = (client, table, key) =>
 
 exports.hasTable = (client, table) =>
    new Promise((resolve, reject) => {
-     db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='${table}';`)
-    .then(() => resolve(true))
+     db.all(`SELECT name FROM sqlite_master WHERE type='table' AND name='${table}';`)
+    .then((rows) => {
+      if(rows.length > 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    })
     .catch(e => reject(e));
    })
 ;
