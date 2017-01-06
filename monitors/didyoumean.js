@@ -11,7 +11,7 @@ exports.run = (client, msg) => {
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
     const command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
     if ((msg.content.startsWith(conf.prefix) || client.config.prefixMention.test(msg.content))
-    && !client.commands.has(command)) {
+    && !(client.commands.has(command) || client.aliases.has(command))) {
       let distances = [];
       client.commands.forEach((val, cmd) => {
         distances.push({
