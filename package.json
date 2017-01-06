@@ -10,6 +10,9 @@
     "url": "git+https://github.com/eslachance/komada-pieces.git"
   },
   "license": "ISC",
+  "dependencies": {
+    "fast-levenshtein": "^2.0.6"
+  }
   "homepage": "https://github.com/eslachance/komada-pieces#readme",
   "devDependencies": {
     "eslint": "^3.9.1",
