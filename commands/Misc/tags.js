@@ -20,7 +20,7 @@ exports.run = (client, msg, [action, ...contents]) => {
   }
 
   if(action === "delete") {
-    db.get(client, "tags", "name", action)
+    db.get(client, "tags", "name", contents[0])
     .then(row => {
       if(!row) return msg.reply("this tag doesn't seem to exist.");
       db.delete(client, "tags", row.id)
