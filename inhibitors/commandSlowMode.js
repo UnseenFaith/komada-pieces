@@ -3,7 +3,7 @@ const timers = [];
 const ratelimit = 1250;
 
 exports.conf = {
-  enabled: true,
+  enabled: false,
   spamProtection: true
 };
 

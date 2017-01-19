@@ -1,6 +1,3 @@
-/**
- * Created by Bastien on 17/01/2017.
- */
 // Add this to the export.conf of any command to implement a cooldown per command
 //
 // cooldowns: {
@@ -12,7 +9,7 @@
 const cooldowns = new Map();
 
 exports.conf = {
-    enabled: true,
+    enabled: false,
     spamProtection: true
 };
 
