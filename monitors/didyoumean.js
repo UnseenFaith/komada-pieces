@@ -6,7 +6,7 @@ exports.conf = {
 
 exports.run = (client, msg) => {
   return new Promise((resolve, reject) => {
-    const conf = client.funcs.confs.get(msg.guild);
+    const conf = client.configuration.get(msg.guild);
     let prefixLength = conf.prefix.length;
     if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
     const command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
