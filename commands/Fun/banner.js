@@ -1,6 +1,5 @@
-const figlet = require("figlet");
-
 exports.run = (client, msg) => {
+  const figlet = require("figlet");
   const banner = msg.content.split(" ").slice(1).join(" ");
   figlet(banner, (err, data) => {
     if (err) {
@@ -20,6 +19,7 @@ exports.conf = {
   permLevel: 2,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: ["figlet"],
 };
 
 exports.help = {
@@ -27,4 +27,5 @@ exports.help = {
   description: "Creates an ASCII banner from the string you supply",
   usage: "<banner:str>",
   usageDelim: "",
+  type: "command",
 };
