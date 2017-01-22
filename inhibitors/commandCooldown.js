@@ -11,6 +11,7 @@ const cooldowns = new Map();
 exports.conf = {
   enabled: false,
   spamProtection: true,
+  requiredModules: [],
 };
 
 exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
@@ -62,3 +63,6 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
   if (entry) reject();
   else resolve();
 });
+
+exports.help.name = "commandCooldown";
+exports.help.description = "Puts commands that have the valid configuration on cooldown, by default per user.";

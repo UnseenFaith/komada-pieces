@@ -1,6 +1,5 @@
-const request = require("request");
-
 exports.run = (client, msg, [search, resultNum]) => {
+  const request = require("request");
   const baseUrl = "http://api.urbandictionary.com/v0/define?term=";
   const theUrl = baseUrl + search;
   request({
@@ -37,6 +36,7 @@ exports.conf = {
   permLevel: 2,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: ["request"],
 };
 
 exports.help = {

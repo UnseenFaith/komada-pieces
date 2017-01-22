@@ -1,7 +1,3 @@
-const fsp = require("fs-promise");
-const moment = require("moment");
-require("moment-duration-format");
-
 exports.init = (client) => {
   if (!client.funcs.confs.hasKey("starboard")) {
     client.funcs.confs.addKey("starboard", "");
@@ -9,6 +5,9 @@ exports.init = (client) => {
 };
 
 exports.run = (client, msg, [message]) => {
+  const fsp = require("fs-promise");
+  const moment = require("moment");
+  require("moment-duration-format");
   if (!msg.guildConf.starboard) {
     if (!msg.guild.channels.exists("name", "starboard")) {
       msg.reply("Please create the _starboard_ channel and try again.").catch(error => console.log(error.stack));
@@ -55,6 +54,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: ["moment", "fs-promise"],
 };
 
 exports.help = {
