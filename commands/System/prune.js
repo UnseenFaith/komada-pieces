@@ -20,11 +20,12 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {
   name: "prune",
-  description: "soon™",
+  description: "This will remove X amount of messages sent in a channel sent by yourself.",
   usage: "<amount:int{1,100}>",
   usageDelim: " ",
 };

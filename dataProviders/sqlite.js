@@ -1,5 +1,5 @@
-const db = require("sqlite");
-const fs = require("fs-extra-promisify");
+let db;
+let fs;
 
 const config = {
   moduleName: "sqlite",
@@ -49,6 +49,8 @@ const dataSchema = {
 const schemaCache = new Map();
 
 exports.init = async client => new Promise(async (resolve, reject) => {
+  db = require("sqlite");
+  fs = require("fs-extra-promisify");
   try {
     await fs.ensureDir(config.baseLocation);
     await db.open(`${config.baseLocation}/db.sqlite`);
@@ -134,3 +136,7 @@ exports.createTable = (client, tableName, keys) => new Promise(async (resolve, r
 exports.deleteTable = (client, tableName) => db.run(`DROP TABLE '${tableName}'`);
 
 exports.run = sql => db.run(sql);
+
+exports.help.name = "sqlite";
+exports.help.description = "Allows you use SQLite functionality throughout Komada.";
+exports.conf.requiredModules = ["sqlite", "fs-extra-promisify"];

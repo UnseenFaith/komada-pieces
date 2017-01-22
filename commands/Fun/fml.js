@@ -1,7 +1,6 @@
-const request = require("superagent");
-const HTMLParser = require("fast-html-parser");
-
 exports.run = (client, msg) => {
+  const request = require("superagent");
+  const HTMLParser = require("fast-html-parser");
   request
   .get("http://www.fmylife.com/random")
   .end((err, res) => {
@@ -20,6 +19,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: ["request", "HTMLParser"],
 };
 
 exports.help = {

@@ -14,6 +14,7 @@ exports.conf = {
   permLevel: 3,
   botPerms: ["CHANGE_NICKNAME"],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {
