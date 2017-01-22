@@ -1,6 +1,7 @@
 const run = (client, msg, action) => (
   new Promise((resolve) => {
     const db = client.dataProviders.get("sqlite");
+    if (!db) return msg.reply("You didn't install the SQlite provider. Download it from our Pieces repo!");
 
     db.get(client, "quiz", "userID", msg.author.id).then((row) => {
       let points = row.points;
@@ -67,3 +68,7 @@ module.exports = (client, msg, action) => (
     }
   })
 );
+
+exports.help.name = "points";
+exports.help.description = "Adds a point system for users accesible through an SQLite database.";
+exports.conf.requiredModules = [];

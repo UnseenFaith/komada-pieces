@@ -11,6 +11,7 @@ exports.conf = {
   permLevel: 3,
   botPerms: ["BAN_MEMBERS"],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {

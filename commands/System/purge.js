@@ -23,6 +23,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: ["MANAGE_MESSAGES"],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {

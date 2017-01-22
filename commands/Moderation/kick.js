@@ -11,6 +11,7 @@ exports.conf = {
   permLevel: 2,
   botPerms: ["KICK_MEMBERS"],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {

@@ -1,6 +1,5 @@
-const figlet = require("figlet");
-
 exports.run = (client, msg) => {
+  const figlet = require("figlet");
   const banner = msg.content.split(" ").slice(1).join(" ");
   figlet(banner, (err, data) => {
     if (err) {
@@ -20,6 +19,7 @@ exports.conf = {
   permLevel: 2,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: ["figlet"],
 };
 
 exports.help = {
