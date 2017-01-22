@@ -16,6 +16,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {

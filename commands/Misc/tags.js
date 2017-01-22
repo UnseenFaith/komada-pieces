@@ -1,53 +1,47 @@
 let db;
 
 exports.run = (client, msg, [action, ...contents]) => {
-  if(!client.dataProviders.has("sqlite")) return msg.reply("this command requires the `sqlite` module which is not present.");
-  if(!contents && ["add", "delete"].includes(action)) return msg.reply("you must provide a name for this action.");
+  if (!client.dataProviders.has("sqlite")) return msg.reply("this command requires the `sqlite` module which is not present.");
+  if (!contents && ["add", "delete"].includes(action)) return msg.reply("you must provide a name for this action.");
 
-  if(!action) {
+  if (!action) {
     return db.getAll(client, "tags")
-    .then(rows => {
-      msg.channel.sendMessage("**List of tags**: ```" + rows.map(r=>r.name).join(" | ") + "```");
+    .then((rows) => {
+      msg.channel.sendMessage(`**List of tags**: \`\`\`${rows.map(r => r.name).join(" | ")}\`\`\``);
     });
   }
 
-  if(action === "add") {
+  if (action === "add") {
     db.insert(client, "tags", ["name", "count", "contents"], [contents[0], 0, contents.slice(1).join(" ")])
-    .then(()=> {
+    .then(() => {
       msg.reply(`The tag \`${contents[0]}\` has been added.`);
     }).catch(console.error);
     return;
   }
 
-  if(action === "delete") {
+  if (action === "delete") {
     db.get(client, "tags", "name", contents[0])
-    .then(row => {
-      if(!row) return msg.reply("this tag doesn't seem to exist.");
+    .then((row) => {
+      if (!row) return msg.reply("this tag doesn't seem to exist.");
       db.delete(client, "tags", row.id)
-      .then(() => {
-        return msg.reply("the tag has been deleted. It's gone. For real, it no longer exists. It's pushing up the daisies.");
-      })
-      .catch(e => {
-        return msg.reply("I wasn't able to delete the tag because of the following reason: \n" + e);
-      });
+      .then(() => msg.reply("the tag has been deleted. It's gone. For real, it no longer exists. It's pushing up the daisies."))
+      .catch(e => msg.reply(`I wasn't able to delete the tag because of the following reason: \n${e}`));
     })
-    .catch(e => {
-      return msg.reply(e);
-    });
+    .catch(e => msg.reply(e));
   }
 
-  if(action === "random") {
+  if (action === "random") {
     return db.getRandom(client, "tags")
-    .then(row => {
+    .then((row) => {
       msg.channel.sendMessage(row.contents);
       db.update(client, "tags", ["count"], [row.count++], "id", row.id);
     });
   }
-  if(!["add", "delete", "random"].includes(action)) {
-    db.get(client, "tags", "name", action).then(row => {
+  if (!["add", "delete", "random"].includes(action)) {
+    db.get(client, "tags", "name", action).then((row) => {
       msg.channel.sendMessage(row.contents);
       db.update(client, "tags", ["count"], [row.count++], "id", row.id);
-    }).catch(e => {
+    }).catch((e) => {
       msg.reply("tag name not found.");
     });
   }
@@ -60,6 +54,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {
@@ -75,9 +70,9 @@ exports.init = (client) => {
   }
   db = client.dataProviders.get("sqlite");
   db.hasTable(client, "tags")
-    .then(res => {
+    .then((res) => {
       if (!res) {
-        let keys = "<name:str> <count:int> <contents:str> <enabled:bool> <embed:bool> <title:str> <footer:str>";
+        const keys = "<name:str> <count:int> <contents:str> <enabled:bool> <embed:bool> <title:str> <footer:str>";
         db.createTable(client, "tags", keys).catch(console.error);
       }
       client.config.init.push("tags");

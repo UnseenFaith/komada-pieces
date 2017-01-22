@@ -1,5 +1,9 @@
 module.exports = (str, l) => {
-  let x = str.substring(0, l).lastIndexOf(" ");
-  let pos = x === -1 ? l : x;
+  const x = str.substring(0, l).lastIndexOf(" ");
+  const pos = x === -1 ? l : x;
   return str.substring(0, pos);
 };
+
+exports.help.name = "splitText";
+exports.help.description = "Find the last space of a string and cuts it down to a manageable size for use in Discord.";
+exports.conf.requiredModules = [];

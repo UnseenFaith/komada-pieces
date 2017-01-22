@@ -4,23 +4,24 @@ const ratelimit = 1250;
 
 exports.conf = {
   enabled: true,
-  spamProtection: true
+  spamProtection: true,
+  requiredModules: [],
 };
 
-exports.run = (client, msg, cmd) => {
-  return new Promise((resolve, reject) => {
+exports.run = (client, msg) => new Promise((resolve, reject) => {
     // also available: msg.server.id , msg.channel.id
-    let slowmode_level = msg.author.id;
-    let entry = slowmode.get(slowmode_level);
-    if (!entry)
-      slowmode.set(slowmode_level, true);
-    if (timers[slowmode_level]) clearTimeout(timers[slowmode_level]);
-    timers[slowmode_level] = setTimeout(() => {
-      slowmode.delete(slowmode_level);
-      delete timers[slowmode_level];
-    }, ratelimit);
+  const slowmodeLevel = msg.author.id;
+  const entry = slowmode.get(slowmodeLevel);
+  if (!entry) { slowmode.set(slowmodeLevel, true); }
+  if (timers[slowmodeLevel]) clearTimeout(timers[slowmodeLevel]);
+  timers[slowmodeLevel] = setTimeout(() => {
+    slowmode.delete(slowmodeLevel);
+    delete timers[slowmodeLevel];
+  }, ratelimit);
 
-    if (entry) reject();
-    else resolve();
-  });
-};
+  if (entry) reject();
+  else resolve();
+});
+
+exports.help.name = "commandSlowMode";
+exports.help.description = "Slows down the usage of commands, which defaults to per user.";

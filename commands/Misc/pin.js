@@ -1,5 +1,3 @@
-const moment = require("moment");
-
 exports.init = (client) => {
   if (!client.funcs.confs.hasKey("pins")) {
     client.funcs.confs.addKey("pins", "");
@@ -7,6 +5,7 @@ exports.init = (client) => {
 };
 
 exports.run = (client, msg, [message]) => {
+  const moment = require("moment");
   if (!msg.guildConf.pins) {
     if (!msg.guild.channels.exists("name", "pins")) {
       msg.reply("Please create the _pins_ channel and try again.");
@@ -27,6 +26,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: ["moment"],
 };
 
 exports.help = {
