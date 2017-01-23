@@ -137,6 +137,8 @@ exports.deleteTable = (client, tableName) => db.run(`DROP TABLE '${tableName}'`)
 
 exports.run = sql => db.run(sql);
 
+exports.help = {};
 exports.help.name = "sqlite";
 exports.help.description = "Allows you use SQLite functionality throughout Komada.";
+exports.conf = {};
 exports.conf.requiredModules = ["sqlite", "fs-extra-promisify"];

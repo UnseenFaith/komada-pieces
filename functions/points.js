@@ -69,6 +69,8 @@ module.exports = (client, msg, action) => (
   })
 );
 
+exports.help = {};
 exports.help.name = "points";
 exports.help.description = "Adds a point system for users accesible through an SQLite database.";
+exports.conf = {};
 exports.conf.requiredModules = [];

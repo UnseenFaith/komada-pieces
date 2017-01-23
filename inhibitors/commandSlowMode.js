@@ -23,5 +23,6 @@ exports.run = (client, msg) => new Promise((resolve, reject) => {
   else resolve();
 });
 
+exports.help = {};
 exports.help.name = "commandSlowMode";
 exports.help.description = "Slows down the usage of commands, which defaults to per user.";
