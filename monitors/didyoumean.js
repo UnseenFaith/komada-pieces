@@ -28,5 +28,5 @@ exports.run = (client, msg) => {
 };
 
 exports.help = {};
-exports.help.name = "Did you mean?";
+exports.help.name = "didyoumean";
 exports.help.description = "Helps users that type in commands incorrectly.";
