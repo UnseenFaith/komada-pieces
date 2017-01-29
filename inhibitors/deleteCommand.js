@@ -17,5 +17,6 @@ exports.run = (client, msg, cmd) => new Promise((resolve) => {
   resolve();
 });
 
+exports.help = {};
 exports.help.name = "deleteCommand";
 exports.help.description = "Enables the ability for Guild/Bot owners to decide if they want all messages that initiate a command to be deleted.";
