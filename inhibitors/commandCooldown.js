@@ -64,6 +64,7 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
   else resolve();
 });
 
+
 exports.help = {};
 exports.help.name = "commandCooldown";
 exports.help.description = "Puts commands that have the valid configuration on cooldown, by default per user.";
