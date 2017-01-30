@@ -11,7 +11,7 @@ exports.run = (client, msg) => {
 exports.conf = {
   enabled: true,
   selfbot: false,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: ["8", "magic", "8ball", "mirror"],
   permLevel: 0,
   botPerms: [],

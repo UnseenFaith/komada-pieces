@@ -1,6 +1,6 @@
 const run = (client, msg, action) => (
   new Promise((resolve) => {
-    const db = client.dataProviders.get("sqlite");
+    const db = client.providers.get("sqlite");
     if (!db) return msg.reply("You didn't install the SQlite provider. Download it from our Pieces repo!");
 
     db.get(client, "quiz", "userID", msg.author.id).then((row) => {
@@ -32,7 +32,7 @@ const run = (client, msg, action) => (
 
 const init = client => (
   new Promise((resolve, reject) => {
-    if (!client.dataProviders.first()) {
+    if (!client.providers.first()) {
       reject("No Database Found");
     }
     client.databaseModules.get("sqlite").hasTable(client, "quiz")

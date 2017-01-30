@@ -49,7 +49,7 @@ exports.run = (client, msg, [action, ...contents]) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: ["tags"],
   permLevel: 0,
   botPerms: [],

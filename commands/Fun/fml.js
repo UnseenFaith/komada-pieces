@@ -14,12 +14,12 @@ exports.run = (client, msg) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: [],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["request", "HTMLParser"],
+  requiredModules: ["superagent", "fast-html-parser"],
 };
 
 exports.help = {

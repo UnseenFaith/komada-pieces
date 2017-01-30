@@ -48,13 +48,13 @@ exports.run = (client, msg, [message]) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   selfbot: false,
   aliases: ["star"],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["moment", "fs-promise"],
+  requiredModules: ["moment", "moment-duration-format", "fs-promise"],
 };
 
 exports.help = {

@@ -9,7 +9,7 @@ exports.run = (client, msg, [nick]) => {
 exports.conf = {
   enabled: true,
   selfbot: false,
-  guildOnly: true,
+  runIn: ["text"],
   aliases: [],
   permLevel: 3,
   botPerms: ["CHANGE_NICKNAME"],
