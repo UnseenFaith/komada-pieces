@@ -135,7 +135,9 @@ exports.createTable = (client, tableName, keys) => new Promise(async (resolve, r
 
 exports.deleteTable = (client, tableName) => db.run(`DROP TABLE '${tableName}'`);
 
-exports.run = sql => db.get(sql); // Returns result rows
+exports.run = sql => db.get(sql); // Returns a result row Best to be used with limit
+
+exports.runAll = sql => db.all(sql); // Returns **ALL** result rows
 
 exports.exec = sql => db.run(sql); // Does not return result rows.
 
