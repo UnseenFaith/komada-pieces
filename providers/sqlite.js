@@ -135,7 +135,9 @@ exports.createTable = (client, tableName, keys) => new Promise(async (resolve, r
 
 exports.deleteTable = (client, tableName) => db.run(`DROP TABLE '${tableName}'`);
 
-exports.run = sql => db.run(sql);
+exports.run = sql => db.get(sql); // Returns result rows
+
+exports.exec = sql => db.run(sql); // Does not return result rows.
 
 exports.help = {};
 exports.help.name = "sqlite";
