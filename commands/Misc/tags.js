@@ -1,7 +1,7 @@
 let db;
 
 exports.run = (client, msg, [action, ...contents]) => {
-  if (!client.dataProviders.has("sqlite")) return msg.reply("this command requires the `sqlite` module which is not present.");
+  if (!client.providers.has("sqlite")) return msg.reply("this command requires the `sqlite` module which is not present.");
   if (!contents && ["add", "delete"].includes(action)) return msg.reply("you must provide a name for this action.");
 
   if (!action) {
@@ -65,10 +65,10 @@ exports.help = {
 };
 
 exports.init = (client) => {
-  if (!client.dataProviders.has("sqlite")) {
+  if (!client.providers.has("sqlite")) {
     console.log("tag Command: No Database Found");
   }
-  db = client.dataProviders.get("sqlite");
+  db = client.providers.get("sqlite");
   db.hasTable(client, "tags")
     .then((res) => {
       if (!res) {
