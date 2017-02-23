@@ -7,7 +7,7 @@ exports.run = (client, msg, [user]) => {
 exports.conf = {
   enabled: true,
   runIn: ["text"],
-  aliases: ["k"],
+  aliases: ["b"],
   permLevel: 3,
   botPerms: ["BAN_MEMBERS"],
   requiredFuncs: [],
