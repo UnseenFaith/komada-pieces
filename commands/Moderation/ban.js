@@ -16,7 +16,7 @@ exports.conf = {
 
 exports.help = {
   name: "ban",
-  description: "Bans a mentionned user. Currently does not require reason (no mod-log)",
+  description: "Bans a mentioned user. Currently does not require reason (no mod-log)",
   usage: "<user:user>",
   usageDelim: "",
 };
