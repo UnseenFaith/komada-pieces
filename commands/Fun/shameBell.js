@@ -1,5 +1,5 @@
 exports.run = (client, msg, [user]) => {
-  msg.channel.sendMessage(`🔔 SHAME 🔔 ${user} 🔔 SHAME 🔔`).catch(error => client.funcs.log(error.stack, "error"));
+  msg.channel.send(`🔔 SHAME 🔔 ${user} 🔔 SHAME 🔔`).catch(e => client.funcs.log(e, "error"));
 };
 
 exports.conf = {
@@ -18,4 +18,5 @@ exports.help = {
   description: "Rings a bell on the server shaming the mentioned person",
   usage: "<user:mention>",
   usageDelim: "",
+  type: "command",
 };

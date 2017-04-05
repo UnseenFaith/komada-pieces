@@ -1,5 +1,5 @@
 exports.run = (client, msg) => {
-  msg.channel.sendMessage(`You flipped ${Math.random() > 0.5 ? "Heads" : "Tails"}.`);
+  msg.reply(`You flipped ${Math.random() > 0.5 ? "Heads" : "Tails"}.`);
 };
 
 exports.conf = {
@@ -18,4 +18,5 @@ exports.help = {
   description: "Flips a (pseudo) fair coin.",
   usage: "",
   usageDelim: "",
+  type: "command",
 };

@@ -1,29 +1,30 @@
-exports.init = (client) => {
-  if (!client.funcs.confs.hasKey("pins")) {
-    client.funcs.confs.addKey("pins", "");
-  }
-};
+const moment = require("moment");
 
-exports.run = (client, msg, [message]) => {
-  const moment = require("moment");
+exports.exist = (client, msg) => new Promise((resolve, reject) => {
   if (!msg.guildConf.pins) {
-    if (!msg.guild.channels.exists("name", "pins")) {
-      msg.reply("Please create the _pins_ channel and try again.");
-    } else {
+    if (!msg.guild.channels.exists("name", "pins")) reject("Please create the _pins_ channel and try again.");
+    else {
       client.funcs.confs.set("pins", msg.guild.channels.find("name", "pins").id);
-      client.channels.get(msg.guild.channels.find("name", "pins").id).sendMessage(`:pushpin: **${message.author.username}#${message.author.discriminator}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`).catch(error => console.log(error.stack));
+      resolve();
     }
-  } else {
-    client.channels.get(msg.guildConf.pins).sendMessage(`:pushpin: **${message.author.username}#${message.author.discriminator}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`).catch(error => console.log(error.stack));
+  } else resolve();
+});
+
+exports.run = async (client, msg, [message]) => {
+  try {
+    await this.exist(client, msg);
+    client.channels.get(msg.guildConf.pins).send(`:pushpin: **${message.author.username}#${message.author.discriminator}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`);
+  } catch (e) {
+    msg.reply(e);
   }
 };
 
 exports.conf = {
   enabled: true,
-  runIn: ["text", "dm", "group"],
-  selfbot: true,
+  selfbot: false,
+  runIn: ["text"],
   aliases: ["note"],
-  permLevel: 0,
+  permLevel: 2,
   botPerms: [],
   requiredFuncs: [],
   requiredModules: ["moment"],
@@ -34,4 +35,9 @@ exports.help = {
   description: "Pin messages to a set channel.",
   usage: "<messageid:msg>",
   usageDelim: "",
+  type: "command",
+};
+
+exports.init = (client) => {
+  if (!client.funcs.confs.hasKey("pins")) client.funcs.confs.addKey("pins", "");
 };

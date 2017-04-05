@@ -9,7 +9,7 @@ exports.run = (client, msg, [num]) => {
     lines.push(`**${ranks[Math.floor(Math.random() * ranks.length)]}**${suits[Math.floor(Math.random() * suits.length)]}`);
   }
 
-  msg.channel.sendMessage(lines.join(", "));
+  msg.channel.send(lines.join(", "));
 };
 
 exports.conf = {
@@ -28,4 +28,5 @@ exports.help = {
   description: "Draws some random cards from a deck.",
   usage: "<num:int{1,10}>",
   usageDelim: "",
+  type: "command",
 };

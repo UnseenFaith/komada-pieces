@@ -6,14 +6,15 @@ exports.run = (client, msg) => {
   const check = msg.guild.members.filter(m => (mtime - m.user.createdTimestamp) <= accAge);
   if (check.size > 0) {
     const result = check.map(u => `${u.user.username}#${u.user.discriminator}, Created:${((mtime - u.user.createdTimestamp) / 1000 / 60).toFixed(0)} min(s) ago`).join("\n");
-    msg.reply(`The following users are less than the Minimum Account Age: \n \`\`\`xl\n${result}\n\`\`\` `);
+    msg.reply(`The following users are less then the Minimum Account Age: \n \`\`\`xl\n${result}\n\`\`\` `);
   } else {
-    msg.reply("No users less than Minimum Account Age were found in the guild.");
+    msg.reply("No users less then Minimum Account Age were found in the guild.");
   }
 };
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text"],
   aliases: [],
   permLevel: 3,
@@ -24,7 +25,8 @@ exports.conf = {
 
 exports.help = {
   name: "check",
-  description: "Checks the guild for any user accounts younger than the minimum account age.",
+  description: "Checks the guild for any user accounts younger then the minimum account age.",
   usage: "",
   usageDelim: "",
+  type: "command",
 };

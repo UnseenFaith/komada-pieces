@@ -21,7 +21,7 @@ const dataSchema = {
   },
   autoid: {
     create: "INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE",
-    insert: () => { throw "Cannot insert Auto ID value!"; },
+    insert: () => { throw new Error("Cannot insert Auto ID value!"); },
     select: value => value,
   },
   timestamp: {
@@ -31,12 +31,12 @@ const dataSchema = {
   },
   autots: {
     create: "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL",
-    insert: () => { throw "Cannot insert Auto Timestamp value!"; },
+    insert: () => { throw new Error("Cannot insert Auto Timestamp value!"); },
     select: value => value,
   },
   bool: {
     create: "INTEGER",
-    insert: value => !value ? 0 : -1,
+    insert: value => !value ? 0 : -1, // eslint-disable-line no-confusing-arrow
     select: value => !!value,
   },
   json: {

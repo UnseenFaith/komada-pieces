@@ -1,54 +1,39 @@
 let db;
 
-exports.run = (client, msg, [action, ...contents]) => {
+exports.run = async (client, msg, [action, ...contents]) => {
   if (!client.providers.has("sqlite")) return msg.reply("this command requires the `sqlite` module which is not present.");
   if (!contents && ["add", "delete"].includes(action)) return msg.reply("you must provide a name for this action.");
-
-  if (!action) {
-    return db.getAll(client, "tags")
-    .then((rows) => {
-      msg.channel.sendMessage(`**List of tags**: \`\`\`${rows.map(r => r.name).join(" | ")}\`\`\``);
-    });
-  }
-
-  if (action === "add") {
-    db.insert(client, "tags", ["name", "count", "contents"], [contents[0], 0, contents.slice(1).join(" ")])
-    .then(() => {
-      msg.reply(`The tag \`${contents[0]}\` has been added.`);
-    }).catch(console.error);
-    return;
-  }
-
-  if (action === "delete") {
-    db.get(client, "tags", "name", contents[0])
-    .then((row) => {
+  try {
+    if (!action) {
+      const rows = await db.getAll(client, "tags");
+      return msg.channel.send(`**List of tags**: \`\`\`${rows.map(r => r.name).join(" | ")}\`\`\``);
+    } else if (action === "add") {
+      await db.insert(client, "tags", ["name", "count", "contents"], [contents[0], 0, contents.slice(1).join(" ")]);
+      return msg.reply(`The tag \`${contents[0]}\` has been added.`);
+    } else if (action === "delete") {
+      const row = await db.get(client, "tags", "name", contents[0]);
       if (!row) return msg.reply("this tag doesn't seem to exist.");
-      db.delete(client, "tags", row.id)
-      .then(() => msg.reply("the tag has been deleted. It's gone. For real, it no longer exists. It's pushing up the daisies."))
-      .catch(e => msg.reply(`I wasn't able to delete the tag because of the following reason: \n${e}`));
-    })
-    .catch(e => msg.reply(e));
+      await db.delete(client, "tags", row.id).catch(e => msg.reply(`I wasn't able to delete the tag because of the following reason: \n${e}`));
+      return msg.reply("the tag has been deleted. It's gone. For real, it no longer exists. It's pushing up the daisies.");
+    } else if (action === "random") {
+      const row = await db.getRandom(client, "tags");
+      await msg.channel.send(row.contents);
+      db.update(client, "tags", ["count"], [row.count++], "id", row.id);
+    } else {
+      const row = await db.get(client, "tags", "name", action).catch(() => msg.reply("tag name not found."));
+      await msg.channel.send(row.contents);
+      db.update(client, "tags", ["count"], [row.count++], "id", row.id);
+    }
+  } catch (e) {
+    client.funcs.log(e, "error");
   }
 
-  if (action === "random") {
-    return db.getRandom(client, "tags")
-    .then((row) => {
-      msg.channel.sendMessage(row.contents);
-      db.update(client, "tags", ["count"], [row.count++], "id", row.id);
-    });
-  }
-  if (!["add", "delete", "random"].includes(action)) {
-    db.get(client, "tags", "name", action).then((row) => {
-      msg.channel.sendMessage(row.contents);
-      db.update(client, "tags", ["count"], [row.count++], "id", row.id);
-    }).catch((e) => {
-      msg.reply("tag name not found.");
-    });
-  }
+  return this;
 };
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: ["tags"],
   permLevel: 0,
@@ -62,19 +47,16 @@ exports.help = {
   description: "Server-Specific tags",
   usage: "[action:string] [contents:string] [...]",
   usageDelim: " ",
+  type: "command",
 };
 
-exports.init = (client) => {
-  if (!client.providers.has("sqlite")) {
-    console.log("tag Command: No Database Found");
-  }
+exports.init = async (client) => {
+  if (!client.providers.has("sqlite")) client.funcs.log("tag Command: No Database Found", "error");
   db = client.providers.get("sqlite");
-  db.hasTable(client, "tags")
-    .then((res) => {
-      if (!res) {
-        const keys = "<name:str> <count:int> <contents:str> <enabled:bool> <embed:bool> <title:str> <footer:str>";
-        db.createTable(client, "tags", keys).catch(console.error);
-      }
-      client.config.init.push("tags");
-    });
+  const res = await db.hasTable(client, "tags");
+  if (!res) {
+    const keys = "<name:str> <count:int> <contents:str> <enabled:bool> <embed:bool> <title:str> <footer:str>";
+    db.createTable(client, "tags", keys).catch(e => client.funcs.log(e, "error"));
+  }
+  client.config.init.push("tags");
 };

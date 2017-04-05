@@ -1,19 +1,24 @@
+const request = require("superagent");
+const HTMLParser = require("fast-html-parser");
+
 exports.run = (client, msg) => {
-  const request = require("superagent");
-  const HTMLParser = require("fast-html-parser");
   request
   .get("http://www.fmylife.com/random")
   .end((err, res) => {
-    if (err) return msg.reply(err);
-    client.funcs.log(err.stack, "error");
+    if (err) {
+      msg.reply(err);
+      client.funcs.log(err, "error");
+      return;
+    }
     const root = HTMLParser.parse(res.text);
-    const article = root.querySelector('.block a');
-    return msg.channel.sendMessage(article.text);
+    const article = root.querySelector(".block a");
+    msg.channel.send(article.text);
   });
 };
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: [],
   permLevel: 0,
@@ -27,4 +32,5 @@ exports.help = {
   description: "Grabs random 'Fuck My Life' quote from the web.",
   usage: "",
   usageDelim: "",
+  type: "command",
 };

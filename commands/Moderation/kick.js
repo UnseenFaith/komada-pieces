@@ -1,11 +1,15 @@
-exports.run = (client, msg, [user]) => {
-  msg.guild.member(user).kick()
-  .then(() => msg.channel.sendMessage(`${user.username}#${user.discriminator} was kicked.`))
-  .catch(e => msg.reply(`There was an error trying to kick: ${e}`));
+exports.run = async (client, msg, [member]) => {
+  try {
+    await member.kick();
+    msg.channel.send(`${member.username}#${member.discriminator} was kicked.`);
+  } catch (e) {
+    msg.reply(`There was an error trying to kick: ${e}`);
+  }
 };
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text"],
   aliases: ["k"],
   permLevel: 2,
@@ -17,6 +21,7 @@ exports.conf = {
 exports.help = {
   name: "kick",
   description: "Kicks a mentioned user. Currently does not require reason (no mod-log)",
-  usage: "<user:user>",
+  usage: "<member:member>",
   usageDelim: "",
+  type: "command",
 };

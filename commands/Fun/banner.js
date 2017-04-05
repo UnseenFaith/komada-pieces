@@ -1,13 +1,9 @@
-exports.run = (client, msg) => {
-  const figlet = require("figlet");
-  const banner = msg.content.split(" ").slice(1).join(" ");
+const figlet = require("figlet");
+
+exports.run = (client, msg, [banner]) => {
   figlet(banner, (err, data) => {
-    if (err) {
-      client.funcs.log("Something went wrong...", "error");
-      console.dir(err);
-      return;
-    }
-    msg.channel.sendCode("", data);
+    if (err) return client.funcs.log(`Something went wrong... ${err}`, "error");
+    return msg.channel.sendCode("", data).catch(e => client.funcs.log(e, "error"));
   });
 };
 
@@ -16,7 +12,7 @@ exports.conf = {
   selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: [],
-  permLevel: 2,
+  permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
   requiredModules: ["figlet"],

@@ -1,11 +1,15 @@
-exports.run = (client, msg, [user]) => {
-  msg.guild.member(user).ban()
-  .then(() => msg.channel.sendMessage(`${user.username}#${user.discriminator} was banned.`))
-  .catch(e => msg.reply(`There was an error trying to ban: ${e}`));
+exports.run = async (client, msg, [member]) => {
+  try {
+    await member.ban();
+    msg.channel.send(`${member.username}#${member.discriminator} was banned.`);
+  } catch (e) {
+    msg.reply(`There was an error trying to ban: ${e}`);
+  }
 };
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text"],
   aliases: ["b"],
   permLevel: 3,
@@ -17,6 +21,7 @@ exports.conf = {
 exports.help = {
   name: "ban",
   description: "Bans a mentioned user. Currently does not require reason (no mod-log)",
-  usage: "<user:user>",
+  usage: "<member:member>",
   usageDelim: "",
+  type: "command",
 };

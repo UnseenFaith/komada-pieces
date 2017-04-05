@@ -1,18 +1,15 @@
-exports.run = (client, msg, [search, resultNum]) => {
-  const request = require("request");
+const request = require("request");
+
+exports.run = (client, msg, [search, resultNum = 0]) => {
   const baseUrl = "http://api.urbandictionary.com/v0/define?term=";
   const theUrl = baseUrl + search;
   request({
     url: theUrl,
     json: true,
   }, (error, response, body) => {
-    if (!resultNum) {
-      resultNum = 0;
-    } else if (resultNum > 1) {
-      resultNum -= 1;
-    }
+    if (resultNum > 1) resultNum -= 1;
     const result = body.list[resultNum];
-    if (result) {
+    if (!error && result) {
       const definition = [
         `**Word:** ${search}`,
         "",
@@ -21,9 +18,9 @@ exports.run = (client, msg, [search, resultNum]) => {
         `**Example:**\n${result.example}`,
         `<${result.permalink}>`,
       ];
-      msg.channel.sendMessage(definition).catch(err => client.funcs.log(err.stack, "error"));
+      msg.channel.send(definition).catch(e => client.funcs.log(e, "error"));
     } else {
-      msg.channel.sendMessage("No entry found.").catch(err => client.funcs.log(err.stack, "error"));
+      msg.channel.send("No entry found.").catch(e => client.funcs.log(e, "error"));
     }
   });
 };
@@ -33,7 +30,7 @@ exports.conf = {
   selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: [],
-  permLevel: 2,
+  permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
   requiredModules: ["request"],
@@ -44,4 +41,5 @@ exports.help = {
   description: "Searches the Urban Dictionary library for a definition to the search term.",
   usage: "<search:str> [resultNum:int]",
   usageDelim: ", ",
+  type: "command",
 };
