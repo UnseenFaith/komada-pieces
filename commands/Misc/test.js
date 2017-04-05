@@ -8,9 +8,10 @@ exports.run = (client, msg) => {
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: [],
-  permLevel: 0,
+  permLevel: 10,
   botPerms: [],
   requiredFuncs: [],
   requiredModules: [],
@@ -21,4 +22,5 @@ exports.help = {
   description: "This is a test command. What does it do? ",
   usage: "",
   usageDelim: "",
+  type: "command",
 };

@@ -1,4 +1,4 @@
-const baseUrl = "https://eslachance.gitbooks.io/discord-js-bot-guide/content";
+const baseUrl = "https://yorkaargh.gitbooks.io/discord-js-bot-guide/content";
 const guides = {
   roles: { url: "/coding-walkthroughs/understanding_roles.html", snippet: "Roles are a powerful feature in Discord, and admittedly have been one of the hardest parts to master in discord.js. This walkthrough aims at explaining how roles and permissions work. We'll also explore how to use roles to protect your commands." },
   args: { url: "/samples/command_with_arguments.html", snippet: "In Your First Bot, we explored how to make more than one command. These commands all started with a prefix, but didn't have any *arguments* : extra parameters used to vary what the command actually does." },
@@ -15,17 +15,18 @@ const guides = {
 exports.run = (client, msg, [keyword]) => {
   if (guides[keyword]) {
     const details = guides[keyword];
-    msg.channel.sendMessage(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
+    msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
   } else if (keyword === "list") {
-    msg.channel.sendMessage(`Available keywords for this command:\n${Object.keys(guides).join(", ")}`);
+    msg.channel.send(`Available keywords for this command:\n${Object.keys(guides).join(", ")}`);
   } else {
     const details = guides.home;
-    msg.channel.sendMessage(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
+    msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
   }
 };
 
 exports.conf = {
   enabled: true,
+  selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: [],
   permLevel: 0,
@@ -39,4 +40,5 @@ exports.help = {
   description: "Returns page details from root's awesome bot guide.",
   usage: "[list:literal|keyword:str]",
   usageDelim: "",
+  type: "command",
 };

@@ -1,16 +1,17 @@
 // Big thanks to AoDude, Faith and cyberiumshadow
-exports.run = (client, msg, [type, status, ...game]) => {
-  game = game.join(" ");
-  if (type === "status") {
-    if (!status) status = "online";
-    client.user.setStatus(status).then(() => {
-      msg.channel.sendMessage(`Status changed to ***${status}***`);
-    }).catch(error => console.log(error.stack));
-  } else if (type === "game") {
-    if (!game) game = null;
-    client.user.setGame(game).then(() => {
-      msg.channel.sendMessage(`${game ? `Game changed to ***${game}***` : "Game cleared"}`);
-    });
+// Now to kyra for rewritting this.
+exports.run = async (client, msg, [type, status = "online", ...game]) => {
+  game = game.length ? game.join(" ") : null;
+  try {
+    if (type === "status") {
+      await client.user.setStatus(status);
+      msg.channel.send(`Status changed to ***${status}***`);
+    } else if (type === "game") {
+      await client.user.setGame(game);
+      msg.channel.send(`${game ? `Game changed to ***${game}***` : "Game cleared"}`);
+    }
+  } catch (e) {
+    client.funcs.log(e, "error");
   }
 };
 
@@ -19,7 +20,7 @@ exports.conf = {
   selfbot: false,
   runIn: ["text", "dm", "group"],
   aliases: [],
-  permLevel: 3,
+  permLevel: 10,
   botPerms: [],
   requiredFuncs: [],
   requiredModules: [],
@@ -30,4 +31,5 @@ exports.help = {
   description: "Set either your 'status' or your 'game' by using this command",
   usage: "<status|game> [online|idle|invisible|dnd] [game:str]",
   usageDelim: " ",
+  type: "command",
 };
