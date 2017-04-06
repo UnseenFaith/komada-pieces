@@ -34,7 +34,7 @@ exports.conf = {
   aliases: [],
   permLevel: 0,
   botPerms: [],
-  requiredFuncs: [],
+  requiredFuncs: ["splitText"],
   requiredModules: ["request-promise-native"],
 };
 
