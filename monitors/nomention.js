@@ -5,8 +5,8 @@ exports.conf = {
 
 exports.run = (client, msg) => {
   if (msg.author.id === client.user.id) return;
-  if (msg.mentions.everyone) client.funcs.log(`${msg.author.name}#${msg.author.id} mentioned everyone.`);
-  else if (msg.mentions.users.has(client.user.id)) client.funcs.log(`${msg.author.name}#${msg.author.id} mentioned you.`);
+  if (msg.mentions.everyone) client.funcs.log(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) mentioned everyone.`);
+  else if (msg.mentions.users.has(client.user.id)) client.funcs.log(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) mentioned you.`);
 };
 
 exports.help = {};
