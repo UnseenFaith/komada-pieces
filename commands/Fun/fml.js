@@ -1,19 +1,15 @@
-const request = require("superagent");
-const HTMLParser = require("fast-html-parser");
-
-exports.run = (client, msg) => {
-  request
-  .get("http://www.fmylife.com/random")
-  .end((err, res) => {
-    if (err) {
-      msg.reply(err);
-      client.funcs.log(err, "error");
-      return;
-    }
-    const root = HTMLParser.parse(res.text);
+exports.run = async (client, msg) => {
+  const rp = require("request-promise-native"); // eslint-disable-line global-require
+  const HTMLParser = require("fast-html-parser"); // eslint-disable-line global-require
+  try {
+    const body = await rp.get("http://www.fmylife.com/random");
+    const root = HTMLParser.parse(body);
     const article = root.querySelector(".block a");
     msg.channel.send(article.text);
-  });
+  } catch (e) {
+    msg.reply(e);
+    client.funcs.log(e, "error");
+  }
 };
 
 exports.conf = {
@@ -24,7 +20,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["superagent", "fast-html-parser"],
+  requiredModules: ["request-promise-native", "fast-html-parser"],
 };
 
 exports.help = {

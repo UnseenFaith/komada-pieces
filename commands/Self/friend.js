@@ -1,11 +1,13 @@
 exports.run = async (client, msg, [type, user]) => {
-  const added = client.user.friends.find(u => u.username === user.username);
-  const blocked = client.user.blocked.find(u => u.username === user.username);
+  const added = client.user.friends.get(user.id);
+  const blocked = client.user.blocked.get(user.id);
   let message;
   try {
     switch (type) {
       case "add":
-        if (!added) {
+        if (user.bot) {
+          message = await msg.edit("You can't add a bot as your friend.");
+        } else if (!added) {
           await client.user.addFriend(user);
           message = await msg.edit(`Sent friend request to ${user.username}.`);
         } else {
@@ -41,7 +43,7 @@ exports.run = async (client, msg, [type, user]) => {
   } catch (e) {
     message = await msg.edit(e);
   } finally {
-    message.delete(2000);
+    message.delete(5000);
   }
 };
 

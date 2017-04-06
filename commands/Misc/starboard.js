@@ -1,7 +1,3 @@
-const fsp = require("fs-promise");
-const moment = require("moment");
-require("moment-duration-format");
-
 exports.exist = (client, msg) => new Promise((resolve, reject) => {
   if (!msg.guildConf.starboard) {
     if (!msg.guild.channels.exists("name", "starboard")) reject("Please create the _starboard_ channel and try again.");
@@ -13,6 +9,9 @@ exports.exist = (client, msg) => new Promise((resolve, reject) => {
 });
 
 exports.run = async (client, msg, [message]) => {
+  const fsp = require("fs-promise"); // eslint-disable-line global-require
+  const moment = require("moment"); // eslint-disable-line global-require
+  require("moment-duration-format"); // eslint-disable-line global-require
   try {
     await this.exist(client, msg);
     if (!fsp.existsSync(`./data/${message.guild.id}.json`)) fsp.writeFileSync(`./data/${message.guild.id}.json`, JSON.stringify([], null, "\t"));
