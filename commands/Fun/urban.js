@@ -1,6 +1,5 @@
-const rp = require("request-promise-native");
-
 exports.run = async (client, msg, [search, resultNum = 0]) => {
+  const rp = require("request-promise-native"); // eslint-disable-line global-require
   const baseUrl = "http://api.urbandictionary.com/v0/define?term=";
   const theUrl = baseUrl + search;
   try {

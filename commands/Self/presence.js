@@ -1,5 +1,5 @@
 // Big thanks to AoDude, Faith and cyberiumshadow
-// Now to kyra for rewritting this.
+// And kyra#2490 for rewritting this.
 exports.run = async (client, msg, [type, status = "online", ...game]) => {
   game = game.length ? game.join(" ") : null;
   try {

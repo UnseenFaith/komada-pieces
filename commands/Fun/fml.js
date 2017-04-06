@@ -1,7 +1,6 @@
-const rp = require("request-promise-native");
-const HTMLParser = require("fast-html-parser");
-
 exports.run = async (client, msg) => {
+  const rp = require("request-promise-native"); // eslint-disable-line global-require
+  const HTMLParser = require("fast-html-parser"); // eslint-disable-line global-require
   try {
     const body = await rp.get("http://www.fmylife.com/random");
     const root = HTMLParser.parse(body);

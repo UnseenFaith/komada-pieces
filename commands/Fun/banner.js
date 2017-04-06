@@ -1,6 +1,5 @@
-const figlet = require("figlet");
-
 exports.run = (client, msg, [banner]) => {
+  const figlet = require("figlet"); // eslint-disable-line global-require
   figlet(banner, (err, data) => {
     if (err) return client.funcs.log(`Something went wrong... ${err}`, "error");
     return msg.channel.sendCode("", data).catch(e => client.funcs.log(e, "error"));

@@ -1,6 +1,5 @@
-const util = require("util").inspect;
-
 exports.run = (client, msg, [ugc]) => {
+  const util = require("util").inspect; // eslint-disable-line global-require
   ugc = util(ugc, { depth: 0 });
   msg.channel.sendCode("xl", client.funcs.clean(client, ugc));
 };

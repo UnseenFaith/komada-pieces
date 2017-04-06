@@ -1,6 +1,5 @@
-const rp = require("request-promise-native");
-
 exports.run = async (client, msg) => {
+  const rp = require("request-promise-native"); // eslint-disable-line global-require
   try {
     const res = await rp.get("http://api.yomomma.info").then(JSON.parse);
     msg.channel.send(`📢 **Yomomma joke:** *${res.joke}*`);

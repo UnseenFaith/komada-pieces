@@ -1,6 +1,5 @@
-const rp = require("request-promise-native");
-
 exports.run = async (client, msg) => {
+  const rp = require("request-promise-native"); // eslint-disable-line global-require
   try {
     const res = await rp.get("http://catfacts-api.appspot.com/api/facts").then(JSON.parse);
     msg.channel.send(`📢 **Catfact:** *${res.facts[0]}*`);

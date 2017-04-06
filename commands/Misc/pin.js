@@ -1,5 +1,3 @@
-const moment = require("moment");
-
 exports.exist = (client, msg) => new Promise((resolve, reject) => {
   if (!msg.guildConf.pins) {
     if (!msg.guild.channels.exists("name", "pins")) reject("Please create the _pins_ channel and try again.");
@@ -11,6 +9,7 @@ exports.exist = (client, msg) => new Promise((resolve, reject) => {
 });
 
 exports.run = async (client, msg, [message]) => {
+  const moment = require("moment"); // eslint-disable-line global-require
   try {
     await this.exist(client, msg);
     client.channels.get(msg.guildConf.pins).send(`:pushpin: **${message.author.username}#${message.author.discriminator}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`);

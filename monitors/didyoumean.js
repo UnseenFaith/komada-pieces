@@ -1,11 +1,10 @@
-const levenshtein = require("fast-levenshtein");
-
 exports.conf = {
   enabled: true,
   requiredModules: ["fast-levenshtein"],
 };
 
 exports.run = async (client, msg) => {
+  const levenshtein = require("fast-levenshtein"); // eslint-disable-line global-require
   if (msg.author.bot) return;
   if (client.config.selfbot && msg.author.id !== client.user.id) return;
 
