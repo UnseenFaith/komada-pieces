@@ -1,28 +1,30 @@
-const request = require("request");
+const rp = require("request-promise-native");
 
-exports.run = (client, msg, [search, resultNum = 0]) => {
+exports.run = async (client, msg, [search, resultNum = 0]) => {
   const baseUrl = "http://api.urbandictionary.com/v0/define?term=";
   const theUrl = baseUrl + search;
-  request({
-    url: theUrl,
-    json: true,
-  }, (error, response, body) => {
+  try {
+    const body = await rp.get(theUrl).then(JSON.parse);
     if (resultNum > 1) resultNum -= 1;
+
     const result = body.list[resultNum];
-    if (!error && result) {
-      const definition = [
-        `**Word:** ${search}`,
-        "",
-        `**Definition:** ${resultNum += 1} out of ${body.list.length}\n_${result.definition}_`,
-        "",
-        `**Example:**\n${result.example}`,
-        `<${result.permalink}>`,
-      ];
-      msg.channel.send(definition).catch(e => client.funcs.log(e, "error"));
-    } else {
-      msg.channel.send("No entry found.").catch(e => client.funcs.log(e, "error"));
-    }
-  });
+    if (!result) throw new Error("No entry found.");
+    const wdef = result.definition.length > 1000
+      ? `${client.funcs.splitText(result.definition, 1000)}...`
+      : result.definition;
+    const definition = [
+      `**Word:** ${search}`,
+      "",
+      `**Definition:** ${resultNum += 1} out of ${body.list.length}\n_${wdef}_`,
+      "",
+      `**Example:**\n${result.example}`,
+      `<${result.permalink}>`,
+    ].join("\n");
+
+    await msg.channel.send(definition);
+  } catch (e) {
+    msg.channel.send("No entry found.");
+  }
 };
 
 exports.conf = {
@@ -33,7 +35,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["request"],
+  requiredModules: ["request-promise-native"],
 };
 
 exports.help = {
