@@ -5,8 +5,10 @@ exports.conf = {
 
 exports.run = (client, msg) => {
   if (msg.author.id === client.user.id) return;
-  if (msg.mentions.everyone) client.funcs.log(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) mentioned everyone.`);
-  else if (msg.mentions.users.has(client.user.id)) client.funcs.log(`${msg.author.username}#${msg.author.discriminator} (${msg.author.id}) mentioned you.`);
+  const user = `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`;
+  const channel = `#${msg.channel.name} (${msg.channel.id}) from ${msg.guild.name}`;
+  if (msg.mentions.everyone) client.funcs.log(`${user} mentioned everyone in ${channel}`);
+  else if (msg.mentions.users.has(client.user.id)) client.funcs.log(`${user} mentioned you in ${channel}`);
 };
 
 exports.help = {};
