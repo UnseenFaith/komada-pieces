@@ -4,6 +4,7 @@ exports.conf = {
 };
 
 exports.run = (client, msg) => {
+  if (!msg.guild) return;
   if (msg.author.id === client.user.id) return;
   const user = `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`;
   const channel = `#${msg.channel.name} (${msg.channel.id}) from ${msg.guild.name}`;
