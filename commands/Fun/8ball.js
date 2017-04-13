@@ -24,5 +24,5 @@ exports.help = {
   description: "Magic 8-Ball, does exactly what the toy does. (Results may vary)",
   usage: "<query:str>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };
