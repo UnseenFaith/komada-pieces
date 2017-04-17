@@ -16,6 +16,7 @@ exports.run = (client, msg, cmd) => {
 
 exports.help = {};
 exports.help.name = "cooldown";
+exports.help.type = "inhibitors";
 exports.help.description = "[v2] Add per-command cooldown to single users.";
 
 /**

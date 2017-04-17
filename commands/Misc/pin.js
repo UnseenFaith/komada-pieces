@@ -34,7 +34,7 @@ exports.help = {
   description: "Pin messages to a set channel.",
   usage: "<messageid:msg>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };
 
 exports.init = (client) => {

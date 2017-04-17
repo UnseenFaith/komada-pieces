@@ -40,5 +40,5 @@ exports.help = {
   description: "Returns page details from root's awesome bot guide.",
   usage: "[list:literal|keyword:str]",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

@@ -25,5 +25,5 @@ exports.help = {
   description: "This will remove X amount of messages sent in a channel, or by Y user.",
   usage: "[user:mention] <amount:int{1,100}>",
   usageDelim: " ",
-  type: "command",
+  type: "commands",
 };

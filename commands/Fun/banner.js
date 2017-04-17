@@ -22,5 +22,5 @@ exports.help = {
   description: "Creates an ASCII banner from the string you supply",
   usage: "<banner:str>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

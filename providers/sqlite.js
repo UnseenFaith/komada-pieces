@@ -143,6 +143,7 @@ exports.exec = sql => db.run(sql); // Does not return result rows.
 
 exports.help = {};
 exports.help.name = "sqlite";
+exports.help.type = "providers";
 exports.help.description = "Allows you use SQLite functionality throughout Komada.";
 exports.conf = {};
 exports.conf.requiredModules = ["sqlite", "fs-extra-promise"];

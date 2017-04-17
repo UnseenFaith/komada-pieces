@@ -31,5 +31,5 @@ exports.help = {
   description: "Set either your 'status' or your 'game' by using this command",
   usage: "<status|game> [online|idle|invisible|dnd] [game:str]",
   usageDelim: " ",
-  type: "command",
+  type: "commands",
 };

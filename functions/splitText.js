@@ -6,6 +6,7 @@ module.exports = (str, l) => {
 
 exports.help = {};
 exports.help.name = "splitText";
+exports.help.type = "functions";
 exports.help.description = "Find the last space of a string and cuts it down to a manageable size for use in Discord.";
 exports.conf = {};
 exports.conf.requiredModules = [];

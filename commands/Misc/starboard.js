@@ -54,7 +54,7 @@ exports.help = {
   description: "Stars a message",
   usage: "<messageid:msg>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };
 
 exports.init = (client) => {

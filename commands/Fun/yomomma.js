@@ -24,5 +24,5 @@ exports.help = {
   description: "Yo momma is so fat, yo.",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

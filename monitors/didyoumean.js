@@ -28,4 +28,5 @@ exports.run = async (client, msg) => {
 
 exports.help = {};
 exports.help.name = "didyoumean";
+exports.help.type = "monitors";
 exports.help.description = "Helps users that type in commands incorrectly.";

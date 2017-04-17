@@ -4,7 +4,6 @@ const ratelimit = 1250;
 
 exports.conf = {
   enabled: true,
-  spamProtection: true,
   requiredModules: [],
 };
 
@@ -25,4 +24,5 @@ exports.run = (client, msg) => new Promise((resolve, reject) => {
 
 exports.help = {};
 exports.help.name = "commandSlowMode";
+exports.help.type = "inhibitors";
 exports.help.description = "Slows down the usage of commands, which defaults to per user.";

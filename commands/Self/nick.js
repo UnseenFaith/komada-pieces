@@ -25,5 +25,5 @@ exports.help = {
   description: "Set's the bot's nickname",
   usage: "[nick:str]",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

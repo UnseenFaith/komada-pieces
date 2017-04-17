@@ -29,5 +29,5 @@ exports.help = {
   description: "Insults who you mention",
   usage: "<user:mention>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

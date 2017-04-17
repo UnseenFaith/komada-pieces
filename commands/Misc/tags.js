@@ -47,7 +47,7 @@ exports.help = {
   description: "Server-Specific tags",
   usage: "[action:string] [contents:string] [...]",
   usageDelim: " ",
-  type: "command",
+  type: "commands",
 };
 
 exports.init = async (client) => {

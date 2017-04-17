@@ -27,6 +27,7 @@ module.exports = async (client, error, channel, file, log = false) => {
 
 exports.help = {};
 exports.help.name = "throwError";
+exports.help.type = "functions";
 exports.help.description = "Centralized error debugger, useful for when you want to send an error message and autodelete it. It's able to send logs aswell.";
 exports.conf = {};
 exports.conf.requiredModules = [];

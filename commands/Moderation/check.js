@@ -28,5 +28,5 @@ exports.help = {
   description: "Checks the guild for any user accounts younger than the minimum account age.",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };
