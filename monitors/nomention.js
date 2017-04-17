@@ -14,4 +14,5 @@ exports.run = (client, msg) => {
 
 exports.help = {};
 exports.help.name = "nomention";
+exports.help.type = "monitors";
 exports.help.description = "Did you get ghost-mentioned? This monitor is for you.";

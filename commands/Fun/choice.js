@@ -24,5 +24,5 @@ exports.help = {
   description: "Makes a decision for you given some choices.",
   usage: "<choices:str> [...]",
   usageDelim: "|",
-  type: "command",
+  type: "commands",
 };

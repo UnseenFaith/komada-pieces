@@ -41,5 +41,5 @@ exports.help = {
   description: "Sends a quiz and expects a correct answer.",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

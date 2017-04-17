@@ -42,5 +42,5 @@ exports.help = {
   description: "Searches the Urban Dictionary library for a definition to the search term.",
   usage: "<search:str> [resultNum:int]",
   usageDelim: ", ",
-  type: "command",
+  type: "commands",
 };

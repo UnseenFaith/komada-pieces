@@ -118,6 +118,7 @@ exports.deleteTable = tableName =>
 
 exports.help = {};
 exports.help.name = "localstorage";
+exports.help.type = "providers";
 exports.help.description = "Allows you to create a \"local storage\" equivalent from a browser for use in Node.js";
 exports.conf = {};
 exports.conf.requiredModules = ["fs-extra", "node-localstorage"];

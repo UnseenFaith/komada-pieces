@@ -18,5 +18,5 @@ exports.help = {
   description: "Rings a bell on the server shaming the mentioned person",
   usage: "<user:mention>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

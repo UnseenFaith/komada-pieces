@@ -28,5 +28,5 @@ exports.help = {
   description: "Grabs random 'Fuck My Life' quote from the web.",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

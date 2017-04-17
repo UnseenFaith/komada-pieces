@@ -20,5 +20,5 @@ exports.help = {
   description: "Spies on a user, guild, or channel",
   usage: "<role:role|msg:msg|user:user|guild:guild|channel:channel>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

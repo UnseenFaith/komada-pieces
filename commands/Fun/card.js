@@ -28,5 +28,5 @@ exports.help = {
   description: "Draws some random cards from a deck.",
   usage: "<num:int{1,10}>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

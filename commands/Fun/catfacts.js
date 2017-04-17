@@ -24,5 +24,5 @@ exports.help = {
   description: "Let me tell you a misterious cat fact.",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

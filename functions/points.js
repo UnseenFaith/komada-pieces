@@ -56,6 +56,7 @@ module.exports = (client, msg, action) => new Promise(async (resolve, reject) =>
 
 exports.help = {};
 exports.help.name = "points";
+exports.help.type = "functions";
 exports.help.description = "Adds a point system for users accesible through an SQLite database.";
 exports.conf = {};
 exports.conf.requiredModules = [];

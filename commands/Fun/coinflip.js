@@ -18,5 +18,5 @@ exports.help = {
   description: "Flips a (pseudo) fair coin.",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

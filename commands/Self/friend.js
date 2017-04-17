@@ -63,5 +63,5 @@ exports.help = {
   description: "You can 'add', 'remove', 'block' and 'unblock' other users.",
   usage: "<add|remove|block|unblock> <user:mention>",
   usageDelim: " ",
-  type: "command",
+  type: "commands",
 };

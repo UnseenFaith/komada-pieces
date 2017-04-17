@@ -24,5 +24,5 @@ exports.help = {
   description: "Bans a mentioned user. Currently does not require reason (no mod-log)",
   usage: "<member:member> [days:int{1,7}]",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

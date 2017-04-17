@@ -22,5 +22,5 @@ exports.help = {
   description: "This is a test command. What does it do? ",
   usage: "",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };

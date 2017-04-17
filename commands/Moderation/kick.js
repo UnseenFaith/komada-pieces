@@ -23,5 +23,5 @@ exports.help = {
   description: "Kicks a mentioned user. Currently does not require reason (no mod-log)",
   usage: "<member:member>",
   usageDelim: "",
-  type: "command",
+  type: "commands",
 };
