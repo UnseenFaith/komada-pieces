@@ -79,7 +79,7 @@ function runListPieces(client, chan, type, pieces) {
   return chan.sendCode("", piecesMsg).catch(console.error);
 }
 
-exports.run = (client, msg, [type, name, src]) => {
+exports.run = async (client, msg, [type, name, src]) => {
   const pieces = client[{
     command: "commands",
     inhibitor: "commandInhibitors",
