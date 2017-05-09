@@ -6,7 +6,7 @@ async function sendHelpMessage(client, msg, cmd) {
 }
 
 /**
- * Returns a array of dir (including trailing slash) and filename
+ * Returns an array of dir (including trailing slash) and filename
  */
 async function getPiecePath(client, type, name, obj) {
   // Komada base dirs already end with sep
