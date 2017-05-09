@@ -6,12 +6,12 @@ async function sendHelpMessage(client, msg, cmd) {
 }
 
 /**
- * Returns a vector of dir (including trailing slash) and filename
+ * Returns a array of dir (including trailing slash) and filename
  */
 async function getPiecePath(client, type, name, obj) {
   // Komada base dirs already end with sep
-  const category = obj.help.category;
-  const subCategory = obj.help.subCategory;
+  const category = (obj.help ? obj.help.category : null) || "General";
+  const subCategory = (obj.help ? obj.help.subCategory : null) || "General";
   const catDir = (category === "General" ? "" : sep + category) +
     (subCategory === "General" ? "" : sep + subCategory);
   const dir = `${client.clientBaseDir}${type}s${catDir}`;
@@ -36,9 +36,8 @@ async function getPiecePath(client, type, name, obj) {
 async function sendDebugMessage(client, msg, type, name, obj) {
   const [dir, filename] = await getPiecePath(client, type, name, obj);
   msg.channel.sendCode("asciidoc", `location :: ${dir}
-        src ${filename}
-     actual ${name}.js
-Type \`${msg.guildConf.prefix}debug command ${name} src\` to see source`);
+            ${filename}
+Type \`${msg.guildConf.prefix}debug ${type} ${name} src\` to see source`);
 }
 
 async function sendSrcMessage(client, chan, type, name, obj) {
@@ -55,24 +54,53 @@ async function sendSrcMessage(client, chan, type, name, obj) {
   }
 }
 
-exports.run = (client, msg, [type, name, src]) => {
-  const obj = {
-    command: client.commands,
-    inhibitor: client.commandInhibitors,
-    monitor: client.messageMonitors,
-    function: client.funcs,
-    provider: client.providers,
-  }[type].get(name);
-  if (src) {
-    sendSrcMessage(client, msg.channel, type, name, obj).catch(console.error);
-  } else if (type === "command") {
-    sendHelpMessage(client, msg, name)
+function runShowPiece(client, msg, type, name, obj) {
+  if (type === "command") {
+    return sendHelpMessage(client, msg, name)
       .then(() => sendDebugMessage(client, msg, type, name, obj)
         .catch(console.error))
       .catch(console.error);
-  } else {
-    sendDebugMessage(client, msg, type, name, obj).catch(console.error);
   }
+  return sendDebugMessage(client, msg, type, name, obj).catch(console.error);
+}
+
+function runShowPieceSrc(client, msg, type, name, obj) {
+  return sendSrcMessage(client, msg.channel, type, name, obj)
+    .catch(console.error);
+}
+
+function runListPieces(client, chan, type, pieces) {
+  const piecesNames = pieces instanceof Map ?
+    pieces.keyArray() :
+    Object.keys(pieces);
+  const piecesMsg = piecesNames.length > 0 ?
+    piecesNames.reduce((acc, name) => `${acc}, ${name}`) :
+    `No ${type}s loaded`;
+  return chan.sendCode("", piecesMsg).catch(console.error);
+}
+
+exports.run = (client, msg, [type, name, src]) => {
+  const pieces = client[{
+    command: "commands",
+    inhibitor: "commandInhibitors",
+    monitor: "messageMonitors",
+    function: "funcs",
+    provider: "providers",
+  }[type]];
+  if (name === "*") {
+    return runListPieces(client, msg.channel, type, pieces);
+  }
+  const obj = pieces instanceof Map ?
+    pieces.get(name) :
+    pieces[name];
+  if (!obj) {
+    return msg.channel.sendCode("", `That ${type} doesn't exist`)
+      .catch(console.error);
+  }
+  if (src) {
+    return runShowPieceSrc(client, msg, type, name, obj);
+  }
+  return runShowPiece(client, msg, type, name, obj);
 };
 
 exports.conf = {
@@ -87,8 +115,8 @@ exports.conf = {
 
 exports.help = {
   name: "debug",
-  description: "Show debugging info on some thing.",
+  description: "Show debugging info on some thing or list all things.",
   usage: "<command|inhibitor|monitor|function|provider> <name:str> [src]",
   usageDelim: " ",
-  extendedHelp: "",
+  extendedHelp: "Use `*` as name to list all pieces of that type.",
 };
