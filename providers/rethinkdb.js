@@ -58,7 +58,7 @@ exports.all = table => r.table(table) || null;
    *
    * @param {string} table the name of the table.
    * @param {string|number} id the entry's ID.
-   * @returns {?array}
+   * @returns {?object}
    */
 exports.get = (table, id) => r.table(table).get(id) || null;
 
