@@ -1,5 +1,10 @@
-const fs = require("fs-extra-promise");
-const sep = require("path").sep;
+let fs;
+let sep;
+
+exports.init = () => {
+  fs = require("fs-extra-promise"); // eslint-disable-line global-require
+  sep = require("path").sep; // eslint-disable-line global-require
+};
 
 async function sendHelpMessage(client, msg, cmd) {
   return client.commands.get("help").run(client, msg, [cmd]);
@@ -22,11 +27,11 @@ async function getPiecePath(client, type, name, obj) {
     return [`${dir}${sep}`, `${name}.js`];
   } catch (_) {
     // It must be a core piece
-    const dir = `${client.coreBaseDir}${type}s${catDir}`;
+    const dir = `${client.coreBaseDir}${type}s${catDir}`; // eslint-disable-line no-shadow
     try {
       await fs.accessAsync(`${dir}${sep}${name}.js`);
       return [`${dir}${sep}`, `${name}.js`];
-    } catch (_) {
+    } catch (_) { // eslint-disable-line no-shadow
       // Or...maybe not. Can't find it ¯\_(ツ)_/¯
       return [null, null];
     }
