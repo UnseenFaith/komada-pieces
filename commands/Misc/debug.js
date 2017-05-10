@@ -119,4 +119,5 @@ exports.help = {
   usage: "<command|inhibitor|monitor|function|provider> <name:str> [src]",
   usageDelim: " ",
   extendedHelp: "Use `*` as name to list all pieces of that type.",
+  type: "commands",
 };
