@@ -174,7 +174,7 @@ exports.getFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(i
    * @param {string} index the ID of the object inside the array.
    * @returns {?object}
    */
-exports.getFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(id)(uArray).filter(r.row("id").eq(index)).run().then(res => res.length ? res[0] : null);
+exports.getFromArrayByID = (table, id, uArray, index) => r.table(table).get(id)(uArray).filter(r.row("id").eq(index)).run().then(res => res.length ? res[0] : null);
 
   /* Exports for the Download command */
 
