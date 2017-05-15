@@ -155,6 +155,17 @@ exports.updateArrayByID = (table, id, uArray, index, doc) => r.table(table).get(
 exports.removeFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(id).update({ [uArray]: r.row(uArray).deleteAt(index) }).run();
 
   /**
+   * Remove an object from an array given the position of the array, entry ID and table.
+   *
+   * @param {string} table the name of the table.
+   * @param {string|number} id the entry's ID.
+   * @param {string} uArray the name of the array you want to update.
+   * @param {string} index the ID of the object inside the array.
+   * @returns {object}
+   */
+exports.removeFromArrayByID = (table, id, uArray, index) => r.table(table).get(id).update({ [uArray]: r.row(uArray).filter(it => it("id").ne(index)) }).run();
+
+  /**
    * Get an object from an array given the position of the array, entry ID and table.
    *
    * @param {string} table the name of the table.
