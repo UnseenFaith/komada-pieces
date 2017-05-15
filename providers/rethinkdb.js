@@ -23,7 +23,7 @@ exports.hasTable = table => r.tableList().run().then(data => data.includes(table
    * Sync the database.
    *
    * @param {string} table the name of the table you want to sync.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.sync = table => r.table(table).sync().run();
 
@@ -31,7 +31,7 @@ exports.sync = table => r.table(table).sync().run();
    * Creates a new table.
    *
    * @param {string} table the name for the new table.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.createTable = table => r.tableCreate(table).run();
 
@@ -39,7 +39,7 @@ exports.createTable = table => r.tableCreate(table).run();
    * Deletes a table.
    *
    * @param {string} table the name of the table you want to drop.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.deleteTable = table => r.tableDrop(table).run();
 
@@ -58,7 +58,7 @@ exports.all = table => r.table(table) || null;
    *
    * @param {string} table the name of the table.
    * @param {string|number} id the entry's ID.
-   * @returns {?object}
+   * @returns {?Object}
    */
 exports.get = (table, id) => r.table(table).get(id) || null;
 
@@ -66,7 +66,7 @@ exports.get = (table, id) => r.table(table).get(id) || null;
    * Get a random entry from a table.
    *
    * @param {string} table the name of the table.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.getRandom = table => this.all(table).then(data => data[Math.floor(Math.random() * data.length)]);
 
@@ -74,8 +74,8 @@ exports.getRandom = table => this.all(table).then(data => data[Math.floor(Math.r
    * Insert a new document into a table.
    *
    * @param {string} table the name of the table.
-   * @param {object} doc the object you want to insert in the table.
-   * @returns {object}
+   * @param {Object} doc the object you want to insert in the table.
+   * @returns {Object}
    */
 exports.add = (table, doc) => r.table(table).insert(doc).run();
 
@@ -84,8 +84,8 @@ exports.add = (table, doc) => r.table(table).insert(doc).run();
    *
    * @param {string} table the name of the table.
    * @param {string|number} id the entry's ID.
-   * @param {object} doc the object you want to insert in the table.
-   * @returns {object}
+   * @param {Object} doc the object you want to insert in the table.
+   * @returns {Object}
    */
 exports.update = (table, id, doc) => r.table(table).get(id).update(doc).run();
 
@@ -94,8 +94,8 @@ exports.update = (table, id, doc) => r.table(table).get(id).update(doc).run();
    *
    * @param {string} table the name of the table.
    * @param {string|number} id the entry's ID.
-   * @param {object} doc the document in question to replace the current entry's properties.
-   * @returns {object}
+   * @param {Object} doc the document in question to replace the current entry's properties.
+   * @returns {Object}
    */
 exports.replace = (table, id, doc) => r.table(table).get(id).replace(doc).run();
 
@@ -104,7 +104,7 @@ exports.replace = (table, id, doc) => r.table(table).get(id).replace(doc).run();
    *
    * @param {string} table the name of the table.
    * @param {string|number} id the entry's ID.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.delete = (table, id) => r.table(table).get(id).delete().run();
 
@@ -114,8 +114,8 @@ exports.delete = (table, id) => r.table(table).get(id).delete().run();
    * @param {string} table the name of the table.
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
-   * @param {object} doc the object you want to insert in the table.
-   * @returns {object}
+   * @param {Object} doc the object you want to insert in the table.
+   * @returns {Object}
    */
 exports.append = (table, id, uArray, doc) => r.table(table).get(id).update(object => ({ [uArray]: object(uArray).default([]).append(doc) })).run();
 
@@ -126,8 +126,8 @@ exports.append = (table, id, uArray, doc) => r.table(table).get(id).update(objec
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
    * @param {number} index the position of the object inside the array.
-   * @param {object} doc the object you want to insert in the table.
-   * @returns {object}
+   * @param {Object} doc the object you want to insert in the table.
+   * @returns {Object}
    */
 exports.updateArrayByIndex = (table, id, uArray, index, doc) => r.table(table).get(id).update({ [uArray]: r.row(uArray).changeAt(index, r.row(uArray).nth(index).merge(doc)) }).run();
 
@@ -138,8 +138,8 @@ exports.updateArrayByIndex = (table, id, uArray, index, doc) => r.table(table).g
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
    * @param {string} index the ID of the object inside the array.
-   * @param {object} doc the object you want to insert in the table.
-   * @returns {object}
+   * @param {Object} doc the object you want to insert in the table.
+   * @returns {Object}
    */
 exports.updateArrayByID = (table, id, uArray, index, doc) => r.table(table).get(id).update({ [uArray]: r.row(uArray).map(d => r.branch(d("id").eq(index), d.merge(doc), d)) }).run();
 
@@ -150,7 +150,7 @@ exports.updateArrayByID = (table, id, uArray, index, doc) => r.table(table).get(
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
    * @param {number} index the position of the object inside the array.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.removeFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(id).update({ [uArray]: r.row(uArray).deleteAt(index) }).run();
 
@@ -161,7 +161,7 @@ exports.removeFromArrayByIndex = (table, id, uArray, index) => r.table(table).ge
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
    * @param {string} index the ID of the object inside the array.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.removeFromArrayByID = (table, id, uArray, index) => r.table(table).get(id).update({ [uArray]: r.row(uArray).filter(it => it("id").ne(index)) }).run();
 
@@ -172,7 +172,7 @@ exports.removeFromArrayByID = (table, id, uArray, index) => r.table(table).get(i
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
    * @param {number} index the position of the object inside the array.
-   * @returns {object}
+   * @returns {Object}
    */
 exports.getFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(id)(uArray).nth(index).run();
 
@@ -183,7 +183,7 @@ exports.getFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(i
    * @param {string|number} id the entry's ID.
    * @param {string} uArray the name of the array you want to update.
    * @param {string} index the ID of the object inside the array.
-   * @returns {?object}
+   * @returns {?Object}
    */
 exports.getFromArrayByID = (table, id, uArray, index) => r.table(table).get(id)(uArray).filter(r.row("id").eq(index)).run().then(res => res.length ? res[0] : null);
 
