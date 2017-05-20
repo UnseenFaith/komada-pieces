@@ -1,17 +1,17 @@
 exports.run = async(client, msg, [coin, currency]) => {
-    const rp = require("request-promise-native");
-    var c1 = coin.toUpperCase();
-    var c2 = currency.toUpperCase();
+    const snekfetch = require('snekfetch');
+    const c1 = coin.toUpperCase();
+    const c2 = currency.toUpperCase();
     try {
-	const res = await rp.get("https://min-api.cryptocompare.com/data/price?fsym="+c1+"&tsyms="+c2).then(JSON.parse);
-	if (!res[c2]) {
-		msg.reply("There was an error, please make sure you specified an appropriate coin and currency.")
+	const res = await snekfetch.get("https://min-api.cryptocompare.com/data/price?fsym="+c1+"&tsyms="+c2);
+	if (!res.body[c2]) {
+     msg.reply("There was an error, please make sure you specified an appropriate coin and currency.");
 	} else {
-	msg.reply("Current " + c1 + " price is " + res[c2] + " " + c2);
+	 msg.reply("Current " + c1 + " price is " + res.body[c2] + " " + c2);
     }
     } catch (e) {
-    msg.reply("There was an error, please make sure you specified an appropriate coin and currency.");
-  }
+     msg.reply("There was an error, please make sure you specified an appropriate coin and currency.");
+    }
 };
 
 exports.conf = {

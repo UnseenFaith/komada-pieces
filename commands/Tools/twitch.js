@@ -1,30 +1,30 @@
 exports.run = async(client, msg, [twitchName]) => {
-    const rp = require("request-promise-native");
+    const snekfetch = require('snekfetch');
     const moment = require('moment');
-    const client_id = "CLIENT_ID"; //Get from here: https://dev.twitch.tv/docs/v5/guides/authentication/
+    const client_id = "CLIENT_ID_HERE"; //Get From Here: https://dev.twitch.tv/docs/v5/guides/authentication/
     try {
-        const res = await rp.get("https://api.twitch.tv/kraken/channels/" + twitchName + "?client_id=" + client_id).then(JSON.parse);
-        var a = moment(res.created_at);
-        var creationDate = a.format("DD-MM-YYYY");
+        const res = await snekfetch.get("https://api.twitch.tv/kraken/channels/" + twitchName + "?client_id=" + client_id);
+        var a = moment(res.body.created_at);
+        const creationDate = a.format("DD-MM-YYYY");
         const twitchInfo = {
             "description": "",
             "color": 6570406,
             "thumbnail": {
-                "url": res.logo
+                "url": res.body.logo
             },
             "author": {
-                "name": res.display_name,
+                "name": res.body.display_name,
                 "icon_url": "https://i.imgur.com/OQwQ8z0.jpg",
-                "url": res.url
+                "url": res.body.url
             },
             "fields": [{
                     "name": "Account ID",
-                    "value": res._id,
+                    "value": res.body._id,
                     "inline": true
                 },
                 {
                     "name": "Followers",
-                    "value": res.followers,
+                    "value": res.body.followers,
                     "inline": true
                 },
                 {
@@ -34,7 +34,7 @@ exports.run = async(client, msg, [twitchName]) => {
                 },
                 {
                     "name": "Channel Views",
-                    "value": res.views,
+                    "value": res.body.views,
                     "inline": true
                 }
             ]
@@ -63,7 +63,7 @@ exports.conf = {
 
 exports.help = {
     name: "twitch",
-    description: "Get info of twitch acc",
+    description: "Returns information on a Twitch.tv Account",
     usage: "<name:str>",
     usageDelim: "",
 };
