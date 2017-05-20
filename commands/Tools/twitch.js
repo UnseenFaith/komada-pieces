@@ -39,7 +39,7 @@ exports.run = async(client, msg, [twitchName]) => {
                 }
             ]
         };
-        msg.channel.sendMessage("Fetching info for " + twitchName + "...").then(msg => {
+        msg.channel.send("Fetching info for " + twitchName + "...").then(msg => {
             msg.edit({
                 embed: twitchInfo
             })
