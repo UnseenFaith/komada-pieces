@@ -1,4 +1,6 @@
 const clientID = "CLIENT_ID_HERE"; //https://dev.twitch.tv/docs/v5/guides/authentication/
+
+/* eslint-disable no-underscore-dangle */
 exports.run = async (client, msg, [twitchName]) => {
   const snekfetch = require("snekfetch");
   const moment = require("moment");
