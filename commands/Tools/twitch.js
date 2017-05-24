@@ -1,53 +1,24 @@
-exports.run = async(client, msg, [twitchName]) => {
-    const snekfetch = require('snekfetch');
-    const moment = require('moment');
-    const client_id = "CLIENT_ID_HERE"; //Get From Here: https://dev.twitch.tv/docs/v5/guides/authentication/
-    try {
-        const res = await snekfetch.get("https://api.twitch.tv/kraken/channels/" + twitchName + "?client_id=" + client_id);
-        var a = moment(res.body.created_at);
-        const creationDate = a.format("DD-MM-YYYY");
-        const twitchInfo = {
-            "description": "",
-            "color": 6570406,
-            "thumbnail": {
-                "url": res.body.logo
-            },
-            "author": {
-                "name": res.body.display_name,
-                "icon_url": "https://i.imgur.com/OQwQ8z0.jpg",
-                "url": res.body.url
-            },
-            "fields": [{
-                    "name": "Account ID",
-                    "value": res.body._id,
-                    "inline": true
-                },
-                {
-                    "name": "Followers",
-                    "value": res.body.followers,
-                    "inline": true
-                },
-                {
-                    "name": "Created On",
-                    "value": creationDate,
-                    "inline": true
-                },
-                {
-                    "name": "Channel Views",
-                    "value": res.body.views,
-                    "inline": true
-                }
-            ]
-        };
-        msg.channel.send("Fetching info for " + twitchName + "...").then(msg => {
-            msg.edit({
-                embed: twitchInfo
-            })
-        });
-    } catch (e) {
-        msg.reply("Unable to find account. Did you spell it correctly?");
-        console.log("Error in twitch.js: " + e);
-    }
+const clientID = "CLIENT_ID_HERE"; //https://dev.twitch.tv/docs/v5/guides/authentication/
+exports.run = async (client, msg, [twitchName]) => {
+  const snekfetch = require("snekfetch");
+  const moment = require("moment");
+  try {
+    const res = await snekfetch.get(`https://api.twitch.tv/kraken/channels/${twitchName}?client_id=${clientID}`);
+    const creationDate = moment(res.body.created_at).format("DD-MM-YYYY");
+    const embed = new client.methods.Embed()
+      .setColor(6570406)
+      .setThumbnail(res.body.logo)
+      .setAuthor(res.body.display_name, "https://i.imgur.com/OQwQ8z0.jpg", res.body.url)
+      .addField("Account ID", res.body._id, true)
+      .addField("Followers", res.body.followers, true)
+      .addField("Created On", creationDate, true)
+      .addField("Channel Views", res.body.views, true);
+    const reply = await msg.channel.send(`Fetching info for ${twitchName}...`);
+    await reply.edit({ embed });
+  } catch (e) {
+    msg.reply("Unable to find account. Did you spell it correctly?");
+    console.log(`Error in twitch.js: ${e}`);
+  }
 };
 
 exports.conf = {
