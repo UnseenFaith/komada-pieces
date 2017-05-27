@@ -143,5 +143,5 @@ exports.help.description = "Allows you use SQLite functionality throughout Komad
 exports.conf = {};
 exports.conf.moduleName = "sqlite";
 exports.conf.enabled = true;
-exposts.conf.requiredFuncs = ["createDBSchema", "validateData", "parseTags"];
+exports.conf.requiredFuncs = ["createDBSchema", "validateData", "parseTags"];
 exports.conf.requiredModules = ["sqlite", "fs-extra-promise"];
