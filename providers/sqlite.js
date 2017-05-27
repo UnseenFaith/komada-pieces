@@ -5,6 +5,7 @@ const config = {
   moduleName: "sqlite",
   enabled: true,
   baseLocation: "./bwd/db/sqlite",
+  requiredFuncs: ["createDBSchema", "validateData", "parseTags"],
 };
 exports.conf = config;
 
