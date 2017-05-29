@@ -6,32 +6,34 @@ const quiz = [
   { q: "Who's a good boy? **Who's a good boy???**", a: ["you are", "i am"] },
 ];
 
-exports.run = (client, msg) => {
+const options = {
+  max: 1,
+  time: 30000,
+  errors: ["time"],
+};
+
+exports.run = async (client, msg) => {
   const item = quiz[Math.floor(Math.random() * quiz.length)];
-  msg.channel.sendMessage(item.q)
-    .then(() => {
-      msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), {
-        max: 1,
-        time: 30000,
-        errors: ["time"],
-      })
-        .then((collected) => {
-          if (client.funcs.includes("points")) {
-            client.funcs.points(client, collected.first(), "add").catch(err => client.funcs.log(err.stack, "error"));
-          }
-          msg.channel.sendMessage(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
-        })
-        .catch(() => msg.channel.sendMessage("Seems no one got it! Oh well."));
-    });
+  await msg.channel.send(item.q);
+  try {
+    const collected = await msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), options);
+    client.funcs.points(client, collected.first(), "add");
+    return msg.channel.send(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
+  } catch (e) {
+    if (e) return client.funcs.log(e, "error");
+    return msg.channel.send("Seems no one got it! Oh well.");
+  }
 };
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  selfbot: false,
+  runIn: ["text", "dm", "group"],
   aliases: [],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: ["points"],
+  requiredModules: [],
 };
 
 exports.help = {
@@ -39,4 +41,5 @@ exports.help = {
   description: "Sends a quiz and expects a correct answer.",
   usage: "",
   usageDelim: "",
+  type: "commands",
 };

@@ -1,30 +1,32 @@
-const levenshtein = require("fast-levenshtein");
-
 exports.conf = {
   enabled: true,
+  requiredModules: ["fast-levenshtein"],
 };
 
-exports.run = (client, msg) => {
-  return new Promise((resolve, reject) => {
-    const conf = client.funcs.confs.get(msg.guild);
-    let prefixLength = conf.prefix.length;
-    if (client.config.prefixMention.test(msg.content)) prefixLength = client.config.prefixMention.exec(msg.content)[0].length + 1;
-    const command = msg.content.slice(prefixLength).split(" ")[0].toLowerCase();
-    if ((msg.content.startsWith(conf.prefix) || client.config.prefixMention.test(msg.content))
-    && !(client.commands.has(command) || client.aliases.has(command))) {
-      let distances = [];
-      client.commands.forEach((val, cmd) => {
-        distances.push({
-          "dist" : levenshtein.get(cmd, command),
-          "cmd" : cmd
-        });
-      });
-      distances.sort((a,b) => {
-        return a.dist - b.dist;
-      });
-      reject(`Did you mean \`${conf.prefix + distances[0].cmd}\` ?`);
-    } else {
-      resolve();
+exports.run = async (client, msg) => {
+  const levenshtein = require("fast-levenshtein"); // eslint-disable-line global-require
+  if (msg.author.bot) return;
+  if (client.config.selfbot && msg.author.id !== client.user.id) return;
+
+  const conf = client.configuration.get(msg.guild);
+  const prefixLength = client.funcs.parseCommand(client, msg, true);
+  if (!prefixLength) return;
+  const command = client.funcs.parseCommand(client, msg);
+  if (command.length && !(client.commands.has(command) || client.aliases.has(command))) {
+    const distances = [];
+    client.commands.filter(c => c.conf.permLevel <= msg.member.permLevel).forEach((val, cmd) => distances.push({
+      dist: levenshtein.get(cmd, command),
+      cmd,
+    }));
+    distances.sort((a, b) => a.score < b.score ? 1 : -1); // eslint-disable-line no-confusing-arrow
+    if (distances[0] && distances[0].dist <= 1) {
+      const message = await msg.channel.send(`|\`❔\`| Did you mean \`${conf.prefix + distances[0].cmd}\`?`);
+      setTimeout(() => { if (message.deletable) message.delete(); }, 10000);
     }
-  });
+  }
 };
+
+exports.help = {};
+exports.help.name = "didyoumean";
+exports.help.type = "monitors";
+exports.help.description = "Helps users that type in commands incorrectly.";

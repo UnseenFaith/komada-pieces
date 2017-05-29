@@ -1,5 +1,5 @@
-const LocalStorage = require("node-localstorage").LocalStorage;
-const fs = require("fs-extra");
+let LocalStorage;
+let fs;
 
 const tables = [];
 const config = {
@@ -15,6 +15,8 @@ exports.debug = (client) => {
 
 exports.init = client =>
    new Promise((resolve, reject) => {
+     LocalStorage = require("node-localstorage").LocalStorage;
+     fs = require("fs-extra");
      fs.ensureDir(config.baseLocation, (e) => {
        if (e) console.error(e);
        try {
@@ -35,8 +37,7 @@ exports.init = client =>
          client.funcs.log(`Loaded ${c} tables in ${config.moduleName} database.`);
        });
      });
-   })
-;
+   });
 
 exports.get = (table, key) =>
    new Promise((resolve, reject) => {
@@ -46,8 +47,7 @@ exports.get = (table, key) =>
      } catch (e) {
        reject("Key not found");
      }
-   })
-;
+   });
 
 exports.has = (table, key) =>
    new Promise((resolve, reject) => {
@@ -57,8 +57,7 @@ exports.has = (table, key) =>
      } catch (e) {
        reject(e);
      }
-   })
-;
+   });
 
 exports.set = (table, key, value) =>
    new Promise((resolve, reject) => {
@@ -68,8 +67,7 @@ exports.set = (table, key, value) =>
        console.log(e);
        reject(e);
      }
-   })
-;
+   });
 
 exports.delete = (table, key) =>
    new Promise((resolve, reject) => {
@@ -79,8 +77,7 @@ exports.delete = (table, key) =>
        console.log(e);
        reject(e);
      }
-   })
-;
+   });
 
 exports.hasTable = tableName =>
    new Promise((resolve, reject) => {
@@ -90,8 +87,7 @@ exports.hasTable = tableName =>
        console.log(e);
        reject(e);
      }
-   })
-;
+   });
 
 exports.createTable = tableName =>
    new Promise((resolve, reject) => {
@@ -101,8 +97,7 @@ exports.createTable = tableName =>
        console.log(e);
        reject(e);
      }
-   })
-;
+   });
 
 exports.deleteTable = tableName =>
    new Promise((resolve, reject) => {
@@ -119,5 +114,11 @@ exports.deleteTable = tableName =>
        console.log(e);
        reject(e);
      }
-   })
-;
+   });
+
+exports.help = {};
+exports.help.name = "localstorage";
+exports.help.type = "providers";
+exports.help.description = "Allows you to create a \"local storage\" equivalent from a browser for use in Node.js";
+exports.conf = {};
+exports.conf.requiredModules = ["fs-extra", "node-localstorage"];

@@ -7,10 +7,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eslachance/komada-pieces.git"
+    "url": "git+https://github.com/dirigeants/komada-pieces.git"
   },
   "license": "ISC",
-  "homepage": "https://github.com/eslachance/komada-pieces#readme",
+  "homepage": "https://github.com/dirigeants/komada-pieces#readme",
   "devDependencies": {
     "eslint": "^3.10.2",
     "eslint-config-airbnb-base": "^11.0.1",

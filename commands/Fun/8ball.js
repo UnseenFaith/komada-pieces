@@ -2,20 +2,21 @@ const answers = ["Maybe.", "Certainly not.", "I hope so.", "Not in your wildest 
 
 exports.run = (client, msg) => {
   if (msg.content.endsWith("?")) {
-    msg.reply(`🎱 ${answers[Math.floor(Math.random() * answers.length)]}`).catch(err => client.funcs.log(err.stack, "error"));
+    msg.reply(`🎱 ${answers[Math.floor(Math.random() * answers.length)]}`).catch(err => client.funcs.log(err, "error"));
   } else {
-    msg.reply("🎱 That doesn't look like a question, try again please.").catch(err => client.funcs.log(err.stack, "error"));
+    msg.reply("🎱 That doesn't look like a question, try again please.").catch(err => client.funcs.log(err, "error"));
   }
 };
 
 exports.conf = {
   enabled: true,
   selfbot: false,
-  guildOnly: false,
+  runIn: ["text", "dm", "group"],
   aliases: ["8", "magic", "8ball", "mirror"],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
+  requiredModules: [],
 };
 
 exports.help = {
@@ -23,4 +24,5 @@ exports.help = {
   description: "Magic 8-Ball, does exactly what the toy does. (Results may vary)",
   usage: "<query:str>",
   usageDelim: "",
+  type: "commands",
 };
