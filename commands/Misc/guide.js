@@ -34,12 +34,12 @@ const guides = {
 exports.run = (client, msg, [keyword]) => {
   if (guides[keyword]) {
     const details = guides[keyword];
-    msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
+    return msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
   } else if (keyword === "list") {
-    msg.channel.send(`Available keywords for this command:\n${Object.keys(guides).join(", ")}`);
+    return msg.channel.send(`Available keywords for this command:\n${Object.keys(guides).join(", ")}`);
   } else {
     const details = guides.home;
-    msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
+    return msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
   }
 };
 

@@ -3,7 +3,7 @@ exports.run = (client, msg) => {
   client.funcs.log("Testing Debug", "debug");
   client.funcs.log("Testing Warn", "warn");
   client.funcs.log("Testing Error", "error");
-  msg.reply("Test Executed");
+  return msg.reply("Test Executed");
 };
 
 exports.conf = {

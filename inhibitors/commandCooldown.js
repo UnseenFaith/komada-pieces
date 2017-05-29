@@ -44,7 +44,7 @@ exports.run = (client, msg, cmd) => new Promise((resolve, reject) => {
 
     if (id === msg.guild.id) message += "\nThe cooldown for this command is shared across the guild.";
 
-    msg.channel.sendCode("asciidoc", message);
+    msg.channel.send(message, {code: 'asciidoc'});
   }
 
   function createTimeOut() {
