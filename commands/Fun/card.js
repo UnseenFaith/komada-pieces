@@ -9,7 +9,7 @@ exports.run = (client, msg, [num]) => {
     lines.push(`**${ranks[Math.floor(Math.random() * ranks.length)]}**${suits[Math.floor(Math.random() * suits.length)]}`);
   }
 
-  msg.channel.send(lines.join(", "));
+  return msg.channel.send(lines.join(", "));
 };
 
 exports.conf = {

@@ -1,5 +1,5 @@
 exports.run = (client, msg) => {
-  msg.reply(`You flipped ${Math.random() > 0.5 ? "Heads" : "Tails"}.`);
+  return msg.reply(`You flipped ${Math.random() > 0.5 ? "Heads" : "Tails"}.`);
 };
 
 exports.conf = {

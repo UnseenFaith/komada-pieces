@@ -1,7 +1,6 @@
 exports.run = async (client, msg, [search, resultNum = 0]) => {
   const rp = require("request-promise-native"); // eslint-disable-line global-require
-  const baseUrl = "http://api.urbandictionary.com/v0/define?term=";
-  const theUrl = baseUrl + search;
+  const baseUrl = `http://api.urbandictionary.com/v0/define?term=${search}`;
   try {
     const body = await rp.get(theUrl).then(JSON.parse);
     if (resultNum > 1) resultNum -= 1;

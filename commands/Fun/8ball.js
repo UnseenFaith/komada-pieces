@@ -2,9 +2,9 @@ const answers = ["Maybe.", "Certainly not.", "I hope so.", "Not in your wildest 
 
 exports.run = (client, msg) => {
   if (msg.content.endsWith("?")) {
-    msg.reply(`🎱 ${answers[Math.floor(Math.random() * answers.length)]}`).catch(err => client.funcs.log(err, "error"));
+    return msg.reply(`🎱 ${answers[Math.floor(Math.random() * answers.length)]}`).catch(err => client.funcs.log(err, "error"));
   } else {
-    msg.reply("🎱 That doesn't look like a question, try again please.").catch(err => client.funcs.log(err, "error"));
+    return msg.reply("🎱 That doesn't look like a question, try again please.").catch(err => client.funcs.log(err, "error"));
   }
 };
 
