@@ -1,12 +1,7 @@
 let db;
 let fs;
 
-const config = {
-  moduleName: "sqlite",
-  enabled: true,
-  baseLocation: "./bwd/db/sqlite",
-};
-exports.conf = config;
+const baseLocation: "./bwd/db/sqlite";
 
 const dataSchema = {
   str: {
@@ -52,8 +47,8 @@ exports.init = async client => new Promise(async (resolve, reject) => {
   db = require("sqlite");
   fs = require("fs-extra-promise");
   try {
-    await fs.ensureDir(config.baseLocation);
-    await db.open(`${config.baseLocation}/db.sqlite`);
+    await fs.ensureDir(baseLocation);
+    await db.open(`${baseLocation}/db.sqlite`);
     await db.run("CREATE TABLE IF NOT EXISTS dataProviderSchemas (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, name, schema)");
     const rows = await db.all("SELECT * FROM dataProviderSchemas");
     rows.map(r => schemaCache.set(r.name, JSON.parse(r.schema)));
@@ -146,4 +141,7 @@ exports.help.name = "sqlite";
 exports.help.type = "providers";
 exports.help.description = "Allows you use SQLite functionality throughout Komada.";
 exports.conf = {};
+exports.conf.moduleName = "sqlite";
+exports.conf.enabled = true;
+exports.conf.requiredFuncs = ["createDBSchema", "validateData", "parseTags"];
 exports.conf.requiredModules = ["sqlite", "fs-extra-promise"];
