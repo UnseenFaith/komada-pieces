@@ -39,7 +39,7 @@ const init = client => new Promise(async (resolve, reject) => {
   resolve();
 });
 
-module.exports = (client, msg, action) => new Promise(async (resolve, reject) => {
+const func = (client, msg, action) => new Promise(async (resolve, reject) => {
   try {
     if (!client.config.init.includes("points")) {
       await init(client);
@@ -54,9 +54,11 @@ module.exports = (client, msg, action) => new Promise(async (resolve, reject) =>
   }
 });
 
-exports.help = {};
-exports.help.name = "points";
-exports.help.type = "functions";
-exports.help.description = "Adds a point system for users accesible through an SQLite database.";
-exports.conf = {};
-exports.conf.requiredModules = [];
+func.conf = { requiredModules: [] };
+func.help = {
+  name: "points",
+  type: "functions",
+  description: "Adds a point system for users accesible through an SQLite database.",
+};
+
+module.exports = func;
