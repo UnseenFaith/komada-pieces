@@ -158,7 +158,7 @@ const parseTagData = (data, disallow, tag) => {
   return toRet;
 };
 
-module.exports = (command, disallowCharacters) => {
+const func = (command, disallowCharacters) => {
   /** *
    parseTags("[asda:asd{1.5,2.2}] <Bar> [asd] [...]").then(tags => console.log(util.inspect(tags, false, null))).catch(e => console.log(e + ""));
   ***/
@@ -228,3 +228,12 @@ module.exports = (command, disallowCharacters) => {
   });
   return tags;
 };
+
+func.conf = { requiredModules: [] };
+func.help = {
+  name: "parseTags",
+  type: "functions",
+  description: "Parse the tags (Required for the SQLite provider)",
+};
+
+module.exports = func;

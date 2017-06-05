@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-module.exports = (embed) => {
+const func = (embed) => {
   if (embed.constructor.name !== "MessageEmbed") throw new Error("You must provide an embed object.");
   const output = {
     title: embed.title || null,
@@ -45,9 +45,12 @@ module.exports = (embed) => {
   return output;
 };
 
-exports.help = {};
-exports.help.name = "embed";
-exports.help.type = "functions";
-exports.help.description = "Sanitize Discord MessageEmbed objects.";
-exports.conf = {};
-exports.conf.requiredModules = [];
+func.conf = { requiredModules: [] };
+func.help = {
+  name: "embed",
+  type: "functions",
+  description: "Sanitize Discord MessageEmbed objects.",
+};
+
+module.exports = func;
+

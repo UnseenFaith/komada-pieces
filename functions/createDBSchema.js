@@ -1,4 +1,4 @@
-module.exports = (data) => {
+const func = (data) => {
   const toRet = [];
   const names = [];
 
@@ -38,3 +38,13 @@ module.exports = (data) => {
 
   return toRet;
 };
+
+func.conf = { requiredModules: [] };
+func.help = {
+  name: "createDBSShema",
+  type: "functions",
+  description: "Create a database shema. (Required for the SQLite provider)",
+};
+
+module.exports = func;
+

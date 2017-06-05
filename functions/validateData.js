@@ -1,4 +1,4 @@
-module.exports = (data, properties, values) => {
+const func = (data, properties, values) => {
   const names = [];
   const compiled = [];
   properties.forEach((p, i) => {
@@ -71,3 +71,13 @@ module.exports = (data, properties, values) => {
     }
   });
 };
+
+func.conf = { requiredModules: [] };
+func.help = {
+  name: "validateData",
+  type: "functions",
+  description: "Validate the data. (Required for the SQLite provider)",
+};
+
+module.exports = func;
+
