@@ -1,0 +1,71 @@
+const util = require('util');
+const stripIndents = require('common-tags').stripIndents;
+
+exports.run = (client, msg, [...args]) => {
+  return Promise.all([
+    new Promise((resolve, reject) => {
+      let ev;
+      try {
+        ev = eval(args.join(' '));
+        if(ev && typeof ev.then == 'function' && typeof ev.catch == 'function')   {
+          ev.then(resolve).catch(reject);
+          return;
+        }
+        resolve(ev);
+      } catch(err) {
+        reject(err);
+      }
+    }),
+  ])
+  .then(resolutions => {
+    let out;
+    const res = resolutions[0];
+    let insp = util.inspect(res, {
+      depth: 0
+    });
+    if(typeof res == 'object' && typeof res != 'string')  {
+      out = require('util').inspect(res);
+      if(typeof out == 'string' && out.length > 1900)   {
+          out = res.toString();
+      }
+    }else{
+      out = res;
+    }
+    return msg.channel.sendMessage(stripIndents`
+      ➡ **Input:**\`\`\`js
+      ${args.join(' ')}\`\`\`
+      🔍 **Inspect:**\`\`\`js
+      ${insp.toString().replace(client.token, 'Redacted').replace(client.user.email, 'Redacted')}\`\`\``)
+      .catch(err => {
+        client.funcs.log(err.stack, "error");
+      });
+  })
+  .catch(err => {
+    return msg.channel.sendMessage(stripIndents`
+      ➡ **Input:**\`\`\`js
+      ${args.join(' ')}\`\`\`
+      ❌ **Error:**\`\`\`LDIF
+      ${(err.message || err)}\`\`\``)
+      .catch(err => {
+        client.funcs.log(err.stack, "error");
+      });
+  }).catch(err => {
+    client.funcs.log(err.stack, "error");
+  });
+};
+
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: ["ev"],
+  permLevel: 10,
+  botPerms: [],
+  requiredFuncs: [],
+};
+
+exports.help = {
+  name: "eval",
+  description: "Evaluates arbitrary Javascript. Reserved for bot owner.",
+  usage: "<expression:str>",
+  usageDelim: "",
+};
