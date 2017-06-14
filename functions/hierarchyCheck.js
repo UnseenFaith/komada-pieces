@@ -3,7 +3,6 @@ Check if user is higher in guild's role hierarchy
 ...Basically an easy way to stop mods from performing actions on admins, etc
 
     Usage:
-        - client scope
         - executor is the user object of the user executing the moderation command
         - target is the user object of the user the moderation command is affecting
         - guild is the guild object of the guild the command is being executed in
@@ -11,23 +10,14 @@ Check if user is higher in guild's role hierarchy
         - boolean true if executor is higher
         - boolean false if executor is lower or equal
         - boolean false if either user isn't in the guild
+**/
 
-        **/
+const func = async (executor, target, guild = null) => {
+  if (guild) {
+    const executorMember = await guild.fetchMember(executor);
+    const targetMember = await guild.fetchMember(target);
 
-const func = async (client, executor, target, guild = null) => {
-  try {
-      if (guild) {
-          const executorMember = await guild.fetchMember(executor);
-          const targetMember = await guild.fetchMember(target);
-
-          if (executorMember.highestRole.position > targetMember.highestRole.position) {
-              return true;
-          }
-      }
-  } catch (err) {
-      client.emit("log", err, "error");
-      client.emit("log", "Failed to fetch guildMember(s). Probably at least one isn't in this guild?", "error");
-      return false;
+    return executorMember.highestRole.position > targetMember.highestRole.position;
   }
   return false;
 };
