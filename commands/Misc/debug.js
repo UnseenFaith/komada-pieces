@@ -12,17 +12,17 @@ const getPiecePath = async (client, type, name, obj) => {
     (subCategory === "General" ? "" : sep + subCategory);
   const clientDir = `${client.clientBaseDir}${type}s${catDir}`;
 
-    // See if it's a client piece (or overrides a core piece)
+  // See if it's a client piece (or overrides a core piece)
   return fs.accessAsync(`${clientDir}${sep}${name}.js`)
-      .then(() => [`${clientDir}${sep}`, `${name}.js`])
-      .catch(() => {
-        // It must be a core piece
-        const coreDir = `${client.coreBaseDir}${type}s${catDir}`;
-        return fs.accessAsync(`${coreDir}${sep}${name}.js`)
-            .then(() => [`${coreDir}${sep}`, `${name}.js`])
-            // Or...maybe not. Can't find it ¯\_(ツ)_/¯
-            .catch(() => [null, null]);
-      });
+  .then(() => [`${clientDir}${sep}`, `${name}.js`])
+  .catch(() => {
+    // It must be a core piece
+    const coreDir = `${client.coreBaseDir}${type}s${catDir}`;
+    return fs.accessAsync(`${coreDir}${sep}${name}.js`)
+      .then(() => [`${coreDir}${sep}`, `${name}.js`])
+      // Or...maybe not. Can't find it ¯\_(ツ)_/¯
+      .catch(() => [null, null]);
+  });
 };
 
 const sendDebugMessage = async (client, msg, type, name, obj) => {

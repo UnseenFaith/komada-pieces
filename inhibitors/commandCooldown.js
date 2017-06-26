@@ -1,10 +1,12 @@
-// Add this to the export.conf of any command to implement a cooldown per command
-//
-// cooldowns: {
-//     //Is the cooldown per player or guild
-//     scope: "guild",
-//     time: 15000
-// }
+/*
+  Add this to the exports.conf of any command to implement a cooldown per command
+
+  exports.conf.cooldowns: {
+    // Is the cooldown per user or guild
+    scope: "guild",
+    time: 15000
+  }
+*/
 
 const cooldowns = new Map();
 
@@ -12,7 +14,7 @@ const createTimeOut = (commandCooldown, commandName, id) => setTimeout(() => {
   const userCooldownBooleans = cooldowns.get(id);
   delete userCooldownBooleans[commandName];
 
-                // delete key in map when its value is empty, just to keep the map clear
+  // delete key in map when its value is empty, just to keep the map clear
   if (Object.keys(userCooldownBooleans).length === 0) {
     cooldowns.delete(id);
   }
@@ -21,14 +23,14 @@ const createTimeOut = (commandCooldown, commandName, id) => setTimeout(() => {
 exports.run = (client, msg, cmd) => {
   const commandName = cmd.help.name;
 
-        // default behaviour
-        // change this to msg.channel.id or msg.guild.id to override default behaviour
+  // default behaviour
+  // change this to msg.channel.id or msg.guild.id to override default behaviour
   let id = msg.author.id;
 
   const standardCooldown = 1000;
   let commandCooldown = standardCooldown;
 
-        // Override default behaviour if command.conf has cooldown variable
+  // Override default behaviour if command.conf has cooldown variable
   if (cmd.conf.cooldown) {
     if (cmd.conf.cooldown.scope === "guild") {
       id = msg.guild.id;

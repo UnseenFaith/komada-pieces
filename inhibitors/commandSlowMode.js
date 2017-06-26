@@ -3,7 +3,6 @@ const timers = [];
 const ratelimit = 1250;
 
 exports.run = (client, msg) => {
-    // also available: msg.server.id , msg.channel.id
   const slowmodeLevel = msg.author.id;
   const entry = slowmode.get(slowmodeLevel);
   if (!entry) { slowmode.set(slowmodeLevel, true); }

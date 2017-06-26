@@ -6,8 +6,8 @@ exports.run = async (client, msg, [coin, currency]) => {
   try {
     const res = await request.get(`https://min-api.cryptocompare.com/data/price?fsym=${c1}&tsyms=${c2}`);
     await msg.reply(!res.body[c2] ?
-        "There was an error, please make sure you specified an appropriate coin and currency." :
-        `Current ${c1} price is ${res.body[c2]} ${c2}`);
+      "There was an error, please make sure you specified an appropriate coin and currency." :
+      `Current ${c1} price is ${res.body[c2]} ${c2}`);
   } catch (e) {
     msg.reply("There was an error, please make sure you specified an appropriate coin and currency.");
   }
