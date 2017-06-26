@@ -1,13 +1,13 @@
-let r;
 const config = {
-  moduleName: "rethink",
+  moduleName: "rethinkdb",
   enabled: true,
   db: "Komada",
+  requiredModules: ["rethinkdbdash"],
 };
 
-  /* eslint-disable no-confusing-arrow */
+const r = require("rethinkdbdash")(config.db);
 
-exports.eval = r;
+exports.exec = r;
 
   /* Table methods */
 
@@ -77,7 +77,9 @@ exports.getRandom = table => this.all(table).then(data => data[Math.floor(Math.r
    * @param {Object} doc the object you want to insert in the table.
    * @returns {Object}
    */
-exports.add = (table, doc) => r.table(table).insert(doc).run();
+exports.create = (table, doc) => r.table(table).insert(doc).run();
+exports.set = (...args) => this.create(...args);
+exports.insert = (...args) => this.create(...args);
 
   /**
    * Update a document from a table given its ID.
@@ -185,17 +187,14 @@ exports.getFromArrayByIndex = (table, id, uArray, index) => r.table(table).get(i
    * @param {string} index the ID of the object inside the array.
    * @returns {?Object}
    */
-exports.getFromArrayByID = (table, id, uArray, index) => r.table(table).get(id)(uArray).filter(r.row("id").eq(index)).run().then(res => res.length ? res[0] : null);
+exports.getFromArrayByID = (table, id, uArray, index) => r.table(table).get(id)(uArray).filter(r.row("id").eq(index)).run().then(res => (res.length ? res[0] : null));
 
   /* Exports for the Download command */
 
-exports.help = {};
-exports.help.name = "rethinkdb";
-exports.help.type = "providers";
-exports.help.description = "Allows you use rethinkDB functionality throughout Komada.";
 exports.conf = config;
-exports.conf.requiredModules = ["rethinkdbdash"];
 
-exports.init = () => {
-  r = require("rethinkdbdash")(config.db);
+exports.help = {
+  name: "rethinkdb",
+  type: "providers",
+  description: "Allows you use rethinkDB functionality throughout Komada.",
 };
