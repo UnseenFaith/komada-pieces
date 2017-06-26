@@ -1,11 +1,7 @@
 exports.run = async (client, msg, [member, days = 1]) => {
-  try {
-    await msg.guild.ban(member, days);
-    await msg.guild.unban(member);
-    msg.channel.send(`${member.username}#${member.discriminator} was softbanned.`);
-  } catch (e) {
-    msg.reply(`There was an error trying to ban: ${e}`);
-  }
+  await msg.guild.ban(member, days);
+  await msg.guild.unban(member);
+  return msg.channel.send(`${member.tag} was softbanned.`);
 };
 
 exports.conf = {

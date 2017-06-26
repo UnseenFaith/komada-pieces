@@ -1,12 +1,7 @@
 exports.run = async (client, msg, [nick = ""]) => {
-  try {
-    await msg.member.setNickname(nick);
-    const text = nick.length ? `Nickname changed to ${nick}` : "Nickname Cleared";
-    const response = await msg.channel.send(text);
-    response.delete(5000);
-  } catch (e) {
-    client.funcs.log(e, "error");
-  }
+  await msg.member.setNickname(nick);
+  const text = nick.length > 0 ? `Nickname changed to ${nick}` : "Nickname Cleared";
+  return msg.channel.send(text).then(m => m.delete(5000));
 };
 
 exports.conf = {

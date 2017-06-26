@@ -1,11 +1,8 @@
+const request = require("snekfetch");
+
 exports.run = async (client, msg) => {
-  const rp = require("request-promise-native"); // eslint-disable-line global-require
-  try {
-    const res = await rp.get("http://api.yomomma.info").then(JSON.parse);
-    msg.channel.send(`📢 **Yomomma joke:** *${res.joke}*`);
-  } catch (e) {
-    client.funcs.log(e, "error");
-  }
+  const res = await request.get("http://api.yomomma.info").then(data => JSON.parse(data.text));
+  return msg.channel.send(`📢 **Yomomma joke:** *${res.joke}*`);
 };
 
 exports.conf = {
@@ -16,7 +13,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["request-promise-native"],
+  requiredModules: ["snekfetch"],
 };
 
 exports.help = {

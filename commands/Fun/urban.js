@@ -1,28 +1,25 @@
-exports.run = async (client, msg, [search, resultNum = 0]) => {
-  const rp = require("request-promise-native"); // eslint-disable-line global-require
-  const baseUrl = `http://api.urbandictionary.com/v0/define?term=${search}`;
-  try {
-    const body = await rp.get(theUrl).then(JSON.parse);
-    if (resultNum > 1) resultNum -= 1;
+const request = require("snekfetch");
 
-    const result = body.list[resultNum];
-    if (!result) throw new Error("No entry found.");
-    const wdef = result.definition.length > 1000
+exports.run = async (client, msg, [search, resultNum = 0]) => {
+  const url = `http://api.urbandictionary.com/v0/define?term=${search}`;
+  const body = await request.get(url).then(data => JSON.parse(data.text));
+  if (resultNum > 1) resultNum--;
+
+  const result = body.list[resultNum];
+  if (!result) return msg.channel.send("No entry found.");
+  const wdef = result.definition.length > 1000
       ? `${client.funcs.splitText(result.definition, 1000)}...`
       : result.definition;
-    const definition = [
-      `**Word:** ${search}`,
-      "",
-      `**Definition:** ${resultNum += 1} out of ${body.list.length}\n_${wdef}_`,
-      "",
-      `**Example:**\n${result.example}`,
-      `<${result.permalink}>`,
-    ].join("\n");
+  const definition = [
+    `**Word:** ${search}`,
+    "",
+    `**Definition:** ${resultNum + 1} out of ${body.list.length}\n_${wdef}_`,
+    "",
+    `**Example:**\n${result.example}`,
+    `<${result.permalink}>`,
+  ].join("\n");
 
-    await msg.channel.send(definition);
-  } catch (e) {
-    msg.channel.send("No entry found.");
-  }
+  return msg.channel.send(definition);
 };
 
 exports.conf = {
@@ -33,7 +30,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: ["splitText"],
-  requiredModules: ["request-promise-native"],
+  requiredModules: ["snekfetch"],
 };
 
 exports.help = {

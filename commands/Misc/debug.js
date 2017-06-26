@@ -1,88 +1,61 @@
-let fs;
-let sep;
+const fs = require("fs-extra-promise");
+const { sep } = require("path");
 
-exports.init = () => {
-  fs = require("fs-extra-promise"); // eslint-disable-line global-require
-  sep = require("path").sep; // eslint-disable-line global-require
-};
+const sendHelpMessage = (client, msg, cmd) => client.commands.get("help").run(client, msg, [cmd]);
 
-async function sendHelpMessage(client, msg, cmd) {
-  return client.commands.get("help").run(client, msg, [cmd]);
-}
-
-/**
- * Returns an array of dir (including trailing slash) and filename
- */
-async function getPiecePath(client, type, name, obj) {
+/* Returns an array of dir (including trailing slash) and filename */
+const getPiecePath = async (client, type, name, obj) => {
   // Komada base dirs already end with sep
   const category = (obj.help ? obj.help.category : null) || "General";
   const subCategory = (obj.help ? obj.help.subCategory : null) || "General";
   const catDir = (category === "General" ? "" : sep + category) +
     (subCategory === "General" ? "" : sep + subCategory);
-  const dir = `${client.clientBaseDir}${type}s${catDir}`;
+  const clientDir = `${client.clientBaseDir}${type}s${catDir}`;
 
-  try {
     // See if it's a client piece (or overrides a core piece)
-    await fs.accessAsync(`${dir}${sep}${name}.js`);
-    return [`${dir}${sep}`, `${name}.js`];
-  } catch (_) {
-    // It must be a core piece
-    const dir = `${client.coreBaseDir}${type}s${catDir}`; // eslint-disable-line no-shadow
-    try {
-      await fs.accessAsync(`${dir}${sep}${name}.js`);
-      return [`${dir}${sep}`, `${name}.js`];
-    } catch (_) { // eslint-disable-line no-shadow
-      // Or...maybe not. Can't find it ¯\_(ツ)_/¯
-      return [null, null];
-    }
-  }
-}
+  return fs.accessAsync(`${clientDir}${sep}${name}.js`)
+      .then(() => [`${clientDir}${sep}`, `${name}.js`])
+      .catch(() => {
+        // It must be a core piece
+        const coreDir = `${client.coreBaseDir}${type}s${catDir}`;
+        return fs.accessAsync(`${coreDir}${sep}${name}.js`)
+            .then(() => [`${coreDir}${sep}`, `${name}.js`])
+            // Or...maybe not. Can't find it ¯\_(ツ)_/¯
+            .catch(() => [null, null]);
+      });
+};
 
-async function sendDebugMessage(client, msg, type, name, obj) {
+const sendDebugMessage = async (client, msg, type, name, obj) => {
   const [dir, filename] = await getPiecePath(client, type, name, obj);
-  msg.channel.sendCode("asciidoc", `location :: ${dir}
-            ${filename}
-Type \`${msg.guildConf.prefix}debug ${type} ${name} src\` to see source`);
-}
+  return msg.channel.send(`location :: ${dir}\n${filename}\nType \`${msg.guildConf.prefix}debug ${type} ${name} src\` to see source`, { code: "asciidoc" });
+};
 
-async function sendSrcMessage(client, chan, type, name, obj) {
+const sendSrcMessage = async (client, chan, type, name, obj) => {
   const [dir, filename] = await getPiecePath(client, type, name, obj);
   if (dir && filename) {
     const src = await fs.readFileAsync(dir + filename);
-    if (src) {
-      chan.sendCode("js", src, { split: true });
-    } else {
-      chan.sendCode("", "Something went wrong; could not load source");
-    }
-  } else {
-    chan.sendCode("", "Could not find piece");
+    if (src) return chan.send("js", src, { code: "js", split: true });
+    return chan.send("Something went wrong; could not load source", { code: true });
   }
-}
+  return chan.send("Could not find piece", { code: true });
+};
 
-function runShowPiece(client, msg, type, name, obj) {
-  if (type === "command") {
-    return sendHelpMessage(client, msg, name)
-      .then(() => sendDebugMessage(client, msg, type, name, obj)
-        .catch(console.error))
-      .catch(console.error);
-  }
-  return sendDebugMessage(client, msg, type, name, obj).catch(console.error);
-}
+const runShowPiece = async (client, msg, type, name, obj) => {
+  if (type === "command") await sendHelpMessage(client, msg, name);
+  return sendDebugMessage(client, msg, type, name, obj);
+};
 
-function runShowPieceSrc(client, msg, type, name, obj) {
-  return sendSrcMessage(client, msg.channel, type, name, obj)
-    .catch(console.error);
-}
+const runShowPieceSrc = (client, msg, type, name, obj) => sendSrcMessage(client, msg.channel, type, name, obj);
 
-function runListPieces(client, chan, type, pieces) {
+const runListPieces = (client, chan, type, pieces) => {
   const piecesNames = pieces instanceof Map ?
     pieces.keyArray() :
     Object.keys(pieces);
   const piecesMsg = piecesNames.length > 0 ?
     piecesNames.reduce((acc, name) => `${acc}, ${name}`) :
     `No ${type}s loaded`;
-  return chan.sendCode("", piecesMsg).catch(console.error);
-}
+  return chan.send(piecesMsg, { code: true }).catch(console.error);
+};
 
 exports.run = async (client, msg, [type, name, src]) => {
   const pieces = client[{
@@ -99,7 +72,7 @@ exports.run = async (client, msg, [type, name, src]) => {
     pieces.get(name) :
     pieces[name];
   if (!obj) {
-    return msg.channel.sendCode("", `That ${type} doesn't exist`)
+    return msg.channel.send(`That ${type} doesn't exist`, { code: true })
       .catch(console.error);
   }
   if (src) {

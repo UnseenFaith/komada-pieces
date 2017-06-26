@@ -1,10 +1,6 @@
 exports.run = async (client, msg, [member]) => {
-  try {
-    await msg.guild.ban(member);
-    msg.channel.send(`${member.user.username}#${member.user.discriminator} was banned.`);
-  } catch (e) {
-    msg.reply(`There was an error trying to ban: ${e}`);
-  }
+  await msg.guild.ban(member);
+  return msg.channel.send(`${member.user.tag} was banned.`);
 };
 
 exports.conf = {

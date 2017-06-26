@@ -2,12 +2,7 @@ const slowmode = new Map();
 const timers = [];
 const ratelimit = 1250;
 
-exports.conf = {
-  enabled: true,
-  requiredModules: [],
-};
-
-exports.run = (client, msg) => new Promise((resolve, reject) => {
+exports.run = (client, msg) => {
     // also available: msg.server.id , msg.channel.id
   const slowmodeLevel = msg.author.id;
   const entry = slowmode.get(slowmodeLevel);
@@ -18,11 +13,16 @@ exports.run = (client, msg) => new Promise((resolve, reject) => {
     delete timers[slowmodeLevel];
   }, ratelimit);
 
-  if (entry) reject();
-  else resolve();
-});
+  return !!entry;
+};
 
-exports.help = {};
-exports.help.name = "commandSlowMode";
-exports.help.type = "inhibitors";
-exports.help.description = "Slows down the usage of commands, which defaults to per user.";
+exports.conf = {
+  enabled: true,
+  requiredModules: [],
+};
+
+exports.help = {
+  name: "commandSlowMode",
+  type: "inhibitors",
+  description: "Slows down the usage of commands, which defaults to per user.",
+};

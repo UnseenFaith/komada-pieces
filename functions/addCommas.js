@@ -1,4 +1,4 @@
-const func = (nStr) => {
+module.exports = (nStr) => {
   nStr += "";
   const x = nStr.split(".");
   let x1 = x[0];
@@ -10,11 +10,9 @@ const func = (nStr) => {
   return x1 + x2;
 };
 
-func.conf = { requiredModules: [] };
-func.help = {
+module.exports.conf = { requiredModules: [] };
+module.exports.help = {
   name: "addCommas",
   type: "functions",
   description: "Add commas in every three characters.",
 };
-
-module.exports = func;

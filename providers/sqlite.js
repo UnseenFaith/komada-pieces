@@ -1,7 +1,7 @@
-let db;
-let fs;
+const db = require("sqlite");
+const fs = require("fs-extra-promise");
 
-const baseLocation: "./bwd/db/sqlite";
+const baseLocation = "./bwd/db/sqlite";
 
 const dataSchema = {
   str: {
@@ -43,9 +43,7 @@ const dataSchema = {
 
 const schemaCache = new Map();
 
-exports.init = async client => new Promise(async (resolve, reject) => {
-  db = require("sqlite");
-  fs = require("fs-extra-promise");
+exports.init = async () => new Promise(async (resolve, reject) => {
   try {
     await fs.ensureDir(baseLocation);
     await db.open(`${baseLocation}/db.sqlite`);

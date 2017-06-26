@@ -1,18 +1,17 @@
-exports.exist = (client, msg) => new Promise((resolve, reject) => {
+const moment = require("moment");
+
+exports.exist = (client, msg) => {
   if (!msg.guildConf.pins) {
-    if (!msg.guild.channels.exists("name", "pins")) reject("Please create the _pins_ channel and try again.");
-    else {
-      client.funcs.confs.set("pins", msg.guild.channels.find("name", "pins").id);
-      resolve();
-    }
-  } else resolve();
-});
+    if (!msg.guild.channels.exists("name", "pins")) throw "Please create the _pins_ channel and try again.";
+    return client.funcs.confs.set("pins", msg.guild.channels.find("name", "pins").id);
+  }
+  return null;
+};
 
 exports.run = async (client, msg, [message]) => {
-  const moment = require("moment"); // eslint-disable-line global-require
   try {
     await this.exist(client, msg);
-    client.channels.get(msg.guildConf.pins).send(`:pushpin: **${message.author.username}#${message.author.discriminator}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`);
+    client.channels.get(msg.guildConf.pins).send(`:pushpin: **${message.author.tag}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`);
   } catch (e) {
     msg.reply(e);
   }

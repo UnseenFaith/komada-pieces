@@ -1,4 +1,4 @@
-const run = (client, msg, action) => new Promise(async (resolve) => { // eslint-disable-line consistent-return
+module.exports = async (client, msg, action) => {
   const db = client.providers.get("sqlite");
   if (!db) return msg.reply("You didn't install the SQlite provider. Download it from our Pieces repo!");
 
@@ -19,46 +19,29 @@ const run = (client, msg, action) => new Promise(async (resolve) => { // eslint-
       // no default
     }
     await db.update(client, "quiz", ["points"], [points], "userID", msg.author.id);
-    resolve(points);
+    return points;
   } catch (e) {
     client.funcs.log(e, "error");
     const points = action === "add" ? 1 : 0;
     await db.update(client, "quiz", ["points"], [points], "userID", msg.author.id);
-    resolve(points);
+    return points;
   }
-});
+};
 
-const init = client => new Promise(async (resolve, reject) => {
-  if (!client.providers.first()) reject("No Database Found");
+module.exports.conf = { requiredModules: [] };
+module.exports.help = {
+  name: "points",
+  type: "functions",
+  description: "Adds a point system for users accesible through an SQLite database.",
+};
+
+module.exports.init = async (client) => {
+  if (!client.providers.first()) throw "No Database Found";
   const res = await client.databaseModules.get("sqlite").hasTable(client, "quiz");
   if (!res) {
     const keys = "<userID:str> <points:int>";
     client.databaseModules.get("sqlite").createTable(client, "quiz", keys);
   }
   client.config.init.push("points");
-  resolve();
-});
-
-const func = (client, msg, action) => new Promise(async (resolve, reject) => {
-  try {
-    if (!client.config.init.includes("points")) {
-      await init(client);
-      const p = await run(client, msg, action);
-      resolve(p);
-    } else {
-      const p = await run(client, msg, action);
-      resolve(p);
-    }
-  } catch (e) {
-    reject(e);
-  }
-});
-
-func.conf = { requiredModules: [] };
-func.help = {
-  name: "points",
-  type: "functions",
-  description: "Adds a point system for users accesible through an SQLite database.",
+  return null;
 };
-
-module.exports = func;

@@ -3,9 +3,8 @@ exports.run = async (client, msg, [...choices]) => {
 
   if (validChoices.length === 1) {
     return msg.reply("You only gave me one choice, dummy.");
-  } else {
-    return msg.reply(`I think you should go with "${choices[Math.floor(Math.random() * choices.length)]}"`);
   }
+  return msg.reply(`I think you should go with "${choices[Math.floor(Math.random() * choices.length)]}"`);
 };
 
 exports.conf = {

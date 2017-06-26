@@ -17,7 +17,6 @@ exports.run = async (client, msg) => {
   await msg.channel.send(item.q);
   try {
     const collected = await msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), options);
-    client.funcs.points(client, collected.first(), "add");
     return msg.channel.send(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
   } catch (e) {
     if (e) return client.funcs.log(e, "error");
