@@ -24,7 +24,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
       return msg.channel.send(row.contents);
     }
     default: {
-      if (contents) {
+      if (!contents) {
         const rows = await this.provider.getAll("tags");
         return msg.channel.send(`**List of tags**: \`\`\`${rows.map(r => r.name).join(" | ")}\`\`\``);
       }

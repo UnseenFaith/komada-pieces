@@ -51,11 +51,10 @@ exports.deleteTable = table => db.query(`DROP TABLE '${table}'`);
  * @returns {Promise<Object[]>}
  */
 exports.getAll = async (table, { key = null, value = null }) => {
-  if (key) {
-    return db.query(`SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}'`)
-      .then(([rows]) => rows);
-  }
-  return db.query(`SELECT * FROM \`${table}\``)
+  const query = key ?
+    `SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}'` :
+    `SELECT * FROM \`${table}\``;
+  return db.query(query)
       .then(([rows]) => rows);
 };
 

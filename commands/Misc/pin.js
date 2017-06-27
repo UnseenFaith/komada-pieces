@@ -1,20 +1,17 @@
 const moment = require("moment");
+require("moment-duration-format");
 
-exports.exist = (client, msg) => {
-  if (!msg.guildConf.pins) {
-    if (!msg.guild.channels.exists("name", "pins")) throw "Please create the _pins_ channel and try again.";
-    return client.funcs.confs.set("pins", msg.guild.channels.find("name", "pins").id);
-  }
-  return null;
+const generateMessage = (message) => {
+  const starTime = moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss");
+  const starFooter = `${message.author.tag} in #${message.channel.name} (ID: ${message.id})`;
+  return `📌 ${message.cleanContent}\n\n- ${starTime} by ${starFooter}`;
 };
 
 exports.run = async (client, msg, [message]) => {
-  try {
-    await this.exist(client, msg);
-    client.channels.get(msg.guildConf.pins).send(`:pushpin: **${message.author.tag}** in #${message.channel.name} - ${moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")}\n${message.cleanContent}`);
-  } catch (e) {
-    msg.reply(e);
-  }
+  const channel = msg.guild.channels.find("name", "pins");
+  if (!channel) return msg.channel.send("Please create the _pins_ channel and try again.");
+  if (channel.postable === false) return msg.channel.send(`I require the permission SEND_MESSAGES to post messages in ${channel} channel.`);
+  return channel.send(generateMessage(message));
 };
 
 exports.conf = {
@@ -25,7 +22,7 @@ exports.conf = {
   permLevel: 2,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["moment"],
+  requiredModules: ["moment", "moment-duration-format"],
 };
 
 exports.help = {
@@ -34,8 +31,4 @@ exports.help = {
   usage: "<messageid:msg>",
   usageDelim: "",
   type: "commands",
-};
-
-exports.init = (client) => {
-  if (!client.funcs.confs.hasKey("pins")) client.funcs.confs.addKey("pins", "");
 };

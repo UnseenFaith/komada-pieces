@@ -8,22 +8,16 @@ exports.init = async (client) => {
   if (!(await this.provider.hasTable("starboard"))) await this.provider.createTable("starboard");
 };
 
-exports.exist = (client, msg) => {
-  if (!msg.guildConf.starboard) {
-    if (!msg.guild.channels.exists("name", "starboard")) throw "Please create the _starboard_ channel and try again.";
-    return client.funcs.confs.set(msg.guild, "starboard", msg.guild.channels.find("name", "starboard").id);
-  }
-  return null;
-};
-
 const generateMessage = (message) => {
   const starTime = moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss");
   const starFooter = `${message.author.tag} in #${message.channel.name} (ID: ${message.id})`;
-  return `${message.cleanContent} - ${starTime} by ${starFooter}`;
+  return `⭐ ${message.cleanContent}\n\n- ${starTime} by ${starFooter}`;
 };
 
 exports.run = async (client, msg, [message]) => {
-  await this.exist(client, msg);
+  const channel = msg.guild.channels.find("name", "starboard");
+  if (!channel) return msg.channel.send("Please create the _starboard_ channel and try again.");
+  if (channel.postable === false) return msg.channel.send(`I require the permission SEND_MESSAGES to post messages in ${channel} channel.`);
   if (!(await this.provider.has("starboard", message.guild.id))) await this.provider.set("starboard", message.guild.id, []);
   const msgArray = JSON.parse(await this.provider.get("starboard", message.guild.id));
   if (msgArray.includes(message.id)) return message.channel.send("This message has already been starred.");
@@ -31,10 +25,10 @@ exports.run = async (client, msg, [message]) => {
   const options = {};
   if (message.attachments.first()) options.files = message.attachments.map(a => ({ name: a.filename, attachment: a.url }));
 
-  await client.channels.get(msg.guildConf.starboard).send(generateMessage(message), options);
+  await channel.send(generateMessage(message), options);
   msgArray.push(message.id);
   await this.provider.replace("starboard", message.guild.id, JSON.stringify(msgArray));
-  await message.addReaction("⭐");
+  await message.addReaction("⭐").catch(() => null);
   return msg.channel.send("Successfully starred!");
 };
 
