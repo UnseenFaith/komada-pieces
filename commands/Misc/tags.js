@@ -10,7 +10,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
   switch (action) {
     case "add": {
       await this.provider.insert("tags", contents.split(" ")[0], { count: 0, contents: contents.split(" ").slice(1).join(" ") });
-      return msg.reply(`The tag \`${contents[0]}\` has been added.`);
+      return msg.reply(`The tag \`${contents.split(" ")[0]}\` has been added.`);
     }
     case "delete": {
       const row = await this.provider.get("tags", contents);
@@ -20,17 +20,18 @@ exports.run = async (client, msg, [action, ...contents]) => {
     }
     case "random": {
       const row = await this.provider.getRandom("tags");
-      await this.provider.update("tags", row.id, { count: row.count++ });
+      await this.provider.update("tags", row.id, { count: row.count + 1 });
       return msg.channel.send(row.contents);
     }
     default: {
       if (!contents) {
         const rows = await this.provider.getAll("tags");
+        if (rows[0] === undefined) return msg.channel.send("There is no tag available.");
         return msg.channel.send(`**List of tags**: \`\`\`${rows.map(r => r.name).join(" | ")}\`\`\``);
       }
       const row = await this.provider.get("tags", contents);
       if (!row) return msg.reply("tag name not found.");
-      await this.provider.update("tags", row.id, { count: row.count++ });
+      await this.provider.update("tags", row.id, { count: row.count + 1 });
       return msg.channel.send(row.contents);
     }
   }
@@ -40,7 +41,7 @@ exports.conf = {
   enabled: true,
   selfbot: false,
   runIn: ["text", "dm", "group"],
-  aliases: ["tags"],
+  aliases: ["tag"],
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
@@ -48,7 +49,7 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "tag",
+  name: "tags",
   description: "Server-Specific tags",
   usage: "[add|delete|random] [contents:string] [...]",
   usageDelim: " ",
