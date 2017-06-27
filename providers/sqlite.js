@@ -44,7 +44,7 @@ exports.deleteTable = table => db.run(`DROP TABLE '${table}'`);
  */
 exports.getAll = (table, options = {}) => {
   const query = options.key && options.value ?
-    `SELECT * FROM '${table}' WHERE '${options.key}' = '${this.sanitize(options.value)}'` :
+    `SELECT * FROM '${table}' WHERE ${options.key} = ${this.sanitize(options.value)}` :
     `SELECT * FROM '${table}'`;
   return db.all(query);
 };
@@ -57,9 +57,9 @@ exports.getAll = (table, options = {}) => {
  * @returns {Promise<?Object>}
  */
 exports.get = (table, key, value = null) => {
-  const query = key && !value ?
-    `SELECT * FROM ${table} WHERE 'id' = '${key}'` :
-    `SELECT * FROM ${table} WHERE '${key}' = '${this.sanitize(value)}'`;
+  const query = !value ?
+    `SELECT * FROM ${table} WHERE id = ${this.sanitize(key)}` :
+    `SELECT * FROM ${table} WHERE ${key} = ${this.sanitize(value)}`;
   return db.get(query).catch(() => null);
 };
 
@@ -69,7 +69,7 @@ exports.get = (table, key, value = null) => {
  * @param {string} value The value to search by 'id'.
  * @returns {Promise<boolean>}
  */
-exports.has = (table, value) => db.get(`SELECT id FROM '${table}' WHERE 'id' = '${this.sanitize(value)}'`)
+exports.has = (table, value) => db.get(`SELECT id FROM '${table}' WHERE id = ${this.sanitize(value)}`)
   .then(() => true)
   .catch(() => false);
 
@@ -89,7 +89,7 @@ exports.getRandom = table => db.get(`SELECT * FROM '${table}' ORDER BY RANDOM() 
  */
 exports.create = (table, row, data) => {
   const { keys, values } = this.serialize(Object.assign(data, { id: row }));
-  return db.run(`INSERT INTO ${table} (${keys.join(", ")}) VALUES('${values.map(this.sanitize).join("', '")}')`);
+  return db.run(`INSERT INTO '${table}' (${keys.join(", ")}) VALUES(${values.map(this.sanitize).join(", ")})`);
 };
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
@@ -102,8 +102,8 @@ exports.insert = (...args) => this.create(...args);
  * @returns {Promise<Object>}
  */
 exports.update = (table, row, data) => {
-  const inserts = Object.entries(data).map(value => `'${value[0]}' = '${this.sanitize(value[1])}'`).join(", ");
-  return db.run(`UPDATE '${table}' SET ${inserts} WHERE 'id' = '${row}'`);
+  const inserts = Object.entries(data).map(value => `${value[0]} = ${this.sanitize(value[1])}`).join(", ");
+  return db.run(`UPDATE '${table}' SET ${inserts} WHERE id = '${row}'`);
 };
 exports.replace = (...args) => this.update(...args);
 
@@ -113,7 +113,7 @@ exports.replace = (...args) => this.update(...args);
  * @param {string} row The row id.
  * @returns {Promise<Object>}
  */
-exports.delete = (table, row) => db.run(`DELETE FROM '${table}' WHERE 'id' = '${this.sanitize(row)}'`);
+exports.delete = (table, row) => db.run(`DELETE FROM '${table}' WHERE id = ${this.sanitize(row)}`);
 
 /**
  * Get a row from an arbitrary SQL query.
@@ -153,12 +153,28 @@ exports.serialize = (data) => {
   return { keys, values };
 };
 
-exports.sanitize = string => (typeof string === "string" ? string.replace(/'/g, "''") : string);
+exports.sanitize = (string) => {
+  if (typeof string === "string") return `'${string.replace(/'/g, "''")}'`;
+  else if (string instanceof Object) return `'${JSON.stringify(string).replace(/'/g, "''")}'`;
+  else if (string === null) return "null";
+  return string;
+};
+
+exports.CONSTANTS = {
+  String: "TEXT",
+  Integer: "INTEGER",
+  Float: "INTEGER",
+  AutoID: "INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE",
+  Timestamp: "DATETIME",
+  AutoTS: "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL",
+  Boolean: "BOOLEAN",
+};
 
 exports.conf = {
   moduleName: "sqlite",
   enabled: true,
   requiredModules: ["sqlite", "fs-nextra"],
+  sql: true,
 };
 
 exports.help = {
