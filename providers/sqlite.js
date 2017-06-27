@@ -25,7 +25,7 @@ exports.hasTable = table => db.get(`SELECT name FROM sqlite_master WHERE type='t
  * @param {string} rows The rows for the table.
  * @returns {Promise<Object>}
  */
-exports.createTable = (table, rows) => db.run(`CREATE TABLE '${table}' (${rows.join(", ")});`);
+exports.createTable = (table, rows) => db.run(`CREATE TABLE '${table}' (${rows});`);
 
 /**
  * Drops a table.
@@ -43,7 +43,7 @@ exports.deleteTable = table => db.run(`DROP TABLE '${table}'`);
  * @returns {Promise<Object[]>}
  */
 exports.getAll = (table, options = {}) => {
-  const query = options.key && options.value ?
+  const query = options.key ?
     `SELECT * FROM ${table} WHERE ${options.key} = '${options.value}'` :
     `SELECT * FROM ${table}`;
   return db.all(query);
@@ -89,7 +89,7 @@ exports.getRandom = table => db.get(`SELECT * FROM ${table} ORDER BY RANDOM() LI
  */
 exports.create = (table, row, data) => {
   const { keys, values } = this.serialize(Object.assign(data, { id: row }));
-  return db.run(`INSERT INTO ${table} (${keys.join(", ")}) VALUES('${values.join("', '")}')`);
+  return db.run(`INSERT INTO ${table} (${keys.join(", ")}) VALUES('${values.map(this.sanitize).join("', '")}')`);
 };
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
@@ -102,7 +102,7 @@ exports.insert = (...args) => this.create(...args);
  * @returns {Promise<Object>}
  */
 exports.update = (table, row, data) => {
-  const inserts = Object.entries(data).map(value => `'${value[0]}' = '${value[1]}'`).join(", ");
+  const inserts = Object.entries(data).map(value => `'${value[0]}' = '${this.sanitize(value[1])}'`).join(", ");
   return db.run(`UPDATE '${table}' SET ${inserts} WHERE id = '${row}'`);
 };
 exports.replace = (...args) => this.update(...args);
@@ -152,6 +152,8 @@ exports.serialize = (data) => {
 
   return { keys, values };
 };
+
+exports.sanitize = string => (typeof string === "string" ? string.replace(/'/g, "''") : string);
 
 exports.conf = {
   moduleName: "sqlite",

@@ -12,6 +12,8 @@ exports.run = async (client, msg, [action, ...contents]) => {
   contents = contents[0] ? contents.join(" ") : null;
   switch (action) {
     case "add": {
+      const row = await this.provider.get("tags", contents);
+      if (row) return msg.reply("this tag already exists.");
       await this.provider.insert("tags", contents.split(" ")[0], { count: 0, contents: contents.split(" ").slice(1).join(" ") });
       return msg.reply(`The tag \`${contents.split(" ")[0]}\` has been added.`);
     }
