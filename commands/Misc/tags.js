@@ -2,7 +2,10 @@ exports.providerEngine = "json";
 
 exports.init = async (client) => {
   if (client.providers.has(this.providerEngine)) this.provider = client.providers.get(this.providerEngine);
-  if (!(await this.provider.hasTable("tags"))) await this.provider.createTable("tags");
+  if (!(await this.provider.hasTable("tags"))) {
+    const SQLCreate = ["count INTEGER NOT NULL DEFAULT 0", "id TEXT NOT NULL UNIQUE", "contents TEXT NOT NULL"];
+    await this.provider.createTable("tags", SQLCreate);
+  }
 };
 
 exports.run = async (client, msg, [action, ...contents]) => {
@@ -27,7 +30,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
       if (!contents) {
         const rows = await this.provider.getAll("tags");
         if (rows[0] === undefined) return msg.channel.send("There is no tag available.");
-        return msg.channel.send(`**List of tags**: \`\`\`${rows.map(r => r.name).join(" | ")}\`\`\``);
+        return msg.channel.send(`**List of tags**: \`\`\`${rows.map(r => r.id).join(" | ")}\`\`\``);
       }
       const row = await this.provider.get("tags", contents);
       if (!row) return msg.reply("tag name not found.");

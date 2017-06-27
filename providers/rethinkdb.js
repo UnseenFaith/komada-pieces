@@ -1,11 +1,10 @@
 const config = {
   moduleName: "rethinkdb",
   enabled: true,
-  db: "Komada",
   requiredModules: ["rethinkdbdash"],
 };
 
-const r = require("rethinkdbdash")(config.db);
+const r = require("rethinkdbdash")();
 
 exports.exec = r;
 

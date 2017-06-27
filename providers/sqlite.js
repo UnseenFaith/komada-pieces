@@ -25,7 +25,7 @@ exports.hasTable = table => db.get(`SELECT name FROM sqlite_master WHERE type='t
  * @param {string} rows The rows for the table.
  * @returns {Promise<Object>}
  */
-exports.createTable = (table, rows) => db.run(`CREATE TABLE '${table}' (${rows});`);
+exports.createTable = (table, rows) => db.run(`CREATE TABLE '${table}' (${rows.join(", ")});`);
 
 /**
  * Drops a table.
@@ -39,11 +39,12 @@ exports.deleteTable = table => db.run(`DROP TABLE '${table}'`);
 /**
  * Get all documents from a table.
  * @param {string} table The name of the table to fetch from.
+ * @param {Object} options key and value.
  * @returns {Promise<Object[]>}
  */
-exports.getAll = (table, { key = null, value = null }) => {
-  const query = key ?
-    `SELECT * FROM ${table} WHERE ${key} = '${value}'` :
+exports.getAll = (table, options = {}) => {
+  const query = options.key && options.value ?
+    `SELECT * FROM ${table} WHERE ${options.key} = '${options.value}'` :
     `SELECT * FROM ${table}`;
   return db.all(query);
 };
@@ -88,7 +89,7 @@ exports.getRandom = table => db.get(`SELECT * FROM ${table} ORDER BY RANDOM() LI
  */
 exports.create = (table, row, data) => {
   const { keys, values } = this.serialize(Object.assign(data, { id: row }));
-  return db.run(`INSERT INTO ${table} (${keys.join(", ")}) VALUES(${values.join(", ")})`);
+  return db.run(`INSERT INTO ${table} (${keys.join(", ")}) VALUES('${values.join("', '")}')`);
 };
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
