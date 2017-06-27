@@ -52,10 +52,10 @@ exports.deleteTable = table => db.query(`DROP TABLE '${table}'`);
  */
 exports.getAll = async (table, { key = null, value = null }) => {
   if (key) {
-    db.query(`SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}'`)
+    return db.query(`SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}'`)
       .then(([rows]) => rows);
   }
-  db.query(`SELECT * FROM \`${table}\``)
+  return db.query(`SELECT * FROM \`${table}\``)
       .then(([rows]) => rows);
 };
 
@@ -67,14 +67,12 @@ exports.getAll = async (table, { key = null, value = null }) => {
  * @returns {Promise<?Object>}
  */
 exports.get = (table, key, value = null) => {
-  if (key && !value) {
-    db.query(`SELECT * FROM \`${table}\` WHERE \`id\` = '${value}' LIMIT 1`)
-      .then(([rows]) => rows[0])
-      .catch(() => null);
-  }
-  db.query(`SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}' LIMIT 1`)
-      .then(([rows]) => rows[0])
-      .catch(() => null);
+  const query = key && !value ?
+    `SELECT * FROM \`${table}\` WHERE \`id\` = '${value}' LIMIT 1` :
+    `SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}' LIMIT 1`;
+  return db.query(query)
+    .then(([rows]) => rows[0])
+    .catch(() => null);
 };
 
 /**
@@ -133,14 +131,14 @@ exports.delete = (table, row) => db.query(`DELETE FROM \`${table}\` WHERE id = '
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.run = sql => db.query(sql).then(([rows]) => rows[0]); // Returns a result row Best to be used with limit
+exports.run = sql => db.query(sql).then(([rows]) => rows[0]);
 
 /**
  * Get all rows from an arbitrary SQL query.
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.runAll = sql => db.query(sql); // Returns **ALL** result rows
+exports.runAll = sql => db.query(sql);
 exports.exec = (...args) => this.runAll(...args);
 
 /**

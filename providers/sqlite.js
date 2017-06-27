@@ -1,12 +1,12 @@
-const { sep, resolve } = require("path");
+const { resolve } = require("path");
 const db = require("sqlite");
 const fs = require("fs-nextra");
 
 exports.init = async (client) => {
   const baseDir = resolve(client.clientBaseDir, "bwd", "provider", "sqlite");
   await fs.ensureDir(baseDir);
-  await fs.ensureFile(`${baseDir + sep}db.sqlite`);
-  return db.open(`${baseDir + sep}db.sqlite`);
+  await fs.ensureFile(resolve(baseDir, "db.sqlite"));
+  return db.open(resolve(baseDir, "db.sqlite"));
 };
 
 /* Table methods */
@@ -54,8 +54,10 @@ exports.getAll = (table, { key = null, value = null }) => {
  * @returns {Promise<?Object>}
  */
 exports.get = (table, key, value = null) => {
-  if (key && !value) return db.get(`SELECT * FROM ${table} WHERE id = '${key}'`).catch(() => null);
-  return db.get(`SELECT * FROM ${table} WHERE ${key} = '${value}'`).catch(() => null);
+  const query = key && !value ?
+    `SELECT * FROM ${table} WHERE id = '${key}'` :
+    `SELECT * FROM ${table} WHERE ${key} = '${value}'`;
+  return db.get(query).catch(() => null);
 };
 
 /**
@@ -115,14 +117,14 @@ exports.delete = (table, row) => db.run(`DELETE FROM ${table} WHERE id = '${row}
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.run = sql => db.get(sql); // Returns a result row Best to be used with limit
+exports.run = sql => db.get(sql);
 
 /**
  * Get all rows from an arbitrary SQL query.
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.runAll = sql => db.all(sql); // Returns **ALL** result rows
+exports.runAll = sql => db.all(sql);
 
 /**
  * Run arbitrary SQL query.
