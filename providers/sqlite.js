@@ -25,7 +25,7 @@ exports.hasTable = table => db.get(`SELECT name FROM sqlite_master WHERE type='t
  * @param {string} rows The rows for the table.
  * @returns {Promise<Object>}
  */
-exports.createTable = (table, rows) => db.run(`CREATE TABLE '${table}' (${rows});`);
+exports.createTable = (table, rows) => db.run(`CREATE TABLE '${table}' (${rows.join(", ")});`);
 
 /**
  * Drops a table.
@@ -43,9 +43,9 @@ exports.deleteTable = table => db.run(`DROP TABLE '${table}'`);
  * @returns {Promise<Object[]>}
  */
 exports.getAll = (table, options = {}) => {
-  const query = options.key ?
-    `SELECT * FROM ${table} WHERE ${options.key} = '${options.value}'` :
-    `SELECT * FROM ${table}`;
+  const query = options.key && options.value ?
+    `SELECT * FROM '${table}' WHERE '${options.key}' = '${this.sanitize(options.value)}'` :
+    `SELECT * FROM '${table}'`;
   return db.all(query);
 };
 
@@ -58,8 +58,8 @@ exports.getAll = (table, options = {}) => {
  */
 exports.get = (table, key, value = null) => {
   const query = key && !value ?
-    `SELECT * FROM ${table} WHERE id = '${key}'` :
-    `SELECT * FROM ${table} WHERE ${key} = '${value}'`;
+    `SELECT * FROM ${table} WHERE 'id' = '${key}'` :
+    `SELECT * FROM ${table} WHERE '${key}' = '${this.sanitize(value)}'`;
   return db.get(query).catch(() => null);
 };
 
@@ -69,7 +69,7 @@ exports.get = (table, key, value = null) => {
  * @param {string} value The value to search by 'id'.
  * @returns {Promise<boolean>}
  */
-exports.has = (table, value) => db.get(`SELECT id FROM ${table} WHERE id = '${value}'`)
+exports.has = (table, value) => db.get(`SELECT id FROM '${table}' WHERE 'id' = '${this.sanitize(value)}'`)
   .then(() => true)
   .catch(() => false);
 
@@ -78,7 +78,7 @@ exports.has = (table, value) => db.get(`SELECT id FROM ${table} WHERE id = '${va
  * @param {string} table The name of the table.
  * @returns {Promise<Object>}
  */
-exports.getRandom = table => db.get(`SELECT * FROM ${table} ORDER BY RANDOM() LIMIT 1`);
+exports.getRandom = table => db.get(`SELECT * FROM '${table}' ORDER BY RANDOM() LIMIT 1`);
 
 /**
  * Insert a new document into a table.
@@ -103,7 +103,7 @@ exports.insert = (...args) => this.create(...args);
  */
 exports.update = (table, row, data) => {
   const inserts = Object.entries(data).map(value => `'${value[0]}' = '${this.sanitize(value[1])}'`).join(", ");
-  return db.run(`UPDATE '${table}' SET ${inserts} WHERE id = '${row}'`);
+  return db.run(`UPDATE '${table}' SET ${inserts} WHERE 'id' = '${row}'`);
 };
 exports.replace = (...args) => this.update(...args);
 
@@ -113,7 +113,7 @@ exports.replace = (...args) => this.update(...args);
  * @param {string} row The row id.
  * @returns {Promise<Object>}
  */
-exports.delete = (table, row) => db.run(`DELETE FROM ${table} WHERE id = '${row}'`);
+exports.delete = (table, row) => db.run(`DELETE FROM '${table}' WHERE 'id' = '${this.sanitize(row)}'`);
 
 /**
  * Get a row from an arbitrary SQL query.
