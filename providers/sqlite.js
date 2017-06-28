@@ -109,18 +109,33 @@ exports.replace = (...args) => this.update(...args);
 
 /**
  * Delete a document from the table.
- * @param {string} table The name of the directory.
+ * @param {string} table The name of the table.
  * @param {string} row The row id.
  * @returns {Promise<Object>}
  */
 exports.delete = (table, row) => db.run(`DELETE FROM '${table}' WHERE id = ${this.sanitize(row)}`);
 
 /**
+ * Update the columns from a table.
+ * @param {string} table The name of the table.
+ * @param {string[]} columns Array of columns.
+ * @param {array[]} schema Tuples of keys/values from the schema.
+ * @returns {boolean}
+ */
+exports.updateColumns = async (table, columns, schema) => {
+  await db.run(`CREATE TABLE \`temp_table\` (\n${schema.map(s => `\`${s[0]}\` ${s[1]}`).join(",\n")}\n);`);
+  await db.run(`INSERT INTO \`temp_table\` (\`${columns.join("`, `")}\`) SELECT \`${columns.join("`, `")}\` FROM \`${table}\`;`);
+  await db.run(`DROP TABLE \`${table}\`;`);
+  await db.run(`ALTER TABLE \`temp_table\` RENAME TO \`${table}\`;`);
+  return true;
+};
+
+/**
  * Get a row from an arbitrary SQL query.
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.run = sql => db.get(sql);
+exports.runGet = sql => db.get(sql);
 
 /**
  * Get all rows from an arbitrary SQL query.
@@ -134,7 +149,14 @@ exports.runAll = sql => db.all(sql);
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.exec = sql => db.run(sql);
+exports.run = sql => db.run(sql);
+
+/**
+ * Execute arbitrary SQL query.
+ * @param {string} sql The query to execute.
+ * @returns {Promise<Object>}
+ */
+exports.exec = sql => db.exec(sql);
 
 /**
  * Transform NoSQL queries into SQL.
@@ -156,8 +178,7 @@ exports.serialize = (data) => {
 exports.sanitize = (string) => {
   if (typeof string === "string") return `'${string.replace(/'/g, "''")}'`;
   else if (string instanceof Object) return `'${JSON.stringify(string).replace(/'/g, "''")}'`;
-  else if (string === null) return "null";
-  return string;
+  return JSON.stringify(string);
 };
 
 exports.CONSTANTS = {
@@ -167,7 +188,6 @@ exports.CONSTANTS = {
   AutoID: "INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE",
   Timestamp: "DATETIME",
   AutoTS: "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL",
-  Boolean: "BOOLEAN",
 };
 
 exports.conf = {
