@@ -15,13 +15,9 @@ const options = {
 exports.run = async (client, msg) => {
   const item = quiz[Math.floor(Math.random() * quiz.length)];
   await msg.channel.send(item.q);
-  try {
-    const collected = await msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), options);
-    return msg.channel.send(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
-  } catch (e) {
-    if (e) return client.funcs.log(e, "error");
-    return msg.channel.send("Seems no one got it! Oh well.");
-  }
+  return msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), options)
+    .then(collected => msg.channel.send(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`))
+    .catch(() => msg.channel.send("Seems no one got it! Oh well."));
 };
 
 exports.conf = {

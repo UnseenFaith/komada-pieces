@@ -1,13 +1,13 @@
-const { promisify } = require("util");
-const exec = promisify(require("child_process").exec);
+const { exec } = require("child_process");
 
-exports.run = async (client, msg, [input]) => {
-  const result = await exec(input);
-
-  const output = result.stdout ? `**\`OUTPUT\`**${"```sh"}\n${result.stdout}\n${"```"}` : "";
-  const outerr = result.stderr ? `**\`ERROR\`**${"```sh"}\n${result.stderr}\n${"```"}` : "";
-  return msg.send([output, outerr].join("\n"));
-};
+exports.run = (client, msg, [input]) => exec(input, (error, stdout, stderr) => {
+  if (error) {
+    return msg.channel.send(`**\`ERROR\`**${"```sh"}\n${error}\n${"```"}`);
+  }
+  stdout = stdout ? `**\`OUTPUT\`**${"```sh"}\n${stdout}\n${"```"}` : "";
+  stderr = stderr ? `**\`ERROR\`**${"```sh"}\n${stderr}\n${"```"}` : "";
+  return msg.channel.send([stdout, stderr].join("\n"));
+});
 
 exports.conf = {
   enabled: true,

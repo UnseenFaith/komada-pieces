@@ -14,6 +14,7 @@ exports.help = {
   description: "Enables the ability for Guild/Bot owners to decide if they want all messages that initiate a command to be deleted.",
 };
 
+// Uncompatible with Komada SettingGateway
 exports.init = (client) => {
   if (!client.funcs.confs.hasKey("deleteCommand")) {
     client.funcs.confs.addKey("deleteCommand", false);

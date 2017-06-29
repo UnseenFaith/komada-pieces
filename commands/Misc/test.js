@@ -1,3 +1,4 @@
+// Uncompatible with Komada Indev
 exports.run = (client, msg) => {
   client.funcs.log("Testing Log");
   client.funcs.log("Testing Debug", "debug");

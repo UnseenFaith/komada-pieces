@@ -1,3 +1,4 @@
+// TODO: Pending for rewrite.
 module.exports = async (client, msg, action) => {
   const db = client.providers.get("sqlite");
   if (!db) return msg.reply("You didn't install the SQlite provider. Download it from our Pieces repo!");

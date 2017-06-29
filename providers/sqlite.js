@@ -2,6 +2,10 @@ const { resolve } = require("path");
 const db = require("sqlite");
 const fs = require("fs-nextra");
 
+/*
+  This provider requires Node.js 8.1.0
+*/
+
 exports.init = async (client) => {
   const baseDir = resolve(client.clientBaseDir, "bwd", "provider", "sqlite");
   await fs.ensureDir(baseDir);
