@@ -1,4 +1,4 @@
-const fs = require("fs-extra-promise");
+const fs = require("fs-nextra");
 const { sep } = require("path");
 
 const sendHelpMessage = (client, msg, cmd) => client.commands.get("help").run(client, msg, [cmd]);
@@ -13,11 +13,11 @@ const getPiecePath = async (client, type, name, obj) => {
   const clientDir = `${client.clientBaseDir}${type}s${catDir}`;
 
   // See if it's a client piece (or overrides a core piece)
-  return fs.accessAsync(`${clientDir}${sep}${name}.js`)
+  return fs.access(`${clientDir}${sep}${name}.js`)
     .then(() => [`${clientDir}${sep}`, `${name}.js`])
     .catch(() => {
       const coreDir = `${client.coreBaseDir}${type}s${catDir}`;
-      return fs.accessAsync(`${coreDir}${sep}${name}.js`)
+      return fs.access(`${coreDir}${sep}${name}.js`)
         .then(() => [`${coreDir}${sep}`, `${name}.js`])
         .catch(() => [null, null]);
     });
@@ -31,7 +31,7 @@ const sendDebugMessage = async (client, msg, type, name, obj) => {
 const sendSrcMessage = async (client, chan, type, name, obj) => {
   const [dir, filename] = await getPiecePath(client, type, name, obj);
   if (dir && filename) {
-    const src = await fs.readFileAsync(dir + filename);
+    const src = await fs.readFile(dir + filename);
     if (src) return chan.send("js", src, { code: "js", split: true });
     return chan.send("Something went wrong; could not load source", { code: true });
   }

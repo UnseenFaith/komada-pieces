@@ -17,6 +17,8 @@ exports.init = async () => {
   db = await mysql.createConnection(options.conn);
 };
 
+const throwError = (err) => { throw err; };
+
 /* Table methods */
 
 /**
@@ -24,7 +26,7 @@ exports.init = async () => {
  * @param {string} table The name of the table you want to check.
  * @returns {Promise<boolean>}
  */
-exports.hasTable = table => db.query(`SELECT 1 FROM ${table} LIMIT 1`)
+exports.hasTable = table => this.exec(`SELECT 1 FROM ${table} LIMIT 1`)
   .then(() => true)
   .catch(() => false);
 
@@ -34,14 +36,14 @@ exports.hasTable = table => db.query(`SELECT 1 FROM ${table} LIMIT 1`)
  * @param {string} rows The rows for the table.
  * @returns {Promise<Object>}
  */
-exports.createTable = (table, rows) => db.query(`CREATE TABLE '${table}' (${rows})`);
+exports.createTable = (table, rows) => this.exec(`CREATE TABLE '${table}' (${rows})`);
 
 /**
  * Drops a table.
  * @param {string} table The name of the table to drop.
  * @returns {Promise<Object>}
  */
-exports.deleteTable = table => db.query(`DROP TABLE '${table}'`);
+exports.deleteTable = table => this.exec(`DROP TABLE '${table}'`);
 
 /* Document methods */
 
@@ -54,7 +56,7 @@ exports.getAll = async (table, { key = null, value = null }) => {
   const query = key ?
     `SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}'` :
     `SELECT * FROM \`${table}\``;
-  return db.query(query)
+  return this.runAll(query)
       .then(([rows]) => rows);
 };
 
@@ -65,14 +67,9 @@ exports.getAll = async (table, { key = null, value = null }) => {
  * @param {string} [value=null] The desired value to find.
  * @returns {Promise<?Object>}
  */
-exports.get = (table, key, value = null) => {
-  const query = key && !value ?
-    `SELECT * FROM \`${table}\` WHERE \`id\` = '${value}' LIMIT 1` :
-    `SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}' LIMIT 1`;
-  return db.query(query)
-    .then(([rows]) => rows[0])
-    .catch(() => null);
-};
+exports.get = (table, key, value = null) => this.run(key && !value ?
+  `SELECT * FROM \`${table}\` WHERE \`id\` = '${value}' LIMIT 1` :
+  `SELECT * FROM \`${table}\` WHERE \`${key}\` = '${value}' LIMIT 1`).then(([rows]) => rows[0]).catch(() => null);
 
 /**
  * Check if a row exists.
@@ -80,7 +77,7 @@ exports.get = (table, key, value = null) => {
  * @param {string} value The value to search by 'id'.
  * @returns {Promise<boolean>}
  */
-exports.has = (table, value) => db.query(`SELECT \`id\` FROM \`${table}\` WHERE \`id\` = '${value}' LIMIT 1`)
+exports.has = (table, value) => this.runAll(`SELECT \`id\` FROM \`${table}\` WHERE \`id\` = '${value}' LIMIT 1`)
   .then(([rows]) => rows.length > 0);
 
 /**
@@ -88,7 +85,7 @@ exports.has = (table, value) => db.query(`SELECT \`id\` FROM \`${table}\` WHERE 
  * @param {string} table The name of the table.
  * @returns {Promise<Object>}
  */
-exports.getRandom = table => db.query(`SELECT * FROM \`${table}\` ORDER BY RAND() LIMIT 1`);
+exports.getRandom = table => this.run(`SELECT * FROM \`${table}\` ORDER BY RAND() LIMIT 1`);
 
 /**
  * Insert a new document into a table.
@@ -99,7 +96,7 @@ exports.getRandom = table => db.query(`SELECT * FROM \`${table}\` ORDER BY RAND(
  */
 exports.create = (table, row, data) => {
   const { keys, values } = this.serialize(Object.assign(data, { id: row }));
-  return db.query(`INSERT INTO \`${table}\` (\`${keys.join("`, `")}\`) VALUES ('${values.join("', '")}')`);
+  return this.exec(`INSERT INTO \`${table}\` (\`${keys.join("`, `")}\`) VALUES ('${values.join("', '")}')`);
 };
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
@@ -113,7 +110,7 @@ exports.insert = (...args) => this.create(...args);
  */
 exports.update = (table, row, data) => {
   const inserts = Object.entries(data).map(value => `\`${value[0]}\` = '${value[1]}'`).join(", ");
-  return db.query(`UPDATE \`${table}\` SET ${inserts} WHERE id = '${row}'`);
+  return this.exec(`UPDATE \`${table}\` SET ${inserts} WHERE id = '${row}'`);
 };
 exports.replace = (...args) => this.update(...args);
 
@@ -123,21 +120,21 @@ exports.replace = (...args) => this.update(...args);
  * @param {string} row The row id.
  * @returns {Promise<Object>}
  */
-exports.delete = (table, row) => db.query(`DELETE FROM \`${table}\` WHERE id = '${row}'`);
+exports.delete = (table, row) => this.exec(`DELETE FROM \`${table}\` WHERE id = '${row}'`);
 
 /**
  * Get a row from an arbitrary SQL query.
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.run = sql => db.query(sql).then(([rows]) => rows[0]);
+exports.run = sql => db.query(sql).then(([rows]) => rows[0]).catch(throwError);
 
 /**
  * Get all rows from an arbitrary SQL query.
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.runAll = sql => db.query(sql);
+exports.runAll = sql => db.query(sql).catch(throwError);
 exports.exec = (...args) => this.runAll(...args);
 
 /**

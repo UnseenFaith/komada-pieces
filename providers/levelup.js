@@ -7,11 +7,12 @@ const { Collection } = require("discord.js");
 let baseDir;
 const loaded = new Collection();
 
-/* eslint-disable no-confusing-arrow */
+const throwError = (err) => { throw err; };
+
 exports.init = async (client) => {
   baseDir = resolve(client.clientBaseDir, "bwd", "provider", "level");
-  fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
-  const files = await fs.readdir(baseDir).catch(err => client.emit("log", err, "error"));
+  await fs.ensureDir(baseDir).catch(throwError);
+  const files = await fs.readdir(baseDir).catch(throwError);
   const fn = file => promisify(level(baseDir + sep + file))
     .then(db => loaded.set(file, db));
   Promise.all(files.map(fn));
@@ -40,7 +41,7 @@ exports.createTable = table => promisify(level(baseDir + sep + table))
  * @returns {Promise<Void>}
  */
 exports.deleteTable = table => this.hasTable(table)
-  .then(exists => exists ? level.destroy(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : null);
+  .then(exists => (exists ? level.destroy(baseDir + sep + table).then(() => fs.remove(baseDir + sep + table)) : null));
 
 /* Document methods */
 

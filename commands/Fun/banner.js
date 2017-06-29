@@ -1,10 +1,8 @@
-const figlet = require("figlet");
+const figletAsync = require("util").promisify(require("figlet"));
 
-exports.run = (client, msg, [banner]) => {
-  figlet(banner, (err, data) => {
-    if (err) return client.funcs.log(`Something went wrong... ${err}`, "error");
-    return msg.channel.send(data, { code: "" }).catch(e => client.funcs.log(e, "error"));
-  });
+exports.run = async (client, msg, [banner]) => {
+  const data = await figletAsync(banner);
+  return msg.channel.send(data, { code: true });
 };
 
 exports.conf = {
