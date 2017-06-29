@@ -2,7 +2,7 @@ const answers = ["Maybe.", "Certainly not.", "I hope so.", "Not in your wildest 
 
 exports.run = (client, msg) => msg.reply(msg.content.endsWith("?") ?
   `🎱 ${answers[Math.floor(Math.random() * answers.length)]}` :
-  "🎱 That doesn't look like a question, try again please.").catch(err => client.funcs.log(err, "error"));
+  "🎱 That doesn't look like a question, try again please.");
 
 exports.conf = {
   enabled: true,

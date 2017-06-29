@@ -1,3 +1,6 @@
+/*
+  Piece not compatible with Komada v0.20.x
+*/
 exports.run = (client, msg) => {
   if (!msg.guild || msg.author.id === client.user.id) return;
   const user = `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`;
