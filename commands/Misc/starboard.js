@@ -5,7 +5,11 @@ exports.providerEngine = "json";
 
 exports.init = async (client) => {
   if (client.providers.has(this.providerEngine)) this.provider = client.providers.get(this.providerEngine);
-  if (!(await this.provider.hasTable("starboard"))) await this.provider.createTable("starboard");
+  else throw new Error(`The Provider ${this.providerEngine} does not seem to exist.`);
+  if (!(await this.provider.hasTable("starboard"))) {
+    const SQLCreate = ["id TEXT NOT NULL UNIQUE", "messages TEXT NOT NULL DEFAULT '[]'"];
+    await this.provider.createTable("starboard", SQLCreate);
+  }
 };
 
 const generateMessage = (message) => {
@@ -27,7 +31,7 @@ exports.run = async (client, msg, [message]) => {
 
   await channel.send(generateMessage(message), options);
   msgArray.push(message.id);
-  await this.provider.replace("starboard", message.guild.id, JSON.stringify(msgArray));
+  await this.provider.update("starboard", message.guild.id, { messages: JSON.stringify(msgArray) });
   await message.react("⭐").catch(() => null);
   return msg.channel.send("Successfully starred!");
 };
