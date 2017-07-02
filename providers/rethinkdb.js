@@ -4,7 +4,7 @@ const config = {
   requiredModules: ["rethinkdbdash"],
 };
 
-const r = require("rethinkdbdash")();
+const r = require("rethinkdbdash")({ db:"test" });
 
 exports.exec = r;
 
