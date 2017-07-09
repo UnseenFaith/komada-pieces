@@ -6,7 +6,7 @@ const end = ["pilot", "canoe", "captain", "pirate", "hammer", "knob", "box", "jo
 
 const roll = type => type[Math.floor(Math.random() * type.length)];
 
-exports.run = async (client, msg, [user]) => msg.channel.send(`${user}, you know what? you're nothing but ${roll(start)} ${roll(middle)} ${roll(end)}.`);
+exports.run = (client, msg, [user]) => msg.channel.send(`${user}, you know what? you're nothing but ${roll(start)} ${roll(middle)} ${roll(end)}.`);
 
 exports.conf = {
   enabled: true,

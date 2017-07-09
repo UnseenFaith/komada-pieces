@@ -2,7 +2,7 @@ const { inspect } = require("util");
 
 exports.run = (client, msg, [ugc]) => {
   ugc = inspect(ugc, { depth: 0 });
-  return msg.channel.send(client.funcs.clean(client, ugc), { code: "xl" });
+  return msg.channel.send(client.funcs.clean(client, ugc), { code: "js" });
 };
 
 exports.conf = {

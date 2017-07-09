@@ -17,9 +17,10 @@ exports.run = async (client, msg) => {
   await msg.channel.send(item.q);
   try {
     const collected = await msg.channel.awaitMessages(answer => item.a.includes(answer.content.toLowerCase()), options);
-    return msg.channel.send(`We have a winner! *${collected.first().author.username}* had a right answer with \`${collected.first().content}\`!`);
-  } catch (e) {
-    if (e) return client.funcs.log(e, "error");
+    const winnerMessage = collected.first();
+    await client.funcs.points(client, winnerMessage.author.id, "add");
+    return msg.channel.send(`We have a winner! *${winnerMessage.author.username}* had a right answer with \`${winnerMessage.content}\`!`);
+  } catch (_) {
     return msg.channel.send("Seems no one got it! Oh well.");
   }
 };

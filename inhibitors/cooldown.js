@@ -21,6 +21,8 @@ exports.help = {
 };
 
 /*
+  Implemented in Komada Indev as a Core Inhibitor.
+
   *Usage*
   In https://komada.js.org/creating-commands.html, you have this object in every command:
     exports.conf = {

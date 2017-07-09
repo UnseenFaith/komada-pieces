@@ -2,6 +2,10 @@ const { LocalStorage } = require("node-localstorage");
 const { resolve } = require("path");
 const fs = require("fs-nextra");
 
+/*
+  This provider requires Node.js 8.1.0
+*/
+
 let baseDir;
 const tables = {};
 

@@ -1,10 +1,8 @@
 exports.run = async (client, msg, [...choices]) => {
   const validChoices = choices.filter(x => x);
-
-  if (validChoices.length === 1) {
-    return msg.reply("You only gave me one choice, dummy.");
-  }
-  return msg.reply(`I think you should go with "${choices[Math.floor(Math.random() * choices.length)]}"`);
+  return msg.reply(validChoices.length === 1 ?
+    "You only gave me one choice, dummy." :
+    `I think you should go with "${choices[Math.floor(Math.random() * choices.length)]}"`);
 };
 
 exports.conf = {

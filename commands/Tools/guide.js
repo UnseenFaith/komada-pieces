@@ -32,14 +32,12 @@ const guides = {
 };
 
 exports.run = (client, msg, [keyword]) => {
-  if (guides[keyword]) {
-    const details = guides[keyword];
-    return msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
-  } else if (keyword === "list") {
-    return msg.channel.send(`Available keywords for this command:\n${Object.keys(guides).join(", ")}`);
+  if (keyword === "list") {
+    return msg.channel.send(`Available keywords for this command:\n\`${Object.keys(guides).join("`, `")}\``);
+  } else if (guides[keyword]) {
+    return msg.channel.send(`${guides[keyword].snippet}\n**Read More**: <${baseUrl}${guides[keyword].url}>`);
   }
-  const details = guides.home;
-  return msg.channel.send(`${details.snippet}\n**Read More**: <${baseUrl}${details.url}>`);
+  return msg.channel.send(`${guides.home.snippet}\n**Read More**: <${baseUrl}${guides.home.url}>`);
 };
 
 exports.conf = {
@@ -56,7 +54,7 @@ exports.conf = {
 exports.help = {
   name: "guide",
   description: "Returns page details from root's awesome bot guide.",
-  usage: "[list:literal|keyword:str]",
+  usage: "[list|keyword:string]",
   usageDelim: "",
   type: "commands",
 };
