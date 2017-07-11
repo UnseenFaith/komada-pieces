@@ -1,11 +1,8 @@
+const request = require("snekfetch");
+
 exports.run = async (client, msg) => {
-  const rp = require("request-promise-native"); // eslint-disable-line global-require
-  try {
-    const res = await rp.get("http://catfacts-api.appspot.com/api/facts").then(JSON.parse);
-    msg.channel.send(`📢 **Catfact:** *${res.facts[0]}*`);
-  } catch (e) {
-    client.funcs.log(e, "error");
-  }
+  const { facts } = await request.get("http://catfacts-api.appspot.com/api/facts").then(data => JSON.parse(data.text));
+  return msg.channel.send(`📢 **Catfact:** *${facts[0]}*`);
 };
 
 exports.conf = {
@@ -16,7 +13,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["request-promise-native"],
+  requiredModules: ["snekfetch"],
 };
 
 exports.help = {

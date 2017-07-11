@@ -1,4 +1,8 @@
-const func = (nStr) => {
+/*
+  This piece keeps here for compatibility. However, Number.toLocaleString() does pretty much the same.
+  Check it here: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString
+*/
+module.exports = (nStr) => {
   nStr += "";
   const x = nStr.split(".");
   let x1 = x[0];
@@ -10,11 +14,9 @@ const func = (nStr) => {
   return x1 + x2;
 };
 
-func.conf = { requiredModules: [] };
-func.help = {
+module.exports.conf = { requiredModules: [] };
+module.exports.help = {
   name: "addCommas",
   type: "functions",
   description: "Add commas in every three characters.",
 };
-
-module.exports = func;

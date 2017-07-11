@@ -1,6 +1,4 @@
-exports.run = (client, msg) => {
-  return msg.reply(`You flipped ${Math.random() > 0.5 ? "Heads" : "Tails"}.`);
-};
+exports.run = (client, msg) => msg.reply(`You flipped ${Math.random() > 0.5 ? "Heads" : "Tails"}.`);
 
 exports.conf = {
   enabled: true,

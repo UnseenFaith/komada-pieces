@@ -1,41 +1,39 @@
-exports.exist = (client, msg) => new Promise((resolve, reject) => {
-  if (!msg.guildConf.starboard) {
-    if (!msg.guild.channels.exists("name", "starboard")) reject("Please create the _starboard_ channel and try again.");
-    else {
-      client.funcs.confs.set(msg.guild, "starboard", msg.guild.channels.find("name", "starboard").id);
-      resolve();
-    }
-  } else resolve();
-});
+const moment = require("moment");
+require("moment-duration-format");
+
+exports.providerEngine = "json";
+
+exports.init = async (client) => {
+  if (client.providers.has(this.providerEngine)) this.provider = client.providers.get(this.providerEngine);
+  else throw new Error(`The Provider ${this.providerEngine} does not seem to exist.`);
+  if (!(await this.provider.hasTable("starboard"))) {
+    const SQLCreate = ["id TEXT NOT NULL UNIQUE", "messages TEXT NOT NULL DEFAULT '[]'"];
+    await this.provider.createTable("starboard", SQLCreate);
+  }
+};
+
+const generateMessage = (message) => {
+  const starTime = moment(message.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss");
+  const starFooter = `${message.author.tag} in #${message.channel.name} (ID: ${message.id})`;
+  return `⭐ ${message.cleanContent}\n\n- ${starTime} by ${starFooter}`;
+};
 
 exports.run = async (client, msg, [message]) => {
-  const fsp = require("fs-promise"); // eslint-disable-line global-require
-  const moment = require("moment"); // eslint-disable-line global-require
-  require("moment-duration-format"); // eslint-disable-line global-require
-  try {
-    await this.exist(client, msg);
-    if (!fsp.existsSync(`./data/${message.guild.id}.json`)) fsp.writeFileSync(`./data/${message.guild.id}.json`, JSON.stringify([], null, "\t"));
-    const star = message;
-    const msgArray = JSON.parse(fsp.readFileSync(`./data/${message.guild.id}.json`, "utf8"));
-    if (msgArray.includes(star.id)) await message.channel.send("This message has already been starred.");
-    else if (msg.author === star.author) await message.channel.send("You cannot star yourself.");
-    else if (star.attachments.first()) {
-      const file = star.attachments.map(a => a.url).join(" ");
-      await client.channels.get(msg.guildConf.starboard).sendFile(file, star.attachments.map(a => a.filename).join(" "), `${star.cleanContent} - ${moment(star.createdTimestamp).format("D[/]M[/]Y [@] HH:mm:ss")} by ${star.author.username}#${star.author.discriminator} in #${star.channel.name} (ID: ${star.id})`);
-      msgArray.push(star.id);
-      fsp.writeFileSync(`./data/${message.guild.id}.json`, JSON.stringify(msgArray, null, "\t"));
-      await message.addReaction("⭐");
-      client.channels.get(msg.channel.id).send("Successfully starred!");
-    } else {
-      client.channels.get(msg.guildConf.starboard).send(`${star.cleanContent} - ${moment(star.timestamp).format("D[/]M[/]Y [@] HH:mm:ss")} by ${star.author.username}#${star.author.discriminator} in ${star.channel}, (ID: ${star.id})`);
-      msgArray.push(star.id);
-      fsp.writeFileSync(`./data/${message.guild.id}.json`, JSON.stringify(msgArray, null, "\t"));
-      await message.addReaction("⭐");
-      client.channels.get(msg.channel.id).send("Successfully starred!");
-    }
-  } catch (e) {
-    msg.reply(e);
-  }
+  const channel = msg.guild.channels.find("name", "starboard");
+  if (!channel) return msg.channel.send("Please create the _starboard_ channel and try again.");
+  if (channel.postable === false) return msg.channel.send(`I require the permission SEND_MESSAGES to post messages in ${channel} channel.`);
+  if (!(await this.provider.has("starboard", message.guild.id))) await this.provider.set("starboard", message.guild.id, JSON.stringify([]));
+  const msgArray = JSON.parse(await this.provider.get("starboard", message.guild.id));
+  if (msgArray.includes(message.id)) return message.channel.send("This message has already been starred.");
+  else if (msg.author === message.author) return message.channel.send("You cannot star yourself.");
+  const options = {};
+  if (message.attachments.first()) options.files = message.attachments.map(a => ({ name: a.filename, attachment: a.url }));
+
+  await channel.send(generateMessage(message), options);
+  msgArray.push(message.id);
+  await this.provider.update("starboard", message.guild.id, { messages: JSON.stringify(msgArray) });
+  await message.react("⭐").catch(() => null);
+  return msg.channel.send("Successfully starred!");
 };
 
 exports.conf = {
@@ -46,7 +44,7 @@ exports.conf = {
   permLevel: 2,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["moment", "moment-duration-format", "fs-promise"],
+  requiredModules: ["moment", "moment-duration-format"],
 };
 
 exports.help = {
@@ -55,8 +53,4 @@ exports.help = {
   usage: "<messageid:msg>",
   usageDelim: "",
   type: "commands",
-};
-
-exports.init = (client) => {
-  if (!client.funcs.confs.hasKey("starboard")) client.funcs.confs.addKey("starboard", "");
 };

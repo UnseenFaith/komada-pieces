@@ -1,18 +1,23 @@
-const { resolve } = require("path");
-const db = require("sqlite");
-const fs = require("fs-nextra");
+const mysql = require("mysql2/promise");
 
-/*
-  This provider requires Node.js 8.1.0
-*/
+let db;
+const options = {
+  moduleName: "mysql",
+  enabled: true,
+  sql: true,
+  conn: {
+    host: "localhost",
+    port: "3306",
+    user: "root",
+    password: "",
+    database: "Komada",
+  },
+};
 
 const throwError = (err) => { throw err; };
 
-exports.init = async (client) => {
-  const baseDir = resolve(client.clientBaseDir, "bwd", "provider", "sqlite");
-  await fs.ensureDir(baseDir).catch(throwError);
-  await fs.ensureFile(resolve(baseDir, "db.sqlite")).catch(throwError);
-  return db.open(resolve(baseDir, "db.sqlite")).catch(throwError);
+exports.init = async () => {
+  db = await mysql.createConnection(options.conn);
 };
 
 /* Table methods */
@@ -22,9 +27,9 @@ exports.init = async (client) => {
  * @param {string} table The name of the table you want to check.
  * @returns {Promise<boolean>}
  */
-exports.hasTable = table => this.runGet(`SELECT name FROM sqlite_master WHERE type='table' AND name='${table}'`)
-  .then(row => !!row)
-  .catch(throwError);
+exports.hasTable = table => this.exec(`SELECT 1 FROM ${table} LIMIT 1`)
+  .then(() => true)
+  .catch(() => false);
 
 /**
  * Creates a new table.
@@ -32,26 +37,25 @@ exports.hasTable = table => this.runGet(`SELECT name FROM sqlite_master WHERE ty
  * @param {string} rows The rows for the table.
  * @returns {Promise<Object>}
  */
-exports.createTable = (table, rows) => this.run(`CREATE TABLE '${table}' (${rows.join(", ")});`);
+exports.createTable = (table, rows) => this.exec(`CREATE TABLE '${table}' (${rows.join(", ")})`);
 
 /**
  * Drops a table.
  * @param {string} table The name of the table to drop.
  * @returns {Promise<Object>}
  */
-exports.deleteTable = table => this.run(`DROP TABLE '${table}'`);
+exports.deleteTable = table => this.exec(`DROP TABLE '${table}'`);
 
 /* Document methods */
 
 /**
  * Get all documents from a table.
  * @param {string} table The name of the table to fetch from.
- * @param {Object} options key and value.
  * @returns {Promise<Object[]>}
  */
-exports.getAll = (table, options = {}) => this.runAll(options.key && options.value ?
-  `SELECT * FROM '${table}' WHERE ${options.key} = ${this.sanitize(options.value)}` :
-  `SELECT * FROM '${table}'`);
+exports.getAll = async (table, options = {}) => this.runAll(options.key && options.value ?
+  `SELECT * FROM \`${table}\` WHERE \`${options.key}\` = ${this.sanitize(options.value)}` :
+  `SELECT * FROM \`${table}\``).then(([rows]) => rows);
 
 /**
  * Get a row from a table.
@@ -60,9 +64,10 @@ exports.getAll = (table, options = {}) => this.runAll(options.key && options.val
  * @param {string} [value=null] The desired value to find.
  * @returns {Promise<?Object>}
  */
-exports.get = (table, key, value = null) => this.runGet(!value ?
-  `SELECT * FROM ${table} WHERE id = ${this.sanitize(key)}` :
-  `SELECT * FROM ${table} WHERE ${key} = ${this.sanitize(value)}`).catch(() => null);
+exports.get = (table, key, value = null) => this.run(!value ?
+  `SELECT * FROM \`${table}\` WHERE \`id\` = ${this.sanitize(key)} LIMIT 1` :
+  `SELECT * FROM \`${table}\` WHERE \`${key}\` = ${this.sanitize(value)} LIMIT 1`)
+  .then(([rows]) => rows[0]).catch(() => null);
 
 /**
  * Check if a row exists.
@@ -70,16 +75,15 @@ exports.get = (table, key, value = null) => this.runGet(!value ?
  * @param {string} value The value to search by 'id'.
  * @returns {Promise<boolean>}
  */
-exports.has = (table, value) => this.runGet(`SELECT id FROM '${table}' WHERE id = ${this.sanitize(value)}`)
-  .then(() => true)
-  .catch(() => false);
+exports.has = (table, value) => this.runAll(`SELECT \`id\` FROM \`${table}\` WHERE \`id\` = ${this.sanitize(value)} LIMIT 1`)
+  .then(([rows]) => rows.length > 0);
 
 /**
  * Get a random row from a table.
  * @param {string} table The name of the table.
  * @returns {Promise<Object>}
  */
-exports.getRandom = table => this.runGet(`SELECT * FROM '${table}' ORDER BY RANDOM() LIMIT 1`).catch(() => null);
+exports.getRandom = table => this.run(`SELECT * FROM \`${table}\` ORDER BY RAND() LIMIT 1`);
 
 /**
  * Insert a new document into a table.
@@ -90,7 +94,7 @@ exports.getRandom = table => this.runGet(`SELECT * FROM '${table}' ORDER BY RAND
  */
 exports.create = (table, row, data) => {
   const { keys, values } = this.serialize(Object.assign(data, { id: row }));
-  return this.run(`INSERT INTO '${table}' (${keys.join(", ")}) VALUES(${values.map(this.sanitize).join(", ")})`);
+  return this.exec(`INSERT INTO \`${table}\` (\`${keys.join("`, `")}\`) VALUES (${values.map(this.sanitize).join(", ")})`);
 };
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
@@ -103,18 +107,18 @@ exports.insert = (...args) => this.create(...args);
  * @returns {Promise<Object>}
  */
 exports.update = (table, row, data) => {
-  const inserts = Object.entries(data).map(value => `${value[0]} = ${this.sanitize(value[1])}`).join(", ");
-  return this.run(`UPDATE '${table}' SET ${inserts} WHERE id = '${row}'`);
+  const inserts = Object.entries(data).map(value => `\`${value[0]}\` = ${this.sanitize(value[1])}`).join(", ");
+  return this.exec(`UPDATE \`${table}\` SET ${inserts} WHERE id = '${row}'`);
 };
 exports.replace = (...args) => this.update(...args);
 
 /**
  * Delete a document from the table.
- * @param {string} table The name of the table.
+ * @param {string} table The name of the directory.
  * @param {string} row The row id.
  * @returns {Promise<Object>}
  */
-exports.delete = (table, row) => this.run(`DELETE FROM '${table}' WHERE id = ${this.sanitize(row)}`);
+exports.delete = (table, row) => this.exec(`DELETE FROM \`${table}\` WHERE id = ${this.sanitize(row)}`);
 
 /**
  * Update the columns from a table.
@@ -124,10 +128,10 @@ exports.delete = (table, row) => this.run(`DELETE FROM '${table}' WHERE id = ${t
  * @returns {boolean}
  */
 exports.updateColumns = async (table, columns, schema) => {
-  await this.run(`CREATE TABLE \`temp_table\` (\n${schema.map(s => `\`${s[0]}\` ${s[1]}`).join(",\n")}\n);`);
-  await this.run(`INSERT INTO \`temp_table\` (\`${columns.join("`, `")}\`) SELECT \`${columns.join("`, `")}\` FROM \`${table}\`;`);
-  await this.run(`DROP TABLE \`${table}\`;`);
-  await this.run(`ALTER TABLE \`temp_table\` RENAME TO \`${table}\`;`);
+  await this.exec(`CREATE TABLE \`temp_table\` (\n${schema.map(s => `\`${s[0]}\` ${s[1]}`).join(",\n")}\n);`);
+  await this.exec(`INSERT INTO \`temp_table\` (\`${columns.join("`, `")}\`) SELECT \`${columns.join("`, `")}\` FROM \`${table}\`;`);
+  await this.exec(`DROP TABLE \`${table}\`;`);
+  await this.exec(`ALTER TABLE \`temp_table\` RENAME TO \`${table}\`;`);
   return true;
 };
 
@@ -136,28 +140,15 @@ exports.updateColumns = async (table, columns, schema) => {
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.runGet = sql => db.get(sql).catch(throwError);
+exports.run = sql => db.query(sql).then(([rows]) => rows[0]).catch(throwError);
 
 /**
  * Get all rows from an arbitrary SQL query.
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.runAll = sql => db.all(sql).catch(throwError);
-
-/**
- * Run arbitrary SQL query.
- * @param {string} sql The query to execute.
- * @returns {Promise<Object>}
- */
-exports.run = sql => this.run(sql).catch(throwError);
-
-/**
- * Execute arbitrary SQL query.
- * @param {string} sql The query to execute.
- * @returns {Promise<Object>}
- */
-exports.exec = sql => db.exec(sql).catch(throwError);
+exports.runAll = sql => db.query(sql).catch(throwError);
+exports.exec = (...args) => this.runAll(...args);
 
 /**
  * Transform NoSQL queries into SQL.
@@ -184,22 +175,18 @@ exports.sanitize = (string) => {
 
 exports.CONSTANTS = {
   String: "TEXT",
-  Integer: "INTEGER",
-  Float: "INTEGER",
-  AutoID: "INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE",
+  Integer: "INT",
+  Float: "INT",
+  AutoID: "INT PRIMARY KEY AUTOINCREMENT UNIQUE",
   Timestamp: "DATETIME",
   AutoTS: "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL",
 };
 
-exports.conf = {
-  moduleName: "sqlite",
-  enabled: true,
-  requiredModules: ["sqlite", "fs-nextra"],
-  sql: true,
-};
+exports.conf = options;
+exports.conf.requiredModules = ["mysql2"];
 
 exports.help = {
-  name: "sqlite",
+  name: "mysql",
   type: "providers",
-  description: "Allows you use SQLite functionality throughout Komada.",
+  description: "Allows you use MySQL functionality throughout Komada.",
 };

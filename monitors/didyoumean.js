@@ -1,10 +1,6 @@
-exports.conf = {
-  enabled: true,
-  requiredModules: ["fast-levenshtein"],
-};
+const levenshtein = require("fast-levenshtein");
 
 exports.run = async (client, msg) => {
-  const levenshtein = require("fast-levenshtein"); // eslint-disable-line global-require
   if (msg.author.bot) return;
   if (client.config.selfbot && msg.author.id !== client.user.id) return;
 
@@ -18,7 +14,7 @@ exports.run = async (client, msg) => {
       dist: levenshtein.get(cmd, command),
       cmd,
     }));
-    distances.sort((a, b) => a.score < b.score ? 1 : -1); // eslint-disable-line no-confusing-arrow
+    distances.sort((a, b) => (a.score < b.score ? 1 : -1));
     if (distances[0] && distances[0].dist <= 1) {
       const message = await msg.channel.send(`|\`❔\`| Did you mean \`${conf.prefix + distances[0].cmd}\`?`);
       setTimeout(() => { if (message.deletable) message.delete(); }, 10000);
@@ -26,7 +22,13 @@ exports.run = async (client, msg) => {
   }
 };
 
-exports.help = {};
-exports.help.name = "didyoumean";
-exports.help.type = "monitors";
-exports.help.description = "Helps users that type in commands incorrectly.";
+exports.conf = {
+  enabled: true,
+  requiredModules: ["fast-levenshtein"],
+};
+
+exports.help = {
+  name: "didyoumean",
+  type: "monitors",
+  description: "Helps users that type in commands incorrectly.",
+};

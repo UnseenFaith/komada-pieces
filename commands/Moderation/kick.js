@@ -1,10 +1,6 @@
 exports.run = async (client, msg, [member]) => {
-  try {
-    await member.kick();
-    msg.channel.send(`${member.user.username}#${member.user.discriminator} was kicked.`);
-  } catch (e) {
-    msg.reply(`There was an error trying to kick: ${e}`);
-  }
+  await member.kick();
+  return msg.channel.send(`${member.user.tag} was kicked.`);
 };
 
 exports.conf = {

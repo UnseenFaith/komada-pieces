@@ -1,64 +1,39 @@
-const run = (client, msg, action) => new Promise(async (resolve) => { // eslint-disable-line consistent-return
-  const db = client.providers.get("sqlite");
-  if (!db) return msg.reply("You didn't install the SQlite provider. Download it from our Pieces repo!");
+module.exports.providerEngine = "json";
 
-  try {
-    const row = await db.get(client, "quiz", "userID", msg.author.id);
-    let points = row.points;
-    switch (action) {
-      case "add":
-        points++;
-        break;
-      case "remove":
-        if (points <= 0) break;
-        points--;
-        break;
-      case "reset":
-        points = 0;
-        break;
-      // no default
-    }
-    await db.update(client, "quiz", ["points"], [points], "userID", msg.author.id);
-    resolve(points);
-  } catch (e) {
-    client.funcs.log(e, "error");
-    const points = action === "add" ? 1 : 0;
-    await db.update(client, "quiz", ["points"], [points], "userID", msg.author.id);
-    resolve(points);
+module.exports.init = async (client) => {
+  if (client.providers.has(this.providerEngine)) this.provider = client.providers.get(this.providerEngine);
+  else throw new Error(`The Provider ${this.providerEngine} does not seem to exist.`);
+  if (!(await this.provider.hasTable("quiz"))) {
+    const SQLCreate = ["id TEXT NOT NULL UNIQUE", "points INTEGER NOT NULL DEFAULT 0"];
+    await this.provider.createTable("quiz", SQLCreate);
   }
-});
+};
 
-const init = client => new Promise(async (resolve, reject) => {
-  if (!client.providers.first()) reject("No Database Found");
-  const res = await client.databaseModules.get("sqlite").hasTable(client, "quiz");
-  if (!res) {
-    const keys = "<userID:str> <points:int>";
-    client.databaseModules.get("sqlite").createTable(client, "quiz", keys);
+module.exports = async (client, user, action) => {
+  let row = await this.provider.get("quiz", user);
+  if (!row) {
+    await this.provider.create("quiz", user, { points: 0 });
+    row = { id: user, points: 0 };
   }
-  client.config.init.push("points");
-  resolve();
-});
-
-const func = (client, msg, action) => new Promise(async (resolve, reject) => {
-  try {
-    if (!client.config.init.includes("points")) {
-      await init(client);
-      const p = await run(client, msg, action);
-      resolve(p);
-    } else {
-      const p = await run(client, msg, action);
-      resolve(p);
-    }
-  } catch (e) {
-    reject(e);
+  let points = row.points;
+  switch (action) {
+    case "add":
+      points++;
+      break;
+    case "remove":
+      Math.max(0, points--);
+      break;
+    case "reset":
+      points = 0;
+      break;
+    // no default
   }
-});
+  await this.provider.update("quiz", user, { points });
+};
 
-func.conf = { requiredModules: [] };
-func.help = {
+module.exports.conf = { requiredModules: [] };
+module.exports.help = {
   name: "points",
   type: "functions",
   description: "Adds a point system for users accesible through an SQLite database.",
 };
-
-module.exports = func;

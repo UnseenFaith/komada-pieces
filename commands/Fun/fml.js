@@ -1,15 +1,11 @@
+const request = require("snekfetch");
+const HTMLParser = require("fast-html-parser");
+
 exports.run = async (client, msg) => {
-  const rp = require("request-promise-native"); // eslint-disable-line global-require
-  const HTMLParser = require("fast-html-parser"); // eslint-disable-line global-require
-  try {
-    const body = await rp.get("http://www.fmylife.com/random");
-    const root = HTMLParser.parse(body);
-    const article = root.querySelector(".block a");
-    msg.channel.send(article.text);
-  } catch (e) {
-    msg.reply(e);
-    client.funcs.log(e, "error");
-  }
+  const { text: html } = await request.get("http://www.fmylife.com/random");
+  const root = HTMLParser.parse(html);
+  const article = root.querySelector(".block a");
+  return msg.channel.send(article.text);
 };
 
 exports.conf = {
@@ -20,7 +16,7 @@ exports.conf = {
   permLevel: 0,
   botPerms: [],
   requiredFuncs: [],
-  requiredModules: ["request-promise-native", "fast-html-parser"],
+  requiredModules: ["snekfetch", "fast-html-parser"],
 };
 
 exports.help = {

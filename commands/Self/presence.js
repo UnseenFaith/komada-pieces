@@ -2,17 +2,12 @@
 // And kyra#2490 for rewritting this.
 exports.run = async (client, msg, [type, status = "online", ...game]) => {
   game = game.length ? game.join(" ") : null;
-  try {
-    if (type === "status") {
-      await client.user.setStatus(status);
-      msg.channel.send(`Status changed to ***${status}***`);
-    } else if (type === "game") {
-      await client.user.setGame(game);
-      msg.channel.send(`${game ? `Game changed to ***${game}***` : "Game cleared"}`);
-    }
-  } catch (e) {
-    client.funcs.log(e, "error");
+  if (type === "status") {
+    await client.user.setStatus(status);
+    return msg.channel.send(`Status changed to ***${status}***`);
   }
+  await client.user.setGame(game);
+  return msg.channel.send(`${game ? `Game changed to ***${game}***` : "Game cleared"}`);
 };
 
 exports.conf = {

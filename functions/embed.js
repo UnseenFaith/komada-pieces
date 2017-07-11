@@ -1,5 +1,9 @@
-/* eslint-disable complexity */
-const func = (embed) => {
+/**
+ * Sanitize Discord MessageEmbed objects by transforming it into a flat object.
+ * @param {Object} embed The MessageEmbed instance.
+ * @returns {Object}
+ */
+module.exports = (embed) => {
   if (embed.constructor.name !== "MessageEmbed") throw new Error("You must provide an embed object.");
   const output = {
     title: embed.title || null,
@@ -45,12 +49,9 @@ const func = (embed) => {
   return output;
 };
 
-func.conf = { requiredModules: [] };
-func.help = {
+module.exports = { requiredModules: [] };
+module.exports = {
   name: "embed",
   type: "functions",
-  description: "Sanitize Discord MessageEmbed objects.",
+  description: "Sanitize Discord MessageEmbed objects by transforming it into a flat object.",
 };
-
-module.exports = func;
-
