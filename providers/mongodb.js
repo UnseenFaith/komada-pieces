@@ -2,15 +2,16 @@ const Mongo = require("mongodb").MongoClient;
 
 let db;
 
-const config = {
+exports.conf = {
   moduleName: "mongo",
   enabled: true,
+  requiredModules: ["mongodb"],
   dbName: "Komada",
   dbURL: "mongodb://localhost:27017/",
 };
 
 exports.init = async () => {
-  db = await Mongo.connect(`${config.dbURL}${config.dbName}`);
+  db = await Mongo.connect(`${this.conf.dbURL}${this.conf.dbName}`);
 };
 
 // Collection Methods. Collections are implicitly created with document methods regardess.
@@ -87,6 +88,3 @@ exports.help = {
   type: "providers",
   description: "Allows use of MongoDB functionality throughout Komada.",
 };
-
-exports.conf = config;
-exports.conf.requiredModules = ["mongodb"];

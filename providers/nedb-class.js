@@ -24,7 +24,7 @@ class NeDB {
    * @returns {Datastore} The NeDB Datastore itself
    */
   connect(client) {
-    return this.db = new Datastore(this.persistent ? { filename: resolve(client.clientBaseDir, "bwd", "provider", `${this.name}-nedb.db`), autoload: true } : {}); // eslint-disable-line no-return-assign
+    return this.db = new Datastore(this.persistent ? { filename: resolve(client.clientBaseDir, "bwd", "provider", "nedb", `${this.name}.db`), autoload: true } : {}); // eslint-disable-line no-return-assign
   }
 
   /**
@@ -131,4 +131,15 @@ class NeDBManager {
   }
 }
 
-module.exports = { NeDB, NeDBManager };
+const conf = {
+  moduleName: "nedbclass",
+  enabled: true,
+  requiredModules: ["nedb-core"],
+};
+const help = {
+  name: "nedbclass",
+  type: "providers",
+  description: "Allows you to use NeDB Class functionality throught Komada",
+};
+
+module.exports = { NeDB, NeDBManager, help, conf };

@@ -74,3 +74,15 @@ exports.get = query => db.findOneAsync(query);
 exports.count = (query = {}) => db.countAsync(query);
 
 exports.eval = () => db;
+
+exports.conf = {
+  moduleName: "nedb",
+  enabled: true,
+  requiredModules: ["nedb-core"],
+};
+
+exports.help = {
+  name: "nedb",
+  type: "providers",
+  description: "Allows you to use NeDB functionality throught Komada",
+};
