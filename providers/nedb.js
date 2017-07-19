@@ -1,84 +1,128 @@
-/* eslint-disable no-unused-expressions */
-let db;
 const { resolve } = require("path");
-const { promisifyAll } = require("tsubaki");
 const Datastore = require("nedb-core");
+require("tsubaki").promisifyAll(Datastore.prototype);
+const dataStores = new (require("discord.js").Collection)();
+const fs = require("fs-nextra");
 
-promisifyAll(Datastore.prototype);
+let baseDir;
 
-const config = {
-  persistent: false,
-};
-
-/**
- * Initiates the NeDB Provider
- * @param {?Client} client Komada Client
- */
 exports.init = (client) => {
-  db = new Datastore(config.persistent ? { filename: resolve(`${client.clientBaseDir}/bwd/db/komada-nedb.db`), autoload: true } : {});
+  baseDir = resolve(client.clientBaseDir, "bwd", "provider", "nedb");
+  return fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
+};
+
+const resolveQuery = query => (query instanceof Object ? query : { id: query });
+
+/* Table methods */
+
+/**
+ * Check if a table exists.
+ * @param {string} table The name of the table you want to check.
+ * @returns {boolean}
+ */
+exports.hasTable = table => dataStores.has(table);
+
+/**
+ * Create a new table.
+ * @param {string} table The name for the new table.
+ * @param {boolean} [persistent=true] Whether the DB should be persistent.
+ * @returns {Promise<void>}
+ */
+exports.createTable = async (table, persistent = true) => {
+  if (dataStores.has(table)) return null;
+  const db = new Datastore(persistent ? { filename: resolve(baseDir, `${table}.db`), autoload: true } : {});
+  dataStores.set(table, db);
+  return db;
 };
 
 /**
- * Inserts a document or an array of documents into the Datastore.
- * @param {(Object|Object[])} doc Object or Array of Objects to insert into Datastore
- * @returns {Promise<Object|Object[]>}
+ * Delete a table.
+ * @param {string} table The name of the table to delete.
+ * @returns {Promise<boolean>}
  */
-exports.insert = doc => db.insertAsync(doc);
+exports.deleteTable = async (table) => {
+  if (dataStores.has(table)) {
+    await this.deleteAll(table);
+    dataStores.delete(table);
+    return true;
+  }
+  return false;
+};
+
+/* Document methods */
 
 /**
- * Updates a document matching the query
- *
- * @param {any} query Query Object for Property Equality or using Query Operators
- * @param {any} updateDoc Object containing a new Document or Update Operators
- * @returns {Promise<number>} Returns the number of Documents updated.
- */
-exports.update = (query, updateDoc) => db.updateAsync(query, updateDoc);
-
-/**
- * Deletes documents matching the query
- *
- * @param {any} query Query Object for Property Equality or using Query Operators
- * @param {boolean} [all=false] Delete All
- * @returns {Promise<number>} Returns the numbers of Documents deleted
- */
-exports.delete = (query, all = false) => db.removeAsync(query, { multi: all });
-
-/**
- * Deletes all Documents in the Datastore
- *
- * @returns {Promise<number>} Returns the numbers of Documents deleted
- */
-exports.deleteAll = () => this.delete({}, true);
-
-/**
- * Get all documents in the Datastore
- *
+ * Get all entries from a table.
+ * @param {string} table The name of the table to get all entries from.
  * @returns {Promise<Object[]>}
  */
-exports.all = () => db.findAsync({});
+exports.getAll = table => dataStores.get(table).findAsync({});
 
 /**
- * Gets a document matching the query
- *
- * @param {any} query Query Object for Property Equality or using Query Operators
+ * Get a single entry from a table by a query.
+ * @param {string} table The name of the table to get the entry from.
+ * @param {string|Object} query The query object. If it is a string, it will search by 'id'.
  * @returns {Promise<Object>}
  */
-exports.get = query => db.findOneAsync(query);
+exports.get = (table, query) => dataStores.get(table).findOneAsync(resolveQuery(query));
 
 /**
- * Counts the number of Documents matching the query
- *
- * @param {any} [query={}] Query Object for Property Equality or using Query Operators
- * @returns {Promise<number>}
+ * Check if a entry exists from a table by a query.
+ * @param {string} table The name of the table to check the entry from.
+ * @param {string|Object} query The query object. If it is a string, it will search by 'id'.
+ * @returns {Promise<boolean>}
  */
-exports.count = (query = {}) => db.countAsync(query);
+exports.has = (table, query) => this.get(table, query).then(result => !!result);
 
-exports.eval = () => db;
+/**
+ * Insert a new entry into a table.
+ * @param {string} table The name of the table to insert the entry.
+ * @param {string|Object} query The query object. If it is a string, it will be keyed by 'id'.
+ * @param {Object} data The data you want the entry to contain.
+ * @returns {Promise<Object>}
+ */
+exports.create = (table, query, data) => dataStores.get(table).insertAsync(Object.assign(data, resolveQuery(query)));
+exports.set = (...args) => this.create(...args);
+exports.insert = (...args) => this.create(...args);
+
+/**
+ * Update an entry from a table.
+ * @param {string} table The name of the table to update the entry from.
+ * @param {string|Object} query The query object. If it is a string, it will search by 'id'.
+ * @param {Object} data The data you want to update.
+ * @returns {Promise<number>} Returns a Promise containing the number of Documents Updated. (Either 0 or 1).
+ */
+exports.update = (table, query, data) => dataStores.get(table).updateAsync(resolveQuery(query), data);
+exports.replace = (...args) => this.update(...args);
+
+/**
+ * Delete a single or all entries from a table that matches the query.
+ * @param {string} table The name of the table to delete the entry from.
+ * @param {string|Object} query The query object. If it is a string, it will search by 'id'.
+ * @param {boolean} [all=false] Option to delete all documents that match the query.
+ * @returns {Promise<number>} Returns a Promise with the number of documents deleted.
+ */
+exports.delete = (table, query, all = false) => dataStores.get(table).removeAsync(resolveQuery(query), { multi: all });
+
+/**
+ * Delete all entries from a table.
+ * @param {string} table The name of the table to delete the entries from.
+ * @returns {Promise<number>} Returns a Promise with the number of documents deleted.
+ */
+exports.deleteAll = table => this.delete(table, {}, true);
+
+/**
+ * Count the amount of entries from a table based on the query.
+ * @param {string} table The name of the table to count the entries from.
+ * @param {string|Object} [query={}] The query object. If it is a string, it will search by 'id'.
+ * @returns {Promise<number>} The amount of entries that matches the query.
+ */
+exports.count = (table, query = {}) => dataStores.get(table).countAsync(resolveQuery(query));
 
 exports.conf = {
   moduleName: "nedb",
   enabled: true,
-  requiredModules: ["nedb-core"],
+  requiredModules: ["fs-nextra", "tsubaki", "nedb-core"],
 };
 
 exports.help = {
