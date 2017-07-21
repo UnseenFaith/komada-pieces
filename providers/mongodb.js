@@ -2,16 +2,15 @@ const Mongo = require("mongodb").MongoClient;
 
 let db;
 
-exports.conf = {
+const config = {
   moduleName: "mongo",
   enabled: true,
-  requiredModules: ["mongodb"],
   dbName: "Komada",
   dbURL: "mongodb://localhost:27017/",
 };
 
 exports.init = async () => {
-  db = await Mongo.connect(`${this.conf.dbURL}${this.conf.dbName}`);
+  db = await Mongo.connect(`${config.dbURL}${config.dbName}`);
 };
 
 // Collection Methods. Collections are implicitly created with document methods regardess.
@@ -23,6 +22,8 @@ exports.init = async () => {
  * @returns {Promise<Collection>} Returns a promise containing the created Collection.
  */
 exports.createCollection = (name, options) => db.createCollection(name, options);
+exports.createTable = (...args) => this.createCollection(...args);
+exports.hasTable = () => true;
 
 /**
  * Drops a collection within a DB.
@@ -30,6 +31,7 @@ exports.createCollection = (name, options) => db.createCollection(name, options)
  * @returns {Promise<boolean>}
  */
 exports.dropCollection = name => db.dropCollection(name);
+exports.deleteTable = (...args) => this.dropCollection(...args);
 
 // Document Methods. Update requires MongoDB Update Operators. Be sure to refer to MongoDB documentation.
 /**
@@ -37,7 +39,7 @@ exports.dropCollection = name => db.dropCollection(name);
  * @param {string} collection Name of the Collection
  * @returns {Promise<Array>}
  */
-exports.all = collection => db.collection(collection).find({}).toArray();
+exports.getAll = collection => db.collection(collection).find({}).toArray();
 
 /**
  * Retrieves a single Document from a Collection that matches a user determined ID
@@ -47,13 +49,26 @@ exports.all = collection => db.collection(collection).find({}).toArray();
  */
 exports.get = (collection, id) => db.collection(collection).findOne({ id }); // eslint-disable-line quote-props
 
+exports.has = async (...args) => {
+  const results = await this.get(...args);
+  if (!results) return false;
+  return true;
+};
+
+exports.getRandom = async (...args) => {
+  const results = await this.getAll(...args);
+  return results[Math.floor(Math.random() * results.length)]
+};
+
 /**
  * Inserts a Document into a Collection using a user provided object.
  * @param {string} collection Name of the Collection
  * @param {Object} docObj Document Object to insert
  * @returns {Promise<CommandResult>}
  */
-exports.add = (collection, docObj) => db.collection(collection).insertOne(docObj);
+exports.insert = (collection, docObj) => db.collection(collection).insertOne(docObj);
+exports.create = (...args) => this.insert(...args);
+exports.set = (...args) => this.insert(...args);
 
 /**
  * Deletes a Document from a Collection that matches a user determined ID *
@@ -88,3 +103,6 @@ exports.help = {
   type: "providers",
   description: "Allows use of MongoDB functionality throughout Komada.",
 };
+
+exports.conf = config;
+exports.conf.requiredModules = ["mongodb"];
