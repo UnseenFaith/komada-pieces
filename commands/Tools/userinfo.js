@@ -1,4 +1,4 @@
-
+// Created by Jellz#9453, hehehehehe.
 exports.run = (client, msg, [member]) => {
 	if (member.id == client.user.id) {
     msg.channel.send(`\`\`\`asciidoc\n= BOT INFORMATION =\n\n• ID :: ${client.user.id}\n• Username :: ${client.user.username}#${client.user.discriminator}\n• Guilds :: ${client.guilds.size}\n• Users :: ${client.users.size}\n• Channels :: ${client.channels.size}\`\`\``);
