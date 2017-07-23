@@ -1,8 +1,17 @@
-exports.run = async (client, msg, [user = client.user, amount]) => {
-  let messages = await msg.channel.fetchMessages({ limit: amount });
-  messages = messages.filter(m => m.author.id === user.id);
-  if (client.config.selfbot) return messages.forEach(m => m.delete().catch((e) => { throw new Error(e); }));
-  return msg.channel.bulkDelete(messages);
+exports.run = async (client, msg, [user, amount]) => {
+  user = msg.mentions.users.first();
+  amount = parseInt(msg.content.split(" ").pop());
+
+  if (!amount) return msg.reply("Must specify an amount to delete!");
+  if (!amount && !user) return msg.reply("Must specify a user and amount, or just an amount, of messages to purge!");
+
+  if (user) {
+    return msg.channel.fetchMessages({ limit: 100 }).then((messages) => {
+      const userMsgs = messages.filter(m => m.author.id === user.id).array().slice(0, amount);
+      return msg.channel.bulkDelete(userMsgs).catch(error => console.log(error.stack));
+    });
+  }
+  return msg.channel.bulkDelete(amount);
 };
 
 exports.conf = {
@@ -10,7 +19,7 @@ exports.conf = {
   runIn: ["text", "dm", "group"],
   selfbot: false,
   aliases: [],
-  permLevel: 0,
+  permLevel: 3,
   botPerms: ["MANAGE_MESSAGES"],
   requiredFuncs: [],
   requiredModules: [],
@@ -18,8 +27,9 @@ exports.conf = {
 
 exports.help = {
   name: "purge",
-  description: "This will remove X amount of messages sent in a channel, or by Y user.",
-  usage: "[user:mention] <amount:int{2,100}>",
+  description: "This will remove X amount of messages sent in a channel, or all msg by Y user in X range.",
+  extendedHelp: "Remove all messages in channel by last X amount, or remove all messages only from Mentioned user from last X messages range.",
+  usage: "[user:mention] <amount:int{2,25}>",
   usageDelim: " ",
   type: "commands",
 };
