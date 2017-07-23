@@ -57,7 +57,7 @@ exports.has = async (...args) => {
 
 exports.getRandom = async (...args) => {
   const results = await this.getAll(...args);
-  return results[Math.floor(Math.random() * results.length)]
+  return results[Math.floor(Math.random() * results.length)];
 };
 
 /**
