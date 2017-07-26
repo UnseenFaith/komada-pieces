@@ -2,8 +2,8 @@
   "name": "komada-pieces",
   "description": "This repository contains the various *Pieces* submitted by users and collaborators.",
   "scripts": {
-    "lint": "eslint commands providers functions inhibitors monitors packages",
-    "lint:fix": "npm run lint -- --fix"
+    "test": "eslint commands providers functions inhibitors monitors packages",
+    "lint": "npm run test -- --fix"
   },
   "repository": {
     "type": "git",

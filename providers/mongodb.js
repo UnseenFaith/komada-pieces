@@ -21,7 +21,7 @@ exports.init = async () => {
  * @param {Object} [options] Object containing various options for the created Collection
  * @returns {Promise<Collection>} Returns a promise containing the created Collection.
  */
-exports.createCollection = (name, options - {}) => db.createCollection(name, options);
+exports.createCollection = (name, options = {}) => db.createCollection(name, options);
 exports.createTable = (...args) => this.createCollection(...args);
 exports.hasTable = () => true;
 

@@ -47,7 +47,7 @@ exports.run = (client, msg, cmd) => {
 
   if (entry && commandCooldown !== standardCooldown) {
     let message = `Please wait ${commandCooldown / 1000} second(s) between !${
-                commandName} commands.`;
+      commandName} commands.`;
 
     if (id === msg.guild.id) message += "\nThe cooldown for this command is shared across the guild.";
 
