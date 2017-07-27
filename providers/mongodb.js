@@ -10,7 +10,9 @@ const config = {
 };
 
 exports.init = async () => {
-  db = await Mongo.connect(`${config.dbURL}${config.dbName}`);
+  try {
+    db = await Mongo.connect(`${config.dbURL}${config.dbName}`);
+  } catch (err) { console.log(err) }
 };
 
 // Collection Methods. Collections are implicitly created with document methods regardess.
@@ -39,7 +41,11 @@ exports.deleteTable = (...args) => this.dropCollection(...args);
  * @param {string} collection Name of the Collection
  * @returns {Promise<Array>}
  */
-exports.getAll = collection => db.collection(collection).find({}).toArray();
+exports.getAll = async (collection) => {
+  const data = await db.collection(collection).find({}).toArray();
+  for (let i = 0; i < data.length; i++) { delete data[i]._id; }
+  return data;
+}
 
 /**
  * Retrieves a single Document from a Collection that matches a user determined ID
@@ -66,7 +72,11 @@ exports.getRandom = async (...args) => {
  * @param {Object} docObj Document Object to insert
  * @returns {Promise<CommandResult>}
  */
-exports.insert = (collection, docObj) => db.collection(collection).insertOne(docObj);
+exports.insert = (collection, id, docObj) => {
+  docObj = Object.assign(docObj, id = { id });
+  console.log(docObj)
+  db.collection(collection).insertOne(docObj);
+};
 exports.create = (...args) => this.insert(...args);
 exports.set = (...args) => this.insert(...args);
 
@@ -85,7 +95,13 @@ exports.delete = (collection, id) => db.collection(collection).deleteOne({ id })
  * @param {Object} updateObj The update operations to be applied to the document
  * @returns {Promise<CommandResult>}
  */
-exports.update = (collection, filter, updateObj) => db.collection(collection).updateOne(filter, updateObj);
+exports.update = async (collection, filter, updateObj) => {
+  let res = await this.get(collection, filter);
+  if (typeof filter === "string") {
+    filter = { id: filter };
+  }
+  await db.collection(collection).updateOne(filter, Object.assign(res, updateObj));
+}
 
 /**
  * Replaces a Document with a new Document specified by the user *

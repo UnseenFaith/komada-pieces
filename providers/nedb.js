@@ -1,12 +1,14 @@
 const { resolve } = require("path");
 const Datastore = require("nedb-core");
 require("tsubaki").promisifyAll(Datastore.prototype);
-const dataStores = new (require("discord.js").Collection)();
+
+let dataStores;
 const fs = require("fs-nextra");
 
 let baseDir;
 
 exports.init = (client) => {
+  dataStores = new client.methods.Collection();
   baseDir = resolve(client.clientBaseDir, "bwd", "provider", "nedb");
   return fs.ensureDir(baseDir).catch(err => client.emit("log", err, "error"));
 };
@@ -92,7 +94,11 @@ exports.insert = (...args) => this.create(...args);
  * @param {Object} data The data you want to update.
  * @returns {Promise<number>} Returns a Promise containing the number of Documents Updated. (Either 0 or 1).
  */
-exports.update = (table, query, data) => dataStores.get(table).updateAsync(resolveQuery(query), data);
+exports.update = async (table, query, data) => {
+  const res = await this.get(table, query)
+  await dataStores.get(table).updateAsync(resolveQuery(query), Object.assign(res, data));
+  await dataStores.get(table).persistence.compactDatafile();
+};
 exports.replace = (...args) => this.update(...args);
 
 /**
@@ -122,7 +128,7 @@ exports.count = (table, query = {}) => dataStores.get(table).countAsync(resolveQ
 exports.conf = {
   moduleName: "nedb",
   enabled: true,
-  requiredModules: ["fs-nextra", "tsubaki", "nedb-core"],
+  requiredModules: ["tsubaki", "nedb-core"],
 };
 
 exports.help = {
