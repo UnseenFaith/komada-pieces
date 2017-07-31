@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 const Mongo = require("mongodb").MongoClient;
 
 let db;
@@ -71,8 +73,9 @@ exports.getRandom = async (...args) => {
 /**
  * Inserts a Document into a Collection using a user provided object.
  * @param {string} collection Name of the Collection
+ * @param {(string|Object)} id ID of the document
  * @param {Object} docObj Document Object to insert
- * @returns {Promise<CommandResult>}
+ * @returns {Promise}
  */
 exports.insert = (collection, id, docObj) => db.collection(collection).insertOne(Object.assign(docObj, resolveQuery(id)));
 exports.create = (...args) => this.insert(...args);
@@ -91,7 +94,6 @@ exports.delete = (collection, id) => db.collection(collection).deleteOne(resolve
  * @param {string} collection Name of the Collection
  * @param {Object} filter The Filter used to select the document to update
  * @param {Object} updateObj The update operations to be applied to the document
- * @returns {Promise<CommandResult>}
  */
 exports.update = async (collection, filter, updateObj) => {
   const res = await this.get(collection, filter);

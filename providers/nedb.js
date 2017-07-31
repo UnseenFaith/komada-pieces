@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 const { resolve } = require("path");
 const Datastore = require("nedb-core");
 require("tsubaki").promisifyAll(Datastore.prototype);
