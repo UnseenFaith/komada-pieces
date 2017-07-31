@@ -58,7 +58,11 @@ exports.deleteTable = async (table) => {
  * @param {string} table The name of the table to get all entries from.
  * @returns {Promise<Object[]>}
  */
-exports.getAll = table => dataStores.get(table).findAsync({});
+exports.getAll = async (table) => {
+  const data = await dataStores.get(table).findAsync({});
+  for (let i = 0; i < data.length; i++) { delete data[i]._id; }
+  return data;
+};
 
 /**
  * Get a single entry from a table by a query.
@@ -66,7 +70,11 @@ exports.getAll = table => dataStores.get(table).findAsync({});
  * @param {string|Object} query The query object. If it is a string, it will search by 'id'.
  * @returns {Promise<Object>}
  */
-exports.get = (table, query) => dataStores.get(table).findOneAsync(resolveQuery(query));
+exports.get = async (table, query) => {
+  const data = await dataStores.get(table).findOneAsync(resolveQuery(query));
+  delete data._id;
+  return data;
+};
 
 /**
  * Check if a entry exists from a table by a query.
@@ -95,11 +103,16 @@ exports.insert = (...args) => this.create(...args);
  * @returns {Promise<number>} Returns a Promise containing the number of Documents Updated. (Either 0 or 1).
  */
 exports.update = async (table, query, data) => {
-  const res = await this.get(table, query)
+  const res = await this.get(table, query);
   await dataStores.get(table).updateAsync(resolveQuery(query), Object.assign(res, data));
   await dataStores.get(table).persistence.compactDatafile();
+  return true;
 };
-exports.replace = (...args) => this.update(...args);
+exports.replace = async (table, query, data) => {
+  await dataStores.get(table).updateAsync(resolveQuery(query), data);
+  await dataStores.get(table).persistence.compactDatafile();
+  return true;
+};
 
 /**
  * Delete a single or all entries from a table that matches the query.

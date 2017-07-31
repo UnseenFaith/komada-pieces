@@ -12,8 +12,10 @@ const config = {
 exports.init = async () => {
   try {
     db = await Mongo.connect(`${config.dbURL}${config.dbName}`);
-  } catch (err) { console.log(err) }
+  } catch (err) { console.log(err); }
 };
+
+const resolveQuery = query => (query instanceof Object ? query : { id: query });
 
 // Collection Methods. Collections are implicitly created with document methods regardess.
 
@@ -45,7 +47,7 @@ exports.getAll = async (collection) => {
   const data = await db.collection(collection).find({}).toArray();
   for (let i = 0; i < data.length; i++) { delete data[i]._id; }
   return data;
-}
+};
 
 /**
  * Retrieves a single Document from a Collection that matches a user determined ID
@@ -53,7 +55,7 @@ exports.getAll = async (collection) => {
  * @param {string} id ID of the document
  * @returns {Promise<?Object>}
  */
-exports.get = (collection, id) => db.collection(collection).findOne({ id }); // eslint-disable-line quote-props
+exports.get = (collection, id) => db.collection(collection).findOne(resolveQuery(id)); // eslint-disable-line quote-props
 
 exports.has = async (...args) => {
   const results = await this.get(...args);
@@ -72,11 +74,7 @@ exports.getRandom = async (...args) => {
  * @param {Object} docObj Document Object to insert
  * @returns {Promise<CommandResult>}
  */
-exports.insert = (collection, id, docObj) => {
-  docObj = Object.assign(docObj, id = { id });
-  console.log(docObj)
-  db.collection(collection).insertOne(docObj);
-};
+exports.insert = (collection, id, docObj) => db.collection(collection).insertOne(Object.assign(docObj, resolveQuery(id)));
 exports.create = (...args) => this.insert(...args);
 exports.set = (...args) => this.insert(...args);
 
@@ -86,7 +84,7 @@ exports.set = (...args) => this.insert(...args);
  * @param {string} id ID of the document
  * @returns {Promise<CommandResult>}
  */
-exports.delete = (collection, id) => db.collection(collection).deleteOne({ id });
+exports.delete = (collection, id) => db.collection(collection).deleteOne(resolveQuery(id));
 
 /**
  * Updates a Document using MongoDB Update Operators. *
@@ -96,12 +94,9 @@ exports.delete = (collection, id) => db.collection(collection).deleteOne({ id })
  * @returns {Promise<CommandResult>}
  */
 exports.update = async (collection, filter, updateObj) => {
-  let res = await this.get(collection, filter);
-  if (typeof filter === "string") {
-    filter = { id: filter };
-  }
-  await db.collection(collection).updateOne(filter, Object.assign(res, updateObj));
-}
+  const res = await this.get(collection, filter);
+  await db.collection(collection).updateOne(resolveQuery(filter), Object.assign(res, updateObj));
+};
 
 /**
  * Replaces a Document with a new Document specified by the user *
@@ -110,7 +105,7 @@ exports.update = async (collection, filter, updateObj) => {
  * @param {Object} repDoc The Document that replaces the matching document
  * @returns {Promise<CommandResult>}
  */
-exports.replace = (collection, filter, repDoc) => db.collection(collection).replaceOne(filter, repDoc);
+exports.replace = (collection, filter, repDoc) => db.collection(collection).replaceOne(resolveQuery(filter), repDoc);
 
 exports.eval = () => db;
 
