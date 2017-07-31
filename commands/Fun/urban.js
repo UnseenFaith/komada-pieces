@@ -8,8 +8,8 @@ exports.run = async (client, msg, [search, resultNum = 0]) => {
   const result = body.list[resultNum];
   if (!result) return msg.channel.send("No entry found.");
   const wdef = result.definition.length > 1000
-      ? `${client.funcs.splitText(result.definition, 1000)}...`
-      : result.definition;
+    ? `${client.funcs.splitText(result.definition, 1000)}...`
+    : result.definition;
   const definition = [
     `**Word:** ${search}`,
     "",
