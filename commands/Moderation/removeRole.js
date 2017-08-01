@@ -21,8 +21,8 @@ exports.run = async (client, msg, [user, role]) => {
       msg.reply({ embed });
     // if the role doesnt exists send this
     } else {
-       msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role));
-      const embed = new Discord.RichEmbed()
+      msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role));
+      const embed = new client.methods.Embed()
         .setTitle("Role Removed!")
         .setAuthor(client.user.username, client.user.avatarURL)
         /*
@@ -40,7 +40,7 @@ exports.run = async (client, msg, [user, role]) => {
       msg.reply({ embed });
     }
   } catch (e) {
-    msg.reply("Some error occured with removing a role from the member. A report has been sent to the developers.");    
+    msg.reply("Some error occured with removing a role from the member. A report has been sent to the developers.");
     // please insert the channel id to where you want to recieve the error reports.
     client.channels.get("CHANNELIDHERE").send(`There was an error trying to remove role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
