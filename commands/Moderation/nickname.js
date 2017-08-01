@@ -4,11 +4,11 @@ exports.run = async (client, msg, [user, name]) => {
     if (name.length > 32 || name.length === 0) {
       msg.reply("Sorry the nickname was too long or too short.");
       return;
-    };
+    }
     // set the nickname
     msg.mentions.members.first().setNickname(`${name}`);
     // send a message in regards to what changed in an embed.
-  	const embed = new client.methods.Embed()
+    const embed = new client.methods.Embed()
       .setTitle("Nickname has been changed!")
       .setAuthor(client.user.username, client.user.avatarURL)
       /*
@@ -25,9 +25,9 @@ exports.run = async (client, msg, [user, name]) => {
       .setURL("URLHERE");
     msg.reply({ embed });
   } catch (e) {
-  	msg.reply("Some error occured with un-muting the member. A report has been sent to the developers.");
-  // please insert the channel id to where you want to recieve the error reports.
-  	client.channels.get("CHANNELIDHERE").send(`There was an error trying to un-mute: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
+    msg.reply("Some error occured with un-muting the member. A report has been sent to the developers.");
+    // please insert the channel id to where you want to recieve the error reports.
+    client.channels.get("CHANNELIDHERE").send(`There was an error trying to un-mute: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
 

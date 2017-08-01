@@ -41,7 +41,7 @@ exports.run = async (client, msg, [user, role]) => {
     }
   } catch (e) {
     msg.reply("Some error occured with removing a role from the member. A report has been sent to the developers.");    
-  // please insert the channel id to where you want to recieve the error reports.
+    // please insert the channel id to where you want to recieve the error reports.
     client.channels.get("CHANNELIDHERE").send(`There was an error trying to remove role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };

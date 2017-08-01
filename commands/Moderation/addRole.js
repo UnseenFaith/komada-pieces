@@ -15,9 +15,9 @@ exports.run = async (client, msg, [user, role]) => {
          * Takes a Date object, defaults to current date.
          */
         .setTimestamp()
-        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        // The URL you wish to have your users linked to when clicking on the title of the embed.
         .setURL("URLHERE");
-      msg.reply({embed});
+      msg.reply({ embed });
     } else {
       const embed = new client.methods.Embed()
         .setTitle("Role Added!")
@@ -33,12 +33,12 @@ exports.run = async (client, msg, [user, role]) => {
          */
         .setTimestamp()
         // The URL you wish to have your users linked to when clicking on the title of the embed.
-        .setURL("URLHERE")
+        .setURL("URLHERE");
       msg.reply({ embed });
-    } 
+    }
   } catch (e) {
     msg.reply("Some error occured with adding a role to the member. A report has been sent to the developers.");
-// Please insert the channel id to where you want to recieve the error reports.
+    // Please insert the channel id to where you want to recieve the error reports.
     client.channels.get("CHANNELIDHERE").send(`There was an error trying to add a role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
