@@ -6,23 +6,24 @@ exports.run = async (client, msg, [user, name]) => {
 	    return
 	  }
 //set the nickname
-	    msg.mentions.members.first().setNickname(`${name}`);
+	  msg.mentions.members.first().setNickname(`${name}`);
 //send a message in regards to what changed in an embed.
-	    msg.reply('', {embed: {
-	        color: 3447003,
-	        author: {
-	        name: client.user.username,
-	        icon_url: client.user.avatarURL
-	        },
-	        title: 'Nickname has been changed!',
-	        url: 'http://ezlgg.com',
-	        description: `Nickname has been changed to ${name} for ${user} :smiley:`,
-	        timestamp: new Date(),
-	        footer: {
-		        icon_url: client.user.avatarURL,
-		        text: 'Made with Komada, Discord.js, & <3'
-	        }
-	    }});
+		const embed = new Discord.RichEmbed()
+        .setTitle("Nickname has been changed!")
+        .setAuthor(client.user.username, client.user.avatarURL)
+        /*
+         * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+         */
+        .setColor(0x00AE86)
+        .setDescription(`Nickname has been changed to ${name} for ${user} :smiley:`)
+        .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
+        /*
+         * Takes a Date object, defaults to current date.
+         */
+        .setTimestamp()
+        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE")
+    msg.reply({embed});
     } catch (e) {
     	msg.reply('Some error occured with un-muting the member. A report has been sent to the developers.');
 //please insert the channel id to where you want to recieve the error reports.

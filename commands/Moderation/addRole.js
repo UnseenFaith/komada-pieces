@@ -1,38 +1,43 @@
 exports.run = async (client, msg, [user, role]) => {
   try {
-    if (msg.guild.roles.exists('name', role)) {
-      msg.mentions.members.first().addRole(msg.guild.roles.find('name', role));
-      msg.reply('', {embed: {
-        color: 3447003,
-        author: {
-          name: client.user.username,
-          icon_url: client.user.avatarURL
-        },
-        description: `${user} has been given the ${role} role. :smiley:`,
-        timestamp: new Date(),
-        footer: {
-          icon_url: client.user.avatarURL,
-          text: 'Made with Komada, Discord.js, & <3'
-        }
-      }
-      });
+    if (msg.guild.roles.exists("name", role)) {
+      msg.mentions.members.first().addRole(msg.guild.roles.find("name", role));
+      const embed = new Discord.RichEmbed()
+        .setTitle("Role Added!")
+        .setAuthor(client.user.username, client.user.avatarURL)
+        /*
+         * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+         */
+        .setColor(0x00AE86)
+        .setDescription(`${user} has been given the ${role} role. :smiley:`)
+        .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
+        /*
+         * Takes a Date object, defaults to current date.
+         */
+        .setTimestamp()
+        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE")
+        msg.reply({embed});
     } else {
-      msg.reply('', {embed: {
-        color: 3447003,
-        author: {
-          name: client.user.username,
-          icon_url: client.user.avatarURL
-        },
-        description: `I am sorry but ${role} role does not exist. :cry:`,
-        timestamp: new Date(),
-        footer: {
-          icon_url: client.user.avatarURL,
-          text: 'Made with Komada, Discord.js, & <3'
-        }
-      }});
+      const embed = new Discord.RichEmbed()
+        .setTitle("Role Added!")
+        .setAuthor(client.user.username, client.user.avatarURL)
+        /*
+         * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+         */
+        .setColor(0x00AE86)
+        .setDescription(`I am sorry but ${role} role does not exist. :cry:`)
+        .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
+        /*
+         * Takes a Date object, defaults to current date.
+         */
+        .setTimestamp()
+        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE")
+      msg.reply({embed});
     } 
   } catch (e) {
-    msg.reply('Some error occured with adding a role to the member. A report has been sent to the developers.');
+    msg.reply("Some error occured with adding a role to the member. A report has been sent to the developers.");
 //please insert the channel id to where you want to recieve the error reports.
     client.channels.get("CHANNELIDHERE").send(`There was an error trying to add a role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
@@ -41,9 +46,9 @@ exports.run = async (client, msg, [user, role]) => {
 exports.conf = {
   enabled: true,
   runIn: ["text"],
-  aliases: ['arole', 'ar'],
+  aliases: ["arole", "ar"],
   permLevel: 2,
-  botPerms: ['MANAGE_ROLES'],
+  botPerms: ["MANAGE_ROLES"],
   requiredFuncs: [],
   cooldown: 0,
 };

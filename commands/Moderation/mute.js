@@ -2,19 +2,22 @@ exports.run = async (client, msg, [user]) => {
   try {
 //Please write the role name you have set up on your server and you wish to use.
     await msg.mentions.members.first().addRole(msg.guild.roles.find('name','ROLENAMEHERE'));
-    msg.reply('', {embed: {
-      color: 3447003,
-      author: {
-        name: client.user.username,
-        icon_url: client.user.avatarURL
-      },
-      description: `${user} is now in the time-out corner. :smiley:`,
-      timestamp: new Date(),
-      footer: {
-        icon_url: client.user.avatarURL,
-        text: 'Made with Komada, Discord.js, & <3'
-      }
-    }});
+    const embed = new Discord.RichEmbed()
+      .setTitle("User Was Muted!")
+      .setAuthor(client.user.username, client.user.avatarURL)
+      /*
+       * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+       */
+      .setColor(0x00AE86)
+      .setDescription(`${user} is now in the time-out corner. :smiley:`)
+      .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
+      /*
+       * Takes a Date object, defaults to current date.
+       */
+      .setTimestamp()
+      //The URL you wish to have your users linked to when clicking on the title of the embed.
+      .setURL("URLHERE")
+    message.reply({embed});
   } catch (e) {
     msg.reply('Some error occured with muting the member. A report has been sent to the developers.');
 //please insert the channel id to where you want to recieve the error reports.

@@ -3,36 +3,41 @@ exports.run = async (client, msg, [user, role]) => {
   try {
     if (msg.guild.roles.exists('name', role)) {
       msg.mentions.members.first().removeRole(msg.guild.roles.find('name', role));
-      msg.reply('', {embed: {
-        color: 3447003,
-        author: {
-          name: client.user.username,
-          icon_url: client.user.avatarURL
-        },
-        description: `${user} has lost the ${role} role. :smiley:`,
-        timestamp: new Date(),
-        footer: {
-          icon_url: client.user.avatarURL,
-          text: 'Made with Komada, Discord.js, & <3'
-        }
-      }
-      });
+      const embed = new Discord.RichEmbed()
+        .setTitle("Role Removed!")
+        .setAuthor(client.user.username, client.user.avatarURL)
+        /*
+         * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+         */
+        .setColor(0x00AE86)
+        .setDescription(`${user} has lost the ${role} role. :smiley:`)
+        .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
+        /*
+         * Takes a Date object, defaults to current date.
+         */
+        .setTimestamp()
+        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE")
+      msg.reply({embed});
 //if the role doesnt exists send this
     } else {
-      msg.reply('', {embed: {
-        color: 3447003,
-        author: {
-          name: client.user.username,
-          icon_url: client.user.avatarURL
-        },
-        description: `I am sorry but ${role} role does not exist. :cry:`,
-        timestamp: new Date(),
-        footer: {
-          icon_url: client.user.avatarURL,
-          text: 'Made with Komada, Discord.js, & <3'
-        }
-      }
-      });
+       msg.mentions.members.first().removeRole(msg.guild.roles.find('name', role));
+      const embed = new Discord.RichEmbed()
+        .setTitle("Role Removed!")
+        .setAuthor(client.user.username, client.user.avatarURL)
+        /*
+         * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
+         */
+        .setColor(0x00AE86)
+        .setDescription(`I am sorry but ${role} role does not exist. :cry:`)
+        .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
+        /*
+         * Takes a Date object, defaults to current date.
+         */
+        .setTimestamp()
+        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE")
+      msg.reply({embed});
     }
   } catch (e) {
     msg.reply('Some error occured with removing a role from the member. A report has been sent to the developers.');    
