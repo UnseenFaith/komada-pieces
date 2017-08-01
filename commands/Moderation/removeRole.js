@@ -1,9 +1,9 @@
 exports.run = async (client, msg, [user, role]) => {
-//tries to remove the role from the user and send back a response.
+// tries to remove the role from the user and send back a response.
   try {
-    if (msg.guild.roles.exists('name', role)) {
-      msg.mentions.members.first().removeRole(msg.guild.roles.find('name', role));
-      const embed = new Discord.RichEmbed()
+    if (msg.guild.roles.exists("name", role)) {
+      msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role));
+      const embed = new client.methods.Embed()
         .setTitle("Role Removed!")
         .setAuthor(client.user.username, client.user.avatarURL)
         /*
@@ -16,12 +16,12 @@ exports.run = async (client, msg, [user, role]) => {
          * Takes a Date object, defaults to current date.
          */
         .setTimestamp()
-        //The URL you wish to have your users linked to when clicking on the title of the embed.
-        .setURL("URLHERE")
-      msg.reply({embed});
-//if the role doesnt exists send this
+        // The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE");
+      msg.reply({ embed });
+    // if the role doesnt exists send this
     } else {
-       msg.mentions.members.first().removeRole(msg.guild.roles.find('name', role));
+       msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role));
       const embed = new Discord.RichEmbed()
         .setTitle("Role Removed!")
         .setAuthor(client.user.username, client.user.avatarURL)
@@ -35,13 +35,13 @@ exports.run = async (client, msg, [user, role]) => {
          * Takes a Date object, defaults to current date.
          */
         .setTimestamp()
-        //The URL you wish to have your users linked to when clicking on the title of the embed.
-        .setURL("URLHERE")
-      msg.reply({embed});
+        // The URL you wish to have your users linked to when clicking on the title of the embed.
+        .setURL("URLHERE");
+      msg.reply({ embed });
     }
   } catch (e) {
-    msg.reply('Some error occured with removing a role from the member. A report has been sent to the developers.');    
-//please insert the channel id to where you want to recieve the error reports.
+    msg.reply("Some error occured with removing a role from the member. A report has been sent to the developers.");    
+  // please insert the channel id to where you want to recieve the error reports.
     client.channels.get("CHANNELIDHERE").send(`There was an error trying to remove role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
@@ -49,9 +49,9 @@ exports.run = async (client, msg, [user, role]) => {
 exports.conf = {
   enabled: true,
   runIn: ["text"],
-  aliases: ['rrole', 'rr'],
+  aliases: ["rrole", "rr"],
   permLevel: 2,
-  botPerms: ['MANAGE_ROLES'],
+  botPerms: ["MANAGE_ROLES"],
   requiredFuncs: [],
   cooldown: 0,
 };
@@ -61,5 +61,5 @@ exports.help = {
   description: "Remove a role from a user.",
   usage: "<user:user> <role:str>",
   usageDelim: " ",
-  extendedHelp: "1) User must have a role called Moderators to use this command.\.2) Bot must have Manage Role permissions. The bot will not be able to remove a role higher than its highest role.",
+  extendedHelp: "1) User must have a role called Moderators to use this command.\n2) Bot must have Manage Role permissions. The bot will not be able to remove a role higher than its highest role.",
 };

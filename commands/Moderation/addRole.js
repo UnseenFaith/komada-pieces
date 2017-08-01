@@ -2,7 +2,7 @@ exports.run = async (client, msg, [user, role]) => {
   try {
     if (msg.guild.roles.exists("name", role)) {
       msg.mentions.members.first().addRole(msg.guild.roles.find("name", role));
-      const embed = new Discord.RichEmbed()
+      const embed = new client.methods.Embed()
         .setTitle("Role Added!")
         .setAuthor(client.user.username, client.user.avatarURL)
         /*
@@ -16,10 +16,10 @@ exports.run = async (client, msg, [user, role]) => {
          */
         .setTimestamp()
         //The URL you wish to have your users linked to when clicking on the title of the embed.
-        .setURL("URLHERE")
-        msg.reply({embed});
+        .setURL("URLHERE");
+      msg.reply({embed});
     } else {
-      const embed = new Discord.RichEmbed()
+      const embed = new client.methods.Embed()
         .setTitle("Role Added!")
         .setAuthor(client.user.username, client.user.avatarURL)
         /*
@@ -32,16 +32,16 @@ exports.run = async (client, msg, [user, role]) => {
          * Takes a Date object, defaults to current date.
          */
         .setTimestamp()
-        //The URL you wish to have your users linked to when clicking on the title of the embed.
+        // The URL you wish to have your users linked to when clicking on the title of the embed.
         .setURL("URLHERE")
-      msg.reply({embed});
+      msg.reply({ embed });
     } 
   } catch (e) {
     msg.reply("Some error occured with adding a role to the member. A report has been sent to the developers.");
-//please insert the channel id to where you want to recieve the error reports.
+// Please insert the channel id to where you want to recieve the error reports.
     client.channels.get("CHANNELIDHERE").send(`There was an error trying to add a role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
-}
+};
 
 exports.conf = {
   enabled: true,
@@ -58,5 +58,5 @@ exports.help = {
   description: "Assign a role to another user.",
   usage: "<user:user> <role:str>",
   usageDelim: " ",
-  extendedHelp: "1) User must have a role called Moderators to use this command.\.2) Bot must have Manage Role permissions. The bot will not be able to assign a role higher than its highest role.",
+  extendedHelp: "1) User must have a role called Moderators to use this command.\n2) Bot must have Manage Role permissions. The bot will not be able to assign a role higher than its highest role.",
 };
