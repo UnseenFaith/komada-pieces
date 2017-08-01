@@ -2,7 +2,7 @@ exports.run = async (client, msg, [user]) => {
   try {
     // Please write the role name you have set up on your server and you wish to use.
     await msg.mentions.members.first().addRole(msg.guild.roles.find("name", "ROLENAMEHERE"));
-    const embed = new Discord.RichEmbed()
+    const embed = new client.methods.Embed()
       .setTitle("User Was Muted!")
       .setAuthor(client.user.username, client.user.avatarURL)
       /*
