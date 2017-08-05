@@ -1,9 +1,9 @@
 exports.run = async (client, msg, [user, role]) => {
   try {
     // The URL you wish to have your users linked to when clicking on the title of the embed.
-    const titleURL = 'URLHERE',
+    const titleURL = "URLHERE";
       // The channel id to where the bot sends a error report when something goes wrong.
-      reportChannelId = 'CHANNELIDHERE',;
+    const reportChannelId = "CHANNELIDHERE";
 
     if (msg.guild.roles.exists("name", role)) {
       if (msg.mentions.members.first().roles.find("name", role)) {

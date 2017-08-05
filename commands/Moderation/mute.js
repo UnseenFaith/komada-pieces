@@ -1,13 +1,12 @@
 exports.run = async (client, msg, [user]) => {
   try {
     // Please write the id number and name of the role you set up on your server for muting. To get a role id, you will need discord developer mode turned on. Note: Depending on how you set this up on your server the bot will mute on text/voice or both.
-    const muteRoleName = 'ROLENAMEHERE',
-      muteRoleId = 'ROLEIDHERE',
-      // The channel id to where the bot sends a error report when something goes wrong.
-      reportChannelId = 'CHANNELIDHERE',
-      // The URL you wish to have your users linked to when clicking on the title of the embed.
-      titleURL = 'URLHERE';
-    
+    const muteRoleName = "ROLENAMEHERE";
+    const muteRoleId = "ROLEIDHERE";
+    // The channel id to where the bot sends a error report when something goes wrong.
+    const reportChannelId = "CHANNELIDHERE";
+    // The URL you wish to have your users linked to when clicking on the title of the embed.
+    const titleURL = "URLHERE";
     if (!msg.mentions.members.first().roles.get(muteRoleId)) {
       msg.mentions.members.first().addRole(msg.guild.roles.find("name", muteRoleName));
       const embed = new client.methods.Embed()
