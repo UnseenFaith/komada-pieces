@@ -2,8 +2,6 @@ exports.run = async (client, msg, [user, role]) => {
   try {
     // The URL you wish to have your users linked to when clicking on the title of the embed.
     const titleURL = "URLHERE";
-      // The channel id to where the bot sends a error report when something goes wrong.
-    const reportChannelId = "CHANNELIDHERE";
 
     if (msg.guild.roles.exists("name", role)) {
       if (msg.mentions.members.first().roles.find("name", role)) {
@@ -21,7 +19,7 @@ exports.run = async (client, msg, [user, role]) => {
           * Takes a Date object, defaults to current date.
           */
           .setTimestamp()
-          .setURL("URLHERE");
+          .setURL(titleURL);
         msg.reply({ embed });
       } else if (!msg.mentions.members.first().roles.find("name", role)) {
         msg.mentions.members.first().addRole(msg.guild.roles.find("name", role));
@@ -38,7 +36,7 @@ exports.run = async (client, msg, [user, role]) => {
           * Takes a Date object, defaults to current date.
           */
           .setTimestamp()
-          .setURL("URLHERE");
+          .setURL(titleURL);
         msg.reply({ embed });
       }
     } else {
@@ -55,13 +53,13 @@ exports.run = async (client, msg, [user, role]) => {
          * Takes a Date object, defaults to current date.
          */
         .setTimestamp()
-        .setURL("URLHERE");
+        .setURL(titleURL);
       msg.reply({ embed });
     }
   } catch (e) {
     msg.reply("Some error occured with adding a role to the member. A report has been sent to the developers.");
     // Please insert the channel id to where you want to recieve the error reports.
-    client.channels.get(reportChannelId).send(`There was an error trying to add a role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
+    client.channels.get("CHANNELIDHERE").send(`There was an error trying to add a role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
 
