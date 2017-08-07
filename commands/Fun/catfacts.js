@@ -1,6 +1,7 @@
 const snekfetch = require("snekfetch");
+
 exports.run = async (client, msg) => {
-    snekfetch.get("https://catfact.ninja/fact").then(res => {
+    snekfetch.get("https://catfact.ninja/fact").then((res) => {
         return msg.channel.send(`📢 **Catfact:** *${res.body.fact}*`);
     });
 
