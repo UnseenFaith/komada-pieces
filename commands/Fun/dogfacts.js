@@ -99,7 +99,7 @@ const facts = [
   "Dogs can get jealous when their humans display affection toward someone or something else.",
   "Weird dog laws include allowing police offers in Palding, Ohio, to bite a dog to quiet it. In Ventura County, California, cats and dogs are not allowed to have sex without a permit.",
   "The largest dog was an English Mastiff who weighed 343 pounds."
-]
+];
 exports.run = (client, msg) => {
   msg.channel.send(facts[Math.floor(Math.random() * facts.length)]);
 };
