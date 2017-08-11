@@ -1,14 +1,3 @@
-module.exports.providerEngine = "json";
-
-module.exports.init = async (client) => {
-  if (client.providers.has(this.providerEngine)) this.provider = client.providers.get(this.providerEngine);
-  else throw new Error(`The Provider ${this.providerEngine} does not seem to exist.`);
-  if (!(await this.provider.hasTable("quiz"))) {
-    const SQLCreate = ["id TEXT NOT NULL UNIQUE", "points INTEGER NOT NULL DEFAULT 0"];
-    await this.provider.createTable("quiz", SQLCreate);
-  }
-};
-
 module.exports = async (client, user, action) => {
   let row = await this.provider.get("quiz", user);
   if (!row) {
@@ -29,6 +18,17 @@ module.exports = async (client, user, action) => {
     // no default
   }
   await this.provider.update("quiz", user, { points });
+};
+
+module.exports.providerEngine = "json";
+
+module.exports.init = async (client) => {
+  if (client.providers.has(this.providerEngine)) this.provider = client.providers.get(this.providerEngine);
+  else throw new Error(`The Provider ${this.providerEngine} does not seem to exist.`);
+  if (!(await this.provider.hasTable("quiz"))) {
+    const SQLCreate = ["id TEXT NOT NULL UNIQUE", "points INTEGER NOT NULL DEFAULT 0"];
+    await this.provider.createTable("quiz", SQLCreate);
+  }
 };
 
 module.exports.conf = { requiredModules: [] };
