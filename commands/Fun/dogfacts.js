@@ -1,13 +1,11 @@
-/*since the catfacts piece in Komada doesn't work, here's an alternative: 
-Uses dogs since cats are overrated anyway. 
-uses a lightweight npm module instead of html parsing
-*/
-
+/* since the catfacts piece in Komada doesn't work, here's an alternative: */
+/* Uses dogs since cats are overrated anyway.*/
+/* uses a lightweight npm module instead of html parsing*/
 const dogFacts = require("dog-facts");
 
 exports.run = (client, msg) => {
   const randomFact = dogFacts.random();
-  msg.channel.send(randomFact).catch(console.error)
+  msg.channel.send(randomFact).catch(console.error);
 };
 
 exports.help = {
@@ -15,7 +13,7 @@ exports.help = {
   description: "Gives you a random dog fact.",
   usage: "",
   usageDelim: "",
-  type: "commands"
+  type: "commands",
 };
 
 exports.conf = {
