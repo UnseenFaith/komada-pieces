@@ -1,17 +1,20 @@
 exports.init = async (client) => {
   const schema = client.settings.guilds.schema;
   if (!schema.titleURL) {
-    await client.settings.guilds.add("titleURL", options);
+    await client.settings.guilds.add("titleURL", "TITLEURL");
   }
   if (!schema.reportChannelId) {
-    await client.settings.guilds.add("reportChannelId", options);
+    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
   }
-}
+};
 exports.run = async (client, msg, [user, role]) => {
   try {
-    const value = msg.mentions.members.first().roles.find("name", role);
     if (msg.guild.roles.exists("name", role)) {
-      value ? msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role)): msg.mentions.members.first().addRole(msg.guild.roles.find("name", role));
+      if (msg.mentions.members.first().roles.find("name", role)) {
+        msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role));
+      } else {
+        msg.mentions.members.first().addRole(msg.guild.roles.find("name", role));
+      }
       const embed = new client.methods.Embed()
         .setTitle(value ? "Role Removed From User!" : "Role Added To User!")
         .setAuthor(client.user.username, client.user.avatarURL)
@@ -38,7 +41,6 @@ exports.run = async (client, msg, [user, role]) => {
     }
   } catch (e) {
     msg.reply("Some error occured with adding a role to the member. A report has been sent to the developers.");
-    // Please insert the channel id to where you want to recieve the error reports.
     client.channels.get(reportChannelId).send(`There was an error trying to add a role: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };

@@ -1,23 +1,26 @@
 exports.init = async (client) => {
   const schema = client.settings.guilds.schema;
   if (!schema.muteRoleName) {
-    await client.settings.guilds.add("muteRoleName", options);
+    await client.settings.guilds.add("muteRoleName", "MUTEROLENAME");
   }
   if (!schema.muteRoleId) {
-    await client.settings.guilds.add("muteRoleId", options);
+    await client.settings.guilds.add("muteRoleId", "MUTEROLEID");
   }
   if (!schema.titleURL) {
-    await client.settings.guilds.add("titleURL", options);
+    await client.settings.guilds.add("titleURL", "TITLEURL");
   }
   if (!schema.reportChannelId) {
-    await client.settings.guilds.add("reportChannelId", options);
+    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
   }
-}
+};
 
 exports.run = async (client, msg, [user]) => {
   try {
-    const value = msg.mentions.members.first().roles.get(muteRoleId);
-    value ? msg.mentions.members.first().removeRole(msg.guild.roles.find("name", muteRoleName)) : msg.mentions.members.first().addRole(msg.guild.roles.find("name", muteRoleName));
+    if (msg.mentions.members.first().roles.get(muteRoleId)) {
+      msg.mentions.members.first().removeRole(msg.guild.roles.find("name", muteRoleName));
+    } else {
+      msg.mentions.members.first().addRole(msg.guild.roles.find("name", muteRoleName));
+    }
     const embed = new client.methods.Embed()
       .setTitle(value ? "User Is No Longer Muted!" : "User Was Muted!")
       .setAuthor(client.user.username, client.user.avatarURL)
@@ -31,7 +34,6 @@ exports.run = async (client, msg, [user]) => {
     msg.reply({ embed });
   } catch (e) {
     msg.reply("Some error occured with mute/un-muting the member. A report has been sent to the developers.");
-    // The channel id to where the bot sends a error report when something goes wrong.
     client.channels.get(reportChannelId).send(`There was an error trying to mute/un-mute: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
