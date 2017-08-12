@@ -7,9 +7,9 @@ exports.init = async (client) => {
     await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
   }
 };
-const { muteRoleId, reportChannelId, titleURL, muteRoleName } = msg.guild.settings;
 exports.run = async (client, msg, [user, role]) => {
   try {
+    const { titleURL, reportChannelId } = msg.guild.settings;
     const value = msg.mentions.members.first().roles.find("name", role);
     if (msg.guild.roles.exists("name", role)) {
       if (msg.mentions.members.first().roles.find("name", role)) {
