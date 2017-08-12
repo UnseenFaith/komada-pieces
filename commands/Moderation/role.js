@@ -9,6 +9,7 @@ exports.init = async (client) => {
 };
 exports.run = async (client, msg, [user, role]) => {
   try {
+    const value = msg.mentions.members.first().roles.find("name", role);
     if (msg.guild.roles.exists("name", role)) {
       if (msg.mentions.members.first().roles.find("name", role)) {
         msg.mentions.members.first().removeRole(msg.guild.roles.find("name", role));

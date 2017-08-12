@@ -16,6 +16,7 @@ exports.init = async (client) => {
 
 exports.run = async (client, msg, [user]) => {
   try {
+    const value = msg.mentions.members.first().roles.get(muteRoleId);
     if (msg.mentions.members.first().roles.get(muteRoleId)) {
       msg.mentions.members.first().removeRole(msg.guild.roles.find("name", muteRoleName));
     } else {
