@@ -4,6 +4,12 @@ exports.conf = {
   priority: 6,
 };
 
+exports.help = {
+  name: "requiredProviders",
+  type: "inhibitors",
+  description: "Checks if specific providers are loaded.",
+};
+
 /* eslint-disable no-prototype-builtins */
 exports.run = (client, msg, cmd) => {
   if (!cmd.conf.requiredProviders || cmd.conf.requiredProviders.length === 0) return false;
