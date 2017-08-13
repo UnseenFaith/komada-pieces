@@ -1,4 +1,14 @@
+exports.init = async (client) => {
+  const schema = client.settings.guilds.schema;
+  if (!schema.titleURL) {
+    await client.settings.guilds.add("titleURL", "TITLEURL");
+  }
+  if (!schema.reportChannelId) {
+    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
+  }
+};
 exports.run = async (client, msg, [user, name]) => {
+  const { reportChannelId, titleURL } = msg.guild.settings;
   try {
     // checks to see if the nickname is too long or too short for the discord requirement if so replies and then exits.
     if (name.length > 32 || name.length === 0) {
@@ -11,23 +21,17 @@ exports.run = async (client, msg, [user, name]) => {
     const embed = new client.methods.Embed()
       .setTitle("Nickname has been changed!")
       .setAuthor(client.user.username, client.user.avatarURL)
-      /*
-       * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
-       */
+      // Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
       .setColor(0x00AE86)
       .setDescription(`Nickname has been changed to ${name} for ${user} :smiley:`)
       .setFooter("Made with Komada, Discord.js, & <3", client.user.avatarURL)
-      /*
-       * Takes a Date object, defaults to current date.
-       */
+      // Takes a Date object, defaults to current date.
       .setTimestamp()
-      // The URL you wish to have your users linked to when clicking on the title of the embed.
-      .setURL("URLHERE");
+      .setURL(titleURL);
     msg.reply({ embed });
   } catch (e) {
     msg.reply("Some error occured with un-muting the member. A report has been sent to the developers.");
-    // please insert the channel id to where you want to recieve the error reports.
-    client.channels.get("CHANNELIDHERE").send(`There was an error trying to un-mute: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
+    client.channels.get(reportChannelId).send(`There was an error trying to un-mute: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
 

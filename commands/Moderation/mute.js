@@ -14,8 +14,8 @@ exports.init = async (client) => {
   }
 };
 exports.run = async (client, msg, [user]) => {
+  const { muteRoleId, reportChannelId, titleURL, muteRoleName } = msg.guild.settings;
   try {
-    const { muteRoleId, reportChannelId, titleURL, muteRoleName } = msg.guild.settings;
     const value = msg.mentions.members.first().roles.get(muteRoleId);
     if (msg.mentions.members.first().roles.get(muteRoleId)) {
       msg.mentions.members.first().removeRole(msg.guild.roles.find("name", muteRoleName));

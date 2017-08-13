@@ -8,8 +8,8 @@ exports.init = async (client) => {
   }
 };
 exports.run = async (client, msg, [user, role]) => {
+  const { titleURL, reportChannelId } = msg.guild.settings;
   try {
-    const { titleURL, reportChannelId } = msg.guild.settings;
     const value = msg.mentions.members.first().roles.find("name", role);
     if (msg.guild.roles.exists("name", role)) {
       if (msg.mentions.members.first().roles.find("name", role)) {
