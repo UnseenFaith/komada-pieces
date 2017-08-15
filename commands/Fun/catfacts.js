@@ -1,8 +1,7 @@
-const request = require("snekfetch");
+const snekfetch = require("snekfetch");
 
 exports.run = async (client, msg) => {
-  const { facts } = await request.get("http://catfacts-api.appspot.com/api/facts").then(data => JSON.parse(data.text));
-  return msg.channel.send(`📢 **Catfact:** *${facts[0]}*`);
+  snekfetch.get("https://catfact.ninja/fact").then(res => msg.channel.send(`📢 **Catfact:** *${res.body.fact}*`));
 };
 
 exports.conf = {
