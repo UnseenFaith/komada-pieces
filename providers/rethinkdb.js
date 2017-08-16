@@ -75,10 +75,11 @@ exports.getRandom = table => this.all(table).then(data => data[Math.floor(Math.r
 /**
    * Insert a new document into a table.
    * @param {string} table the name of the table.
+   * @param {string} id the id of the record.
    * @param {Object} doc the object you want to insert in the table.
    * @returns {Object}
    */
-exports.create = (table, doc) => r.table(table).insert(doc).run();
+exports.create = (table, id, doc) => r.table(table).insert(Object.assign(doc, { id }).run();
 exports.set = (...args) => this.create(...args);
 exports.insert = (...args) => this.create(...args);
 
