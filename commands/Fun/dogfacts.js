@@ -101,7 +101,7 @@ const facts = [
   "The largest dog was an English Mastiff who weighed 343 pounds.",
 ];
 
-exports.run = (client, msg) => msg.channel.send(facts[Math.floor(Math.random() *facts.length)]);
+exports.run = (client, msg) => msg.channel.send(facts[Math.floor(Math.random() * facts.length)]);
 
 exports.conf = {
   enabled: true,
