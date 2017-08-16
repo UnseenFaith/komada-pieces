@@ -101,15 +101,7 @@ const facts = [
   "The largest dog was an English Mastiff who weighed 343 pounds.",
 ];
 exports.run = (client, msg) => {
-  msg.channel.send(facts[Math.floor(Math.random() * facts.length)]);
-};
-
-exports.help = {
-  name: "dogfact",
-  description: "Gives you a random dog fact.",
-  usage: "",
-  usageDelim: "",
-  type: "commands",
+  return msg.channel.send(facts[Math.floor(Math.random() * facts.length)]);
 };
 
 exports.conf = {
@@ -121,4 +113,12 @@ exports.conf = {
   botPerms: [],
   requiredFuncs: [],
   requiredModules: [],
+};
+
+exports.help = {
+  name: "dogfact",
+  description: "Gives you a random dog fact.",
+  usage: "",
+  usageDelim: "",
+  type: "commands",
 };
