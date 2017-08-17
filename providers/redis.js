@@ -37,7 +37,7 @@ exports.deleteTable = table => redis.deleteTable(table);
  * @param {string} table the name of the table you want to get the data from.
  * @returns {?array}
  */
-exports.getAll = table => redis.table(table).keys("*");
+exports.getAll = table => redis.table(table).values("*");
 
 /**
  * Get an entry from a table.
