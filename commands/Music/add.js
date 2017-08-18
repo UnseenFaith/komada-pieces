@@ -1,7 +1,7 @@
 const yt = require("ytdl-core");
 const getInfoAsync = require("util").promisify(yt.getInfo);
 
-const YouTubeRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9-_]{11}).*/;
+const YouTubeRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed)?)?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([\w-]{6,11})/;
 const DefaultObj = {
   playing: false,
   songs: [],
