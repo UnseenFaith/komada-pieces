@@ -5,7 +5,7 @@ let db;
 const throwError = (err) => { throw err; };
 
 exports.init = async () => {
-  db = await mysql.createConnection(conn: {
+  db = await mysql.createConnection({
     host: "localhost",
     port: "3306",
     user: "root",
