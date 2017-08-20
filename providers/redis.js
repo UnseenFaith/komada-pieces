@@ -2,7 +2,7 @@ const Redis = require("redis-nextra");
 
 const redis = new Redis()
   .on("ready", () => console.log("Redis Connected"))
-  .on("serverReconnect", (server) => console.warn(`Redis server ${server.host.string} is reconnecting`))
+  .on("serverReconnect", server => console.warn(`Redis server ${server.host.string} is reconnecting`))
   .on("error", err => console.error("Redis error:", err));
 
 /* Table methods */
