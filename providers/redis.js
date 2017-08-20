@@ -1,10 +1,8 @@
 const Redis = require("redis-nextra");
 
-const redis = new Redis({});
-
-redis
-  .on("connect", () => console.log("Redis Connected"))
-  .on("reconnect", () => console.warn("Redis is reconnecting"))
+const redis = new Redis()
+  .on("ready", () => console.log("Redis Connected"))
+  .on("serverReconnect", (server) => console.warn(`Redis server ${server.host.string} is reconnecting`))
   .on("error", err => console.error("Redis error:", err));
 
 /* Table methods */
@@ -45,7 +43,7 @@ exports.getAll = table => redis.table(table).values("*");
  * @param {string|number} id the entry's ID.
  * @returns {?Object}
  */
-exports.get = (table, id) => redis.table(table).get(id);
+exports.get = (table, id) => redis.table(table).getJson(id);
 
 /**
  * Check if an entry exists from a table.
@@ -63,7 +61,7 @@ exports.has = (table, id) => redis.table(table).has(id);
  * @param {?number} timer Amount of time in milliseconds for the value to expirate.
  * @returns {Object}
  */
-exports.set = (table, id, value, timer) => redis.table(table).set(id, value, timer);
+exports.set = (table, id, value, timer) => redis.table(table).setJson(id, value, timer);
 
 /**
  * Delete an entry from the table.
