@@ -1,4 +1,5 @@
 const moment = require("moment");
+require("moment-duration-format");
 
 exports.run = async (client, msg) => {
   if (!msg.guild.voiceConnection) {
@@ -7,7 +8,7 @@ exports.run = async (client, msg) => {
 
   const handler = client.queue.get(msg.guild.id);
   if (!handler || handler.playing === false) throw "I am not playing music.";
-  return msg.send(`🕰 Time remaining: ${moment.duration((handler.songs[0].seconds * 1000) - msg.guild.voiceConnection.dispatcher.time).format("h[:]mm[:]ss")}`);
+  return msg.send(`🕰 Time remaining: ${moment.duration((handler.songs[0].seconds * 1000) - msg.guild.voiceConnection.dispatcher.time).format("h:mm:ss", { trim: false })}`);
 };
 
 exports.conf = {
