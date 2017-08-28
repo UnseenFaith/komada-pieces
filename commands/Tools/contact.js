@@ -1,22 +1,19 @@
 exports.run = async (client, msg, [type, ...content]) => {
-  try {
     // Determines which type of contact and sends to the appropriate channel.
+    const output = "";
     if (type === "bug") {
-      this.channel.send(`Bug Report From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
+      output += "Bug Report";
     } else if (type === "idea") {
-      this.channel.send(`New Idea From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
+      output += "New Idea";
     } else {
-      this.channel.send(`New Message From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
+      output += "New Message";
     }
-  } catch (e) {
-    msg.reply("Some error occured with relaying a message to the developers. A report has been sent to the developers.");
-    this.channel.send(`There was an error trying to relaying a message to the developers: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
-  }
+    this.channel.send(`${output} From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
 };
 
 exports.conf = {
   enabled: true,
-  runIn: ["text", "dm", "group"],
+  runIn: ["text"],
   aliases: ["report"],
   permLevel: 0,
   botPerms: [],
