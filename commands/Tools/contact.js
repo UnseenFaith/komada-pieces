@@ -10,7 +10,7 @@ exports.run = async (client, msg, [type, ...content]) => {
     }
   } catch (e) {
     msg.reply("Some error occured with relaying a message to the developers. A report has been sent to the developers.");
-    client.channels.get(reportChannelId).send(`There was an error trying to relaying a message to the developers: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
+    this.channel.send(`There was an error trying to relaying a message to the developers: ${e} in ${msg.channel} on ${msg.guild} by ${msg.author}`);
   }
 };
 
@@ -37,4 +37,4 @@ exports.channel = null;
 exports.init = (client) => {
   // Insert channel ID of the channel you would like for the users to contact you on.
   this.channel = client.channels.get("CHANNEL_ID");
-}
+};
