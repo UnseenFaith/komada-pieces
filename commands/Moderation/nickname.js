@@ -15,7 +15,7 @@ exports.conf = {
   runIn: ["text"],
   aliases: ["nick"],
   permLevel: 2,
-  botPerms: ["CHANGE_NICKNAME", "MANAGE_NICKNAMES"],
+  botPerms: ["MANAGE_NICKNAMES"],
   requiredFuncs: [],
   cooldown: 0,
 };
