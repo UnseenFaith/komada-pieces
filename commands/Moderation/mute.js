@@ -1,12 +1,12 @@
 exports.run = async (client, msg, [user]) => {
   const { muteRole } = msg.guild.settings;
-    const value = user.roles.find("name", muteRole);
-    if (value) {
-      user.removeRole(msg.guild.roles.find("name", muteRole));
-    } else {
-      user.addRole(msg.guild.roles.find("name", muteRole));
-    }
-    msg.reply(value ? `${user} is is no longer in the time-out corner. :smiley:` : `${user} is now in the time-out corner. :smiley:`);
+  const value = user.roles.find("name", muteRole);
+  if (value) {
+    user.removeRole(msg.guild.roles.find("name", muteRole));
+  } else {
+    user.addRole(msg.guild.roles.find("name", muteRole));
+  }
+  msg.reply(value ? `${user} is is no longer in the time-out corner. :smiley:` : `${user} is now in the time-out corner. :smiley:`);
 };
 
 exports.conf = {

@@ -1,14 +1,14 @@
 exports.run = async (client, msg, [type, ...content]) => {
-    // Determines which type of contact and sends to the appropriate channel.
-    const output = "";
-    if (type === "bug") {
-      output += "Bug Report";
-    } else if (type === "idea") {
-      output += "New Idea";
-    } else {
-      output += "New Message";
-    }
-    this.channel.send(`${output} From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
+  // Determines which type of contact and sends to the appropriate channel.
+  let output = "";
+  if (type === "bug") {
+    output += "Bug Report";
+  } else if (type === "idea") {
+    output += "New Idea";
+  } else {
+    output += "New Message";
+  }
+  this.channel.send(`${output} From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
 };
 
 exports.conf = {

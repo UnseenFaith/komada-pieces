@@ -11,7 +11,7 @@ exports.run = async (client, msg, [user, role]) => {
       // Add role if the role was missing
       user.addRole(msg.guild.roles.find("name", role));
       // Send reply
-      msg.reply(`${user} has been given the ${role} role. :smiley:`)
+      msg.reply(`${user} has been given the ${role} role. :smiley:`);
     }
   } else {
     // Send reply if the role doesnt exist on the server
