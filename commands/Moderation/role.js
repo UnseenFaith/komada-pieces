@@ -1,12 +1,3 @@
-exports.init = async (client) => {
-  const schema = client.settings.guilds.schema;
-  if (!schema.titleURL) {
-    await client.settings.guilds.add("titleURL", "TITLEURL");
-  }
-  if (!schema.reportChannelId) {
-    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
-  }
-};
 exports.run = async (client, msg, [user, role]) => {
   const { titleURL, reportChannelId } = msg.guild.settings;
   try {
@@ -63,4 +54,14 @@ exports.help = {
   usage: "<user:user> <role:str>",
   usageDelim: " ",
   extendedHelp: "1) User must have a role called Moderators to use this command.\n2) Bot must have Manage Role permissions. The bot will not be able to assign a role higher than its highest role.",
+};
+
+exports.init = async (client) => {
+  const schema = client.settings.guilds.schema;
+  if (!schema.titleURL) {
+    await client.settings.guilds.add("titleURL", "TITLEURL");
+  }
+  if (!schema.reportChannelId) {
+    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
+  }
 };

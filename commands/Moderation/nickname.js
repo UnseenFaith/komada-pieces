@@ -1,12 +1,3 @@
-exports.init = async (client) => {
-  const schema = client.settings.guilds.schema;
-  if (!schema.titleURL) {
-    await client.settings.guilds.add("titleURL", "TITLEURL");
-  }
-  if (!schema.reportChannelId) {
-    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
-  }
-};
 exports.run = async (client, msg, [user, name]) => {
   const { reportChannelId, titleURL } = msg.guild.settings;
   try {
@@ -51,4 +42,14 @@ exports.help = {
   usage: "<user:user> <name:str{1,32}>",
   usageDelim: " ",
   extendedHelp: "1) User will require a role called Moderators\n2) Bot will require a role higher than the user to be able to change nickname.\n3) Up to a maximum of 3 words with spaces and max characters must be 32 or less.",
+};
+
+exports.init = async (client) => {
+  const schema = client.settings.guilds.schema;
+  if (!schema.titleURL) {
+    await client.settings.guilds.add("titleURL", "TITLEURL");
+  }
+  if (!schema.reportChannelId) {
+    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
+  }
 };

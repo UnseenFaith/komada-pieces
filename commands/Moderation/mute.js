@@ -1,18 +1,3 @@
-exports.init = async (client) => {
-  const schema = client.settings.guilds.schema;
-  if (!schema.muteRoleName) {
-    await client.settings.guilds.add("muteRoleName", "MUTEROLENAME");
-  }
-  if (!schema.muteRoleId) {
-    await client.settings.guilds.add("muteRoleId", "MUTEROLEID");
-  }
-  if (!schema.titleURL) {
-    await client.settings.guilds.add("titleURL", "TITLEURL");
-  }
-  if (!schema.reportChannelId) {
-    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
-  }
-};
 exports.run = async (client, msg, [user]) => {
   const { muteRoleId, reportChannelId, titleURL, muteRoleName } = msg.guild.settings;
   try {
@@ -55,4 +40,20 @@ exports.help = {
   usage: "<user:user>",
   usageDelim: "",
   extendedHelp: "1) mute @user\n2) Requires the user to have a role called Moderators\n3) Bot requires Mute Members permissions.\n4) Requires a role that is called 'Time-Out' set up without any permissions and at a high level in the role settings as well as each channel permissions being edited with its settings.",
+};
+
+exports.init = async (client) => {
+  const schema = client.settings.guilds.schema;
+  if (!schema.muteRoleName) {
+    await client.settings.guilds.add("muteRoleName", "MUTEROLENAME");
+  }
+  if (!schema.muteRoleId) {
+    await client.settings.guilds.add("muteRoleId", "MUTEROLEID");
+  }
+  if (!schema.titleURL) {
+    await client.settings.guilds.add("titleURL", "TITLEURL");
+  }
+  if (!schema.reportChannelId) {
+    await client.settings.guilds.add("reportChannelId", "CHANNELIDHERE");
+  }
 };
