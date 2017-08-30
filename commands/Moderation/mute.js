@@ -1,12 +1,12 @@
 exports.run = async (client, msg, [user]) => {
   const { muteRole } = msg.guild.settings;
-  const value = user.roles.find("name", muteRole);
+  const value = user.roles.get(muteRole);
   if (value) {
-    user.removeRole(msg.guild.roles.find("name", muteRole));
+    await user.removeRole(msg.guild.roles.get(muteRole));
   } else {
-    user.addRole(msg.guild.roles.find("name", muteRole));
+    await user.addRole(msg.guild.roles.get(muteRole));
   }
-  msg.reply(value ? `${user} is is no longer in the time-out corner. :smiley:` : `${user} is now in the time-out corner. :smiley:`);
+  return msg.reply(value ? `${user} is is no longer muted. 😄` : `${user} is now muted. 😄`);
 };
 
 exports.conf = {
@@ -14,7 +14,7 @@ exports.conf = {
   runIn: ["text"],
   aliases: ["unmute"],
   permLevel: 2,
-  botPerms: ["MUTE_MEMBERS"],
+  botPerms: ["MANAGE_ROLES"],
   requiredFuncs: [],
   cooldown: 0,
 };
@@ -24,7 +24,7 @@ exports.help = {
   description: "Mutes/unmutes a person on both text and voice.",
   usage: "<user:member>",
   usageDelim: "",
-  extendedHelp: "1) mute @user\n2) Requires the user to have a role called Moderators\n3) Bot requires Mute Members permissions.\n4) Requires a role that is called 'Time-Out' set up without any permissions and at a high level in the role settings as well as each channel permissions being edited with its settings.",
+  extendedHelp: "1) mute @user\n2) Requires the user to have the modRole as per your configurations\n3) Bot requires Manage Role permissions.\n4) Requires a role with the muteRole settings you made set up without any permissions and at a high level in the role settings as well as each channel permissions being edited with its settings.",
 };
 
 exports.init = async (client) => {
