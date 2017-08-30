@@ -30,7 +30,7 @@ exports.conf = {
 exports.help = {
   name: "filterWords",
   type: "monitors",
-  description: "Incredibly powerful word filter. For example, it will filter out the word 'assumption' if you have the word 'ass' on the filter list.",
+  description: "Very powerful word filter. For example, it will filter out the word 'assumption' if you have the word 'ass' on the filter list.",
 };
 
 exports.init = async (client) => {
