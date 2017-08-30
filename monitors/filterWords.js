@@ -1,4 +1,4 @@
-exports.run = (client, msg) => {
+exports.run = async (client, msg) => {
   const modlog = msg.guild.settings.modLog;
   if (msg.deletable) {
     if (msg.guild.settings.swearWords) {
