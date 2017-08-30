@@ -6,9 +6,8 @@ exports.run = async (client, msg, [user, role]) => {
     }
     await user.addRole(msg.guild.roles.find("name", role));
     return msg.reply(`${user} has been given the ${role} role. 😄`);
-  } else {
-    return msg.reply(`I am sorry but ${role} role does not exist. 😢`);
   }
+  return msg.reply(`I am sorry but ${role} role does not exist. 😢`);
 };
 
 exports.conf = {
