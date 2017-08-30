@@ -10,7 +10,7 @@ exports.run = async (client, msg, [type, ...content]) => {
     bug: "Bug Report",
     idea: "New Idea",
     message: "New Message",
-  }
+  };
   return client.config.supportChannel.send(`${types[type]} From: ${msg.author} in ${msg.guild}\n\n ${content.toString().replace(/,/g, " ")}`);
 };
 
