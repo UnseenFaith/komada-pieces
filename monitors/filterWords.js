@@ -4,7 +4,7 @@ exports.run = async (client, msg) => {
     if (msg.guild.settings.swearWords) {
       const badWords = msg.guild.settings.swearWords.filter(word => msg.content.toLowerCase().includes(word));
       if (badWords.length > 0) {
-        let badWordList = [];
+        const badWordList = [];
         for (let i = 0; i < badWords.length; i++) {
           badWordList.push(badWords[i]);
         }
