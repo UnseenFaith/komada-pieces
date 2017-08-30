@@ -38,7 +38,6 @@ exports.init = async (client) => {
   if (!schema.swearWords) {
     await client.settings.guilds.add("swearWords", { type: "String", array: true });
   }
-  const schema = client.settings.guilds.schema;
   if (!schema.modLog) {
     await client.settings.guilds.add("modLog", { type: "TextChannel" });
   }
