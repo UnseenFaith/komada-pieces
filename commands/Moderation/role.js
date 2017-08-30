@@ -3,10 +3,9 @@ exports.run = async (client, msg, [user, role]) => {
     if (user.roles.find("name", role)) {
       await user.removeRole(msg.guild.roles.find("name", role));
       return msg.reply(`${user} has lost the ${role} role. 😄`);
-    } else {
-      await user.addRole(msg.guild.roles.find("name", role));
-      return msg.reply(`${user} has been given the ${role} role. 😄`);
     }
+    await user.addRole(msg.guild.roles.find("name", role));
+    return msg.reply(`${user} has been given the ${role} role. 😄`);
   } else {
     return msg.reply(`I am sorry but ${role} role does not exist. 😢`);
   }
