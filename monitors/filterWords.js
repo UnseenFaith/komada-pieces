@@ -1,5 +1,5 @@
 exports.run = async (client, msg) => {
-  if (!msg.guild) return
+  if (!msg.guild) return;
   const modlog = msg.guild.settings.modLog;
   if (msg.deletable && msg.guild.settings.swearWords.length > 0) {
     const badWords = msg.guild.settings.swearWords.filter(word => msg.content.toLowerCase().includes(word));

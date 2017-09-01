@@ -29,4 +29,4 @@ exports.channel = null;
 
 exports.init = (client) => {
   this.channel = client.channels.get("CHANNEL_ID");
-}
+};
