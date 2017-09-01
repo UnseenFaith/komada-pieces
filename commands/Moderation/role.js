@@ -1,13 +1,12 @@
 exports.run = async (client, msg, [user, role]) => {
-  if (msg.guild.roles.exists("name", role)) {
-    if (user.roles.find("name", role)) {
-      await user.removeRole(msg.guild.roles.find("name", role));
-      return msg.reply(`${user} has lost the ${role} role. 😄`);
-    }
+  if (!msg.guild.roles.exists("name", role)) return msg.reply(`There is no role by that name in this server.`)
+  if (msg.guild.roles.exists("name", role) && user.roles.find("name", role)) {
+    await user.removeRole(msg.guild.roles.find("name", role));
+  } else {
     await user.addRole(msg.guild.roles.find("name", role));
-    return msg.reply(`${user} has been given the ${role} role. 😄`);
   }
-  return msg.reply(`I am sorry but ${role} role does not exist. 😢`);
+  return msg.reply(`${user} has ${user.roles.find("name", role) ? "lost" : "been given"} the ${role} role. 😄`);
+
 };
 
 exports.conf = {

@@ -1,29 +1,21 @@
 exports.run = async (client, msg) => {
+  if (!msg.guild) return
   const modlog = msg.guild.settings.modLog;
-  if (msg.deletable) {
-    if (msg.guild.settings.swearWords) {
-      const badWords = msg.guild.settings.swearWords.filter(word => msg.content.toLowerCase().includes(word));
-      if (badWords.length > 0) {
-        const badWordList = [];
-        for (let i = 0; i < badWords.length; i++) {
-          badWordList.push(badWords[i]);
-        }
-        await msg.author.send(`I deleted the message below because you used a word that is not allowed. : **${badWordList.join(", ")}**`);
-        await msg.author.send(msg.content);
-        await msg.delete()
-          .then(client.channels.get(modlog).send(`Deleted message from ${msg.author} that said the \n\n **Naughty Words:** ${badWordList} in the server ${msg.guild} in the channel ${msg.channel}. \n\n **Full Message:** ${msg.content}`))
-          .catch(console.error);
-      }
+  if (msg.deletable && msg.guild.settings.swearWords.length > 0) {
+    const badWords = msg.guild.settings.swearWords.filter(word => msg.content.toLowerCase().includes(word));
+    if (badWords.length > 0) {
+      await msg.author.send(`I deleted the message below because you used a word that is not allowed. : **${badWords.join(", ")}**`);
+      await msg.author.send(msg.content);
+      await msg.delete()
+        .then(msg.guild.channels.get(modlog).send(`Deleted message from ${msg.author} that said the \n\n **Naughty Words:** ${badWords} in the server ${msg.guild} in the channel ${msg.channel}. \n\n **Full Message:** ${msg.content}`))
+        .catch(console.error);
     }
-  } else {
-    const serverOrDM = msg.guild ? `Server: ${msg.guild}` : "Message was sent in a DM"
-    client.channels.get(modlog).send(`Sorry this message was not able to be deleted. Author: ${msg.author} ${serverOrDM}\n ${msg.content}`);
   }
 };
 
 exports.conf = {
   enabled: true,
-  ignoreBots: false,
+  ignoreBots: true,
   ignoreSelf: false,
 };
 

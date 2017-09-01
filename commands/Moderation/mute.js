@@ -1,12 +1,13 @@
 exports.run = async (client, msg, [user]) => {
   const { muteRole } = msg.guild.settings;
+  if (!msg.guild.settings.muteRole) return msg.reply(`Sorry you have not created a mute role for this server.`)
   const value = user.roles.get(muteRole);
-  if (value) {
+  if (value && msg.guild.roles.get(muteRole)) {
     await user.removeRole(msg.guild.roles.get(muteRole));
   } else {
     await user.addRole(msg.guild.roles.get(muteRole));
   }
-  return msg.reply(value ? `${user} is is no longer muted. 😄` : `${user} is now muted. 😄`);
+  return msg.reply(`${user} is ${value ? "no longer" : "now"} muted. 😄`);
 };
 
 exports.conf = {
@@ -30,6 +31,6 @@ exports.help = {
 exports.init = async (client) => {
   const schema = client.settings.guilds.schema;
   if (!schema.muteRole) {
-    await client.settings.guilds.add("muteRole", { type: "String" });
+    await client.settings.guilds.add("muteRole", { type: "Role" });
   }
 };

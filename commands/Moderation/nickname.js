@@ -1,4 +1,4 @@
-exports.run = async (client, msg, [user, name]) => {
+exports.run = async (client, msg, [user, name = ""]) => {
   await user.setNickname(name);
   return msg.reply(`Nickname has been changed to ${name} for ${user} 😄`);
 };
