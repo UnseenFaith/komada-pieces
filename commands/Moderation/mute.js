@@ -1,32 +1,27 @@
-exports.run = async (client, msg, [member]) => {
-  const muteRole = msg.guild.settings.muteRole;
-  if (!muteRole) return msg.reply("Sorry you have not created a mute role for this server.");
-  const role = msg.guild.roles.get(muteRole);
-  const hasRole = member.roles.has(role.id);
-  await member[hasRole ? "removeRole" : "addRole"](role);
-  return msg.send(`The user is ${hasRole ? "no longer" : ""} muted. 😄`);
+exports.run = async (client, msg, [member, role]) => {
+role = typeof role === "string" ? msg.guild.roles.find('name', role) : role;  
+if (!role) return msg.send("There is no role by that name in this server.");
+  if (member.roles.has(role.id)) {
+    await member.removeRole(role);
+  } else {
+    await member.addRole(role);
+  }
+  return msg.send(`${user} has ${role ? "lost" : "been given"} the ${role.name} role. 😄`);
 };
-
 exports.conf = {
   enabled: true,
   runIn: ["text"],
-  aliases: ["unmute"],
-  permLevel: 2,
+  aliases: ["addrole", "ar", "removerole", "rr"],
+  permLevel: 3,
   botPerms: ["MANAGE_ROLES"],
   requiredFuncs: [],
   cooldown: 0,
 };
 
 exports.help = {
-  name: "mute",
-  description: "Mutes/unmutes a person on both text and voice.",
-  usage: "<member:member>",
-  usageDelim: "",
-  extendedHelp: "1) mute @user\n2) Requires the user to have the modRole as per your configurations\n3) Bot requires Manage Role permissions.\n4) Requires a role with the muteRole settings you made set up without any permissions and at a high level in the role settings as well as each channel permissions being edited with its settings.",
-};
-
-exports.init = async (client) => {
-  if (!client.settings.guilds.schema.muteRole) {
-    await client.settings.guilds.add("muteRole", { type: "Role" });
-  }
+  name: "role",
+  description: "Assign a role to another user.",
+  usage: "<member:member> <role:role|role:str>",
+  usageDelim: " ",
+  extendedHelp: "1) User must have a modRole as set in the bot settings for your server.\n2) Bot must have Manage Role permissions. The bot will not be able to assign a role higher than its highest role.",
 };
