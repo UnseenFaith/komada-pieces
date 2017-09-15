@@ -1,8 +1,8 @@
 exports.run = async (client, msg, [member]) => {
   const { muteRole } = msg.guild.settings;
-  if (!muteRole) return msg.reply("Sorry you have not created a mute role for this server.");
+  if (!muteRole) return msg.send('Sorry you have not created a mute role for this server.');
   const value = member.roles.get(muteRole);
-const role = msg.guild.roles.get(muteRole);
+  const role = msg.guild.roles.get(muteRole);
   if (value && role) {
     await member.removeRole(role);
   } else {
