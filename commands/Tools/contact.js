@@ -1,11 +1,11 @@
 const types = {
-    bug: "Bug Report",
-    idea: "New Idea",
-    message: "New Message",
-  };
+  bug: "Bug Report",
+  idea: "New Idea",
+  message: "New Message",
+};
 exports.run = async (client, msg, [type, ...content]) => {
   this.channel.send(`${types[type]} From: ${msg.author} in ${msg.guild ? msg.guild : "private message"}\n\n ${content.toString().join(" ")}`);
-  msg.send('You\'re message has been sent to the developer. We appreciate you being a user. Thank you!')
+  msg.send("You're message has been sent to the developer. We appreciate you being a user. Thank you!");
 };
 
 exports.conf = {

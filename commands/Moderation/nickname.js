@@ -1,9 +1,9 @@
 exports.run = async (client, msg, [member, name = ""]) => {
   if (msg.member.highestRole.comparePositionTo(member.highestRole) >= 0) {
     await member.setNickname(name);
-    return msg.send(`Nickname was ${name.length > 0 ? `changed to ${name}`: 'removed'} for ${member} 😄`);
+    return msg.send(`Nickname was ${name.length > 0 ? `changed to ${name}` : "removed"} for ${member} 😄`);
   }
-  return msg.send(`Sorry you don\'t have a high enough role to change this ${member} nickname`)
+  return msg.send(`Sorry you don't have a high enough role to change this ${member} nickname`);
 };
 
 exports.conf = {

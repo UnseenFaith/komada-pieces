@@ -1,5 +1,5 @@
 exports.run = async (client, msg, [user, role]) => {
-  const userRole = user.roles.find("name", role)
+  const userRole = user.roles.find("name", role);
   if (!msg.guild.roles.find("name", role)) return msg.reply("There is no role by that name in this server.");
   if (userRole) {
     await user.removeRole(userRole);
