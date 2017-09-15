@@ -1,6 +1,6 @@
 exports.run = async (client, msg, [member, role]) => {
-  role = typeof role === "string" ? msg.guild.roles.find('name', role) : role;  
-  if (!role) return msg.send('There is no role by that name in this server.');
+  role = typeof role === "string" ? msg.guild.roles.find("name", role) : role;
+  if (!role) return msg.send("There is no role by that name in this server.");
   if (member.roles.has(role.id)) {
     await member.removeRole(role);
   } else {
