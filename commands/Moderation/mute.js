@@ -1,12 +1,12 @@
 exports.run = async (client, msg, [member, role]) => {
-role = typeof role === "string" ? msg.guild.roles.find('name', role) : role;  
-if (!role) return msg.send("There is no role by that name in this server.");
+  role = typeof role === "string" ? msg.guild.roles.find("name", role) : role;
+  if (!role) return msg.send("There is no role by that name in this server.");
   if (member.roles.has(role.id)) {
     await member.removeRole(role);
   } else {
     await member.addRole(role);
   }
-  return msg.send(`${user} has ${role ? "lost" : "been given"} the ${role.name} role. 😄`);
+  return msg.send(`${member} has ${role ? "lost" : "been given"} the ${role.name} role. 😄`);
 };
 exports.conf = {
   enabled: true,
