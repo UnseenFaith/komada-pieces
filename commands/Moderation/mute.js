@@ -8,6 +8,7 @@ exports.run = async (client, msg, [member, role]) => {
   }
   return msg.send(`${member} has ${role ? "lost" : "been given"} the ${role.name} role. 😄`);
 };
+
 exports.conf = {
   enabled: true,
   runIn: ["text"],
