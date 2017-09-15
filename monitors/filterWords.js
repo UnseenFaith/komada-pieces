@@ -1,8 +1,8 @@
 exports.run = async (client, msg) => {
   if (!msg.guild) return;
-  const modlog = msg.guild.settings.modLog;
-  if (!msg.deletable && !msg.guild.settings.swearWords.length > 0) return;
-  const badWords = msg.guild.settings.swearWords.filter(word => msg.content.toLowerCase().includes(word));
+  const { modLog, swearWords } = msg.guild.settings;
+  if (!msg.deletable && !swearWords.length > 0) return;
+  const badWords = swearWords.filter(word => msg.content.toLowerCase().includes(word));
   if (badWords.length > 0) {
     await msg.author.send(`I deleted the message below because you used a word that is not allowed. : **${badWords.join(", ")}**`);
     await msg.author.send(msg.content);
