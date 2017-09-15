@@ -1,10 +1,11 @@
-exports.run = async (client, msg, [type, ...content]) => {
-  const types = {
+const types = {
     bug: "Bug Report",
     idea: "New Idea",
     message: "New Message",
   };
-  return this.channel.send(`${types[type]} From: ${msg.author} in ${msg.guild ? msg.guild : "private message"}\n\n ${content.toString().join(" ")}`);
+exports.run = async (client, msg, [type, ...content]) => {
+  this.channel.send(`${types[type]} From: ${msg.author} in ${msg.guild ? msg.guild : "private message"}\n\n ${content.toString().join(" ")}`);
+  msg.send('You\'re message has been sent to the developer. We appreciate you being a user. Thank you!')
 };
 
 exports.conf = {
@@ -28,5 +29,6 @@ exports.help = {
 exports.channel = null;
 
 exports.init = (client) => {
-  this.channel = client.channels.get("CHANNEL_ID");
+  // You will need to add a supportChannel setting in the Komada Configurations in app.js/index.js file
+  this.channel = client.channels.get(client.config.supportChannel);
 };
