@@ -9,13 +9,15 @@ exports.run = async (client, msg, [song]) => {
   const info = await getInfoAsync(`https://youtu.be/${id[1]}`);
 
   if (client.queue.has(msg.guild.id) === false) {
-  client.queue.set(msg.guild.id, {
-    playing: false,
-    songs: [],
-  });
-}
+    client.queue.set(msg.guild.id, {
+      playing: false,
+      songs: [],
+    });
+  }
 
-  client.queue.get(msg.guild.id).songs.push({ url: song, title: info.title, seconds: info.length_seconds, requester: msg.author.username });
+  client.queue.get(msg.guild.id).songs.push({
+    url: song, title: info.title, seconds: info.length_seconds, requester: msg.author.username,
+  });
 
   return msg.send(`🎵 Added **${info.title}** to the queue 🎶`);
 };
