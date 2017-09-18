@@ -16,7 +16,10 @@ exports.run = async (client, msg, [song]) => {
   }
 
   client.queue.get(msg.guild.id).songs.push({
-    url: song, title: info.title, seconds: info.length_seconds, requester: msg.author.username,
+    url: song,
+    title: info.title,
+    seconds: info.length_seconds,
+    requester: msg.author.username,
   });
 
   return msg.send(`🎵 Added **${info.title}** to the queue 🎶`);
