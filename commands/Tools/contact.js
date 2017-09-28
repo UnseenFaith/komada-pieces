@@ -4,7 +4,7 @@ const types = {
   message: "New Message",
 };
 exports.run = async (client, msg, [type, ...content]) => {
-  this.channel.send(`${types[type]} From: ${msg.author} in ${msg.guild ? msg.guild : "private message"}\n\n ${content.toString().join(" ")}`);
+  await this.channel.send(`${types[type]} From: ${msg.author} in ${msg.guild ? msg.guild : "private message"}\n\n ${content.join(" ")}`);
   return msg.send("Your message has been sent to the developer. We appreciate you being a user. Thank you!");
 };
 
