@@ -7,9 +7,8 @@ exports.run = async (client, msg) => {
   if (client.config.selfbot && msg.author.id !== client.user.id) return;
 
   const info = parseCommand(client, msg);
-  const { prefixLength } = info;
+  const { prefixLength, command, prefix } = info;
   if (!prefixLength) return;
-  const { command } = info;
   if (command.length && !(client.commands.has(command) || client.aliases.has(command))) {
     const distances = [];
     client.commands.filter(c => c.conf.permLevel <= msg.member.permLevel).forEach((val, cmd) => distances.push({
@@ -18,7 +17,7 @@ exports.run = async (client, msg) => {
     }));
     distances.sort((a, b) => (a.score < b.score ? 1 : -1));
     if (distances[0] && distances[0].dist <= 1) {
-      const message = await msg.channel.send(`|\`❔\`| Did you mean \`${info.prefix + distances[0].cmd}\`?`);
+      const message = await msg.channel.send(`|\`❔\`| Did you mean \`${prefix + distances[0].cmd}\`?`);
       if (message.deletable) message.delete({ timeout: 10000 });
     }
   }
