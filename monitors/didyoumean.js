@@ -6,8 +6,7 @@ exports.run = async (client, msg) => {
   if (msg.author.bot) return;
   if (client.config.selfbot && msg.author.id !== client.user.id) return;
 
-  const info = parseCommand(client, msg);
-  const { prefixLength, command, prefix } = info;
+  const { prefixLength, command, prefix } = parseCommand(client, msg);
   if (!prefixLength) return;
   if (command.length && !(client.commands.has(command) || client.aliases.has(command))) {
     const distances = [];
