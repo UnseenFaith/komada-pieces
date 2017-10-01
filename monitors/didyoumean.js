@@ -2,6 +2,8 @@
 
 const levenshtein = require("fast-levenshtein");
 
+exports.minDist = null;
+
 exports.init = (client) => {
   this.minDist = client.config.minDist && Number.isInteger(client.config.minDist) && client.config.minDist >= 1 ? client.config.minDist : 1;
 };
