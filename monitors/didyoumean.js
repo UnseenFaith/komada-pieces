@@ -1,12 +1,15 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable no-use-before-define, no-restricted-syntax */
 
 const levenshtein = require("fast-levenshtein");
+
+exports.init = (client) => {
+  this.minDist = client.config.minDist && Number.isInteger(client.config.minDist) && client.config.minDist >= 1 ? client.config.minDist : 1;
+};
 
 exports.run = async (client, msg) => {
   if (msg.author.bot || (client.config.selfbot && msg.author.id !== client.user.id)) return;
 
   const { prefixLength, command, prefix } = parseCommand(client, msg);
-  const minDist = client.config.minDist ? client.config.minDist : 1
 
   if (!prefixLength) return;
   if (!command.length && (client.commands.has(command) || client.aliases.has(command))) return;
@@ -23,7 +26,7 @@ exports.run = async (client, msg) => {
 
   if (distances.length === 0) return;
   distances.sort((a, b) => (a.score < b.score ? 1 : -1));
-  if (distances[0] && distances[0].dist <= minDist) {
+  if (distances[0] && distances[0].dist <= this.minDist) {
     await msg.send(`|\`❔\`| Did you mean \`${prefix + distances[0].cmd}\`?`);
   }
 };
