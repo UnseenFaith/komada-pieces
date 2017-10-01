@@ -6,16 +6,24 @@ exports.run = async (client, msg) => {
   if (msg.author.bot || (client.config.selfbot && msg.author.id !== client.user.id)) return;
 
   const { prefixLength, command, prefix } = parseCommand(client, msg);
+  const minDist = client.config.minDist ? client.config.minDist : 1
+
   if (!prefixLength) return;
   if (!command.length && (client.commands.has(command) || client.aliases.has(command))) return;
 
   const distances = [];
-  client.commands.filter(c => c.conf.permLevel <= msg.member.permLevel).forEach((val, cmd) => distances.push({
-    dist: levenshtein.get(cmd, command),
-    cmd,
-  }));
+
+  for (const cmd in client.commands) {
+    if (!client.funcs.checkPerms(client, msg, cmd.conf.permLevel)) continue;
+    distances.push({
+      dist: levenshtein.get(cmd, command),
+      cmd,
+    });
+  }
+
+  if (distances.length === 0) return;
   distances.sort((a, b) => (a.score < b.score ? 1 : -1));
-  if (distances[0] && distances[0].dist <= 1) {
+  if (distances[0] && distances[0].dist <= minDist) {
     await msg.send(`|\`❔\`| Did you mean \`${prefix + distances[0].cmd}\`?`);
   }
 };
