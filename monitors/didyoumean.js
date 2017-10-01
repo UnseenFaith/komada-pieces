@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define, no-restricted-syntax */
+/* eslint-disable no-use-before-define, no-restricted-syntax, consistent-return */
 
 const levenshtein = require("fast-levenshtein");
 
@@ -18,8 +18,10 @@ exports.run = async (client, msg) => {
 
   const distances = [];
 
+  const highPerm = calcHighPerm(client, msg);
+
   for (const cmd in client.commands) {
-    if (!client.funcs.checkPerms(client, msg, cmd.conf.permLevel)) continue;
+    if (cmd.conf.permLevel > highPerm) continue;
     distances.push({
       dist: levenshtein.get(cmd, command),
       cmd,
@@ -28,8 +30,10 @@ exports.run = async (client, msg) => {
 
   if (distances.length === 0) return;
   distances.sort((a, b) => (a.score < b.score ? 1 : -1));
-  if (distances[0] && distances[0].dist <= this.minDist) {
-    await msg.send(`|\`❔\`| Did you mean \`${prefix + distances[0].cmd}\`?`);
+  if (distances[0].dist <= this.minDist) {
+    return msg.send(`|\`❔\`| Did you mean \`${prefix + distances[0].cmd}\`?`).catch((err) => {
+      client.console.log(err, "error");
+    });
   }
 };
 
@@ -58,4 +62,11 @@ const parseCommand = async (client, msg) => {
 const getLength = (client, msg, prefix) => {
   if (client.config.prefixMention === prefix) return prefix.exec(msg.content)[0].length + 1;
   return prefix.exec(msg.content)[0].length;
+};
+
+const calcHighPerm = (client, msg) => {
+  for (let i = 0; i < 11; i++) {
+    if (client.permStructure[i].check(client, msg)) return i;
+  }
+  return null;
 };
