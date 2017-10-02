@@ -12,7 +12,7 @@ exports.init = (client) => {
 exports.run = async (client, msg) => {
   if (msg.author.bot || (!client.user.bot && msg.author.id !== client.user.id)) return;
 
-  const { prefixLength, command, prefix } = await parseCommand(client, msg);
+  const { prefixLength, command } = await parseCommand(client, msg);
   if (!prefixLength) return;
   if (!command.length && (client.commands.has(command) || client.aliases.has(command))) return;
 
@@ -29,7 +29,7 @@ exports.run = async (client, msg) => {
   distances.sort((a, b) => a.dist - b.dist);
 
   if (distances[0].dist > 0 && distances[0].dist <= this.minDist) {
-    return msg.send(`|\`❔\`| Did you mean \`${prefix.source.slice(1) + distances[0].cmd[0]}\`?`).catch((err) => {
+    return msg.send(`|\`❔\`| Did you mean \`${msg.guildSettings.prefix + distances[0].cmd[0]}\`?`).catch((err) => {
       client.console.log(err, "error");
     });
   }
@@ -52,7 +52,6 @@ const parseCommand = async (client, msg) => {
   const prefixLength = getLength(client, msg, prefix);
   return {
     command: msg.content.slice(prefixLength).trim().split(" ")[0].toLowerCase(),
-    prefix,
     prefixLength,
   };
 };
