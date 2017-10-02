@@ -14,7 +14,8 @@ exports.run = async (client, msg) => {
 
   const { prefixLength, command } = await parseCommand(client, msg);
   if (!prefixLength) return;
-  if (!command.length && (client.commands.has(command) || client.aliases.has(command))) return;
+  if (!command.length) return;
+  if (client.commands.has(command) || client.aliases.has(command)) return;
 
   const distances = [];
 
