@@ -1,34 +1,35 @@
 /* eslint-disable no-use-before-define, no-restricted-syntax, consistent-return, guard-for-in */
 
-const levenshtein = require("fast-levenshtein");
+let levenshtein;
 
 exports.minDist = null;
 
 exports.init = (client) => {
+  levenshtein = require("fast-levenshtein");
   this.minDist = client.config.minDist && Number.isInteger(client.config.minDist) && client.config.minDist >= 1 ? client.config.minDist : 1;
 };
 
 exports.run = async (client, msg) => {
-  if (msg.author.bot || (client.config.selfbot && msg.author.id !== client.user.id)) return;
+  if (msg.author.bot || (!client.user.bot && msg.author.id !== client.user.id)) return;
 
-  const { prefixLength, command, prefix } = parseCommand(client, msg);
-
+  const { prefixLength, command, prefix } = await parseCommand(client, msg);
   if (!prefixLength) return;
   if (!command.length && (client.commands.has(command) || client.aliases.has(command))) return;
 
   const distances = [];
 
-  for (const cmd in msg.usableCommands) {
+  for (const cmd of msg.usableCommands) {
     distances.push({
-      dist: levenshtein.get(cmd, command),
+      dist: levenshtein.get(cmd[0], command),
       cmd,
     });
   }
 
   if (distances.length === 0) return;
-  distances.sort((a, b) => (a.score < b.score ? 1 : -1));
-  if (distances[0].dist <= this.minDist) {
-    return msg.send(`|\`❔\`| Did you mean \`${prefix + distances[0].cmd}\`?`).catch((err) => {
+  distances.sort((a, b) => a.dist - b.dist);
+
+  if (distances[0].dist > 0 && distances[0].dist <= this.minDist) {
+    return msg.send(`|\`❔\`| Did you mean \`${prefix.source.slice(1) + distances[0].cmd[0]}\`?`).catch((err) => {
       client.console.log(err, "error");
     });
   }
