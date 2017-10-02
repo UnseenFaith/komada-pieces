@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define, no-restricted-syntax, consistent-return */
+/* eslint-disable no-use-before-define, no-restricted-syntax, consistent-return, guard-for-in */
 
 const levenshtein = require("fast-levenshtein");
 
@@ -18,10 +18,7 @@ exports.run = async (client, msg) => {
 
   const distances = [];
 
-  const highPerm = calcHighPerm(client, msg);
-
-  for (const cmd in client.commands) {
-    if (cmd.conf.permLevel > highPerm) continue;
+  for (const cmd in msg.usableCommands) {
     distances.push({
       dist: levenshtein.get(cmd, command),
       cmd,
@@ -62,11 +59,4 @@ const parseCommand = async (client, msg) => {
 const getLength = (client, msg, prefix) => {
   if (client.config.prefixMention === prefix) return prefix.exec(msg.content)[0].length + 1;
   return prefix.exec(msg.content)[0].length;
-};
-
-const calcHighPerm = (client, msg) => {
-  for (let i = 0; i < 11; i++) {
-    if (client.permStructure[i].check(client, msg)) return i;
-  }
-  return null;
 };
