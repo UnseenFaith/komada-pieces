@@ -1,11 +1,10 @@
 /* eslint-disable no-use-before-define, no-restricted-syntax, consistent-return, guard-for-in */
 
-let levenshtein;
+const levenshtein = require("fast-levenshtein");
 
 exports.minDist = null;
 
 exports.init = (client) => {
-  levenshtein = require("fast-levenshtein");
   this.minDist = client.config.minDist && Number.isInteger(client.config.minDist) && client.config.minDist >= 1 ? client.config.minDist : 1;
 };
 
