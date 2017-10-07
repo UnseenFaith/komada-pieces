@@ -1,23 +1,17 @@
 const mysql = require("mysql2/promise");
 
 let db;
-const options = {
-  moduleName: "mysql",
-  enabled: true,
-  sql: true,
-  conn: {
+
+const throwError = (err) => { throw err; };
+
+exports.init = async () => {
+  db = await mysql.createConnection({
     host: "localhost",
     port: "3306",
     user: "root",
     password: "",
     database: "Komada",
-  },
-};
-
-const throwError = (err) => { throw err; };
-
-exports.init = async () => {
-  db = await mysql.createConnection(options.conn);
+  });
 };
 
 /* Table methods */
@@ -182,8 +176,12 @@ exports.CONSTANTS = {
   AutoTS: "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL",
 };
 
-exports.conf = options;
-exports.conf.requiredModules = ["mysql2"];
+exports.conf = {
+  moduleName: "mysql",
+  enabled: true,
+  requiredModules: ["mysql2"],
+  sql: true,
+};
 
 exports.help = {
   name: "mysql",
