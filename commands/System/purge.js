@@ -1,5 +1,5 @@
 exports.run = async (client, msg, [user = client.user, amount]) => {
-  let messages = await msg.channel.fetchMessages({ limit: amount });
+  let messages = await msg.channel.messages.fetch({ limit: amount });
   messages = messages.filter(m => m.author.id === user.id);
   if (client.config.selfbot) return messages.forEach(m => m.delete().catch((e) => { throw new Error(e); }));
   return msg.channel.bulkDelete(messages);
