@@ -150,7 +150,7 @@ exports.runAll = sql => db.all(sql).catch(throwError);
  * @param {string} sql The query to execute.
  * @returns {Promise<Object>}
  */
-exports.run = sql => this.run(sql).catch(throwError);
+exports.run = sql => db.run(sql).catch(throwError);
 
 /**
  * Execute arbitrary SQL query.
