@@ -8,7 +8,7 @@ exports.run = async (client, msg) => {
 exports.conf = {
   enabled: true,
   runIn: ["text", "dm", "group"],
-  aliases: ["dawg", "duwg", "woof", "bork", "stitch", "bark", "duggo", "doggo", "dug"],
+  aliases: ["dawg", "duwg", "woof", "bork", "bark", "duggo", "doggo", "dug"],
   permLevel: 0,
   botPerms: ["SEND_MESSAGES"],
   requiredFuncs: [],
