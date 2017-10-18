@@ -1,4 +1,5 @@
 const yt = require("ytdl-core");
+const wait =  require("util").promisify(setTimeout);
 
 exports.run = async (client, msg) => {
   if (client.queue.has(msg.guild.id) === false) {
@@ -26,8 +27,10 @@ exports.run = async (client, msg) => {
 
     return msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes: 2 })
       .on("end", () => {
-        handler.songs.shift();
-        play(handler.songs[0]);
+        wait(100).then(() => {
+          handler.songs.shift();
+          play(handler.songs[0]);
+        });
       })
       .on("error", err => msg.channel.send(`error: ${err}`).then(() => {
         handler.songs.shift();
