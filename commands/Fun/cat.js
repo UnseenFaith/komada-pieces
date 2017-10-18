@@ -1,12 +1,8 @@
 const snek = require("snekfetch");
 
 exports.run = async (client, msg) => {
-  try {
-    const { body } = await snek.get("http://random.cat/meow");
-    await msg.send({ files: [{ attachment: body.file, name: `cat.${body.file.split(".")[2]}` }] });
-  } catch (e) {
-    console.log(e);
-  }
+  const { body } = await snek.get("http://random.cat/meow");
+  await msg.send({ files: [{ attachment: body.file, name: `cat.${body.file.split(".")[2]}` }] }).catch(e => msg.channel.send(e));
 };
 
 exports.conf = {
