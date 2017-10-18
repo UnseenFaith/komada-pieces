@@ -1,5 +1,5 @@
 const yt = require("ytdl-core");
-const wait =  require("util").promisify(setTimeout);
+const wait = require("util").promisify(setTimeout);
 
 exports.run = async (client, msg) => {
   if (client.queue.has(msg.guild.id) === false) {
