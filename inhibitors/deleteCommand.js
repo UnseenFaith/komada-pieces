@@ -1,5 +1,5 @@
 exports.run = (client, msg) => {
-  if (msg.guildConf.deleteCommand === true) msg.delete();
+  if (msg.guildConf.deleteCommand === true) msg.delete({ interval: 5000 });
   return false;
 };
 
