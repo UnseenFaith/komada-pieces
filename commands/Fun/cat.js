@@ -9,7 +9,7 @@ exports.conf = {
   enabled: true,
   runIn: ["text", "dm", "group"],
   permLevel: 0,
-  botPerms: ["SEND_MESSAGES, ATTACH_FILES"],
+  botPerms: ["ATTACH_FILES"],
   requiredFuncs: [],
   requiredSettings: [],
 };
