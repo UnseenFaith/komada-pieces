@@ -10,7 +10,7 @@ exports.conf = {
   runIn: ["text", "dm", "group"],
   aliases: ["dawg", "duwg", "woof", "bork", "bark", "duggo", "doggo", "dug"],
   permLevel: 0,
-  botPerms: ["SEND_MESSAGES, ATTACH_FILES"],
+  botPerms: ["ATTACH_FILES"],
   requiredFuncs: [],
   requiredSettings: [],
 };
