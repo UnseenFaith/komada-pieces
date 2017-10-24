@@ -1,15 +1,15 @@
 const snek = require("snekfetch");
 
 exports.run = async (client, msg) => {
-  const { body } = await snek.get("http://random.cat/meow");
-  await msg.send({ files: [{ attachment: body.file, name: `cat.${body.file.split(".")[2]}` }] }).catch(e => msg.channel.send(e));
+  const { body: { file } } = await snek.get("http://random.cat/meow");
+  return msg.channel.sendFile(file, `cat.${file.split(".")[2]}`);
 };
 
 exports.conf = {
   enabled: true,
   runIn: ["text", "dm", "group"],
   permLevel: 0,
-  botPerms: ["SEND_MESSAGES"],
+  botPerms: ["SEND_MESSAGES, ATTACH_FILES"],
   requiredFuncs: [],
   requiredSettings: [],
 };
