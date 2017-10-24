@@ -8,6 +8,7 @@ exports.run = async (client, msg) => {
 exports.conf = {
   enabled: true,
   runIn: ["text", "dm", "group"],
+  aliases: ["meow, nyan, kitty, kitten"],
   permLevel: 0,
   botPerms: ["ATTACH_FILES"],
   requiredFuncs: [],
