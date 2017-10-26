@@ -26,8 +26,10 @@ exports.run = async (client, msg) => {
 
     return msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes: 2 })
       .on("end", () => {
-        handler.songs.shift();
-        play(handler.songs[0]);
+        setTimeout(() => {
+          handler.songs.shift();
+          play(handler.songs[0]);
+        }, 100);
       })
       .on("error", err => msg.channel.send(`error: ${err}`).then(() => {
         handler.songs.shift();
