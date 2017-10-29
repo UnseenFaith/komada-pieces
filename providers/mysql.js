@@ -45,6 +45,7 @@ exports.deleteTable = table => this.exec(`DROP TABLE '${table}'`);
 /**
  * Get all documents from a table.
  * @param {string} table The name of the table to fetch from.
+ * @param {Object} options Options.
  * @returns {Promise<Object[]>}
  */
 exports.getAll = async (table, options = {}) => this.runAll(options.key && options.value ?
@@ -154,8 +155,8 @@ exports.serialize = (data) => {
   const values = [];
   const entries = Object.entries(data);
   for (let i = 0; i < entries.length; i++) {
-    keys[i] = entries[i][0];
-    values[i] = entries[i][1];
+    keys[i] = entries[i][0]; // eslint-disable-line prefer-destructuring
+    values[i] = entries[i][1]; // eslint-disable-line prefer-destructuring
   }
 
   return { keys, values };

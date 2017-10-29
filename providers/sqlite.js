@@ -169,8 +169,8 @@ exports.serialize = (data) => {
   const values = [];
   const entries = Object.entries(data);
   for (let i = 0; i < entries.length; i++) {
-    keys[i] = entries[i][0];
-    values[i] = entries[i][1];
+    keys[i] = entries[i][0]; // eslint-disable-line prefer-destructuring
+    values[i] = entries[i][1]; // eslint-disable-line prefer-destructuring
   }
 
   return { keys, values };

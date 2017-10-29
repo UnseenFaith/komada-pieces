@@ -6,7 +6,7 @@ module.exports = async (client, user, action) => {
     await this.provider.create("quiz", user, { points: 0 });
     row = { id: user, points: 0 };
   }
-  let points = row.points;
+  let { points } = row;
   switch (action) {
     case "add":
       points++;

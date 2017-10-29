@@ -5,7 +5,7 @@ exports.run = async (client, msg, [vol = null]) => {
   const handler = client.queue.get(msg.guild.id);
   if (!handler || handler.playing === false) throw "I am not playing music.";
 
-  const dispatcher = msg.guild.voiceConnection.dispatcher;
+  const { dispatcher } = msg.guild.voiceConnection;
 
   if (!vol) return msg.send(`📢 Volume: ${Math.round(dispatcher.volume * 50)}%`);
   if (/^[+]+$/.test(vol)) {
