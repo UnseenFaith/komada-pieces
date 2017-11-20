@@ -25,7 +25,7 @@ exports.run = (client, msg, cmd) => {
 
   // default behaviour
   // change this to msg.channel.id or msg.guild.id to override default behaviour
-  let id = msg.author.id;
+  let { id } = msg.author;
 
   const standardCooldown = 1000;
   let commandCooldown = standardCooldown;
@@ -33,7 +33,7 @@ exports.run = (client, msg, cmd) => {
   // Override default behaviour if command.conf has cooldown variable
   if (cmd.conf.cooldown) {
     if (cmd.conf.cooldown.scope === "guild") {
-      id = msg.guild.id;
+      id = msg.guild.id; // eslint-disable-line prefer-destructuring
     }
 
     commandCooldown = cmd.conf.cooldown.time;

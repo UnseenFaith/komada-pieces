@@ -1,5 +1,5 @@
 exports.run = async (client, msg) => {
-  const voiceChannel = msg.member.voiceChannel;
+  const { voiceChannel } = msg.member;
   if (!voiceChannel) {
     throw "You are not conected in a voice channel.";
   }
