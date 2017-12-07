@@ -13,7 +13,7 @@ const config = {
 
 exports.init = async () => {
   try {
-    let client = await Mongo.connect(`${config.dbURL}${config.dbName}`);
+    const client = await Mongo.connect(`${config.dbURL}${config.dbName}`);
     db = await client.db(config.dbName);
   } catch (err) { console.log(err); }
 };
@@ -98,7 +98,7 @@ exports.delete = (collection, id) => db.collection(collection).deleteOne(resolve
  */
 exports.update = async (collection, filter, updateObj) => {
   const res = await this.get(collection, filter);
-  await db.collection(collection).updateOne(resolveQuery(filter), {$set: Object.assign(res, updateObj)});
+  await db.collection(collection).updateOne(resolveQuery(filter), { $set: Object.assign(res, updateObj) });
 };
 
 /**
