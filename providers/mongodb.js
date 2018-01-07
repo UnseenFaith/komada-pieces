@@ -13,7 +13,7 @@ const config = {
 
 exports.init = async () => {
   try {
-    const client = await Mongo.connect(`${config.dbURL}${config.dbName}`);
+    const client = await Mongo.connect(config.dbURL);
     db = client.db(config.dbName);
   } catch (err) { console.log(err); }
 };
