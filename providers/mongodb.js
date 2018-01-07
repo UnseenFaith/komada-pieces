@@ -30,7 +30,7 @@ const resolveQuery = query => (query instanceof Object ? query : { id: query });
  */
 exports.createCollection = (name, options = {}) => db.createCollection(name, options);
 exports.createTable = (...args) => this.createCollection(...args);
-exports.hasTable = (table) => db.listCollections().toArray().then(collections => collections.some(col => col.name === table));
+exports.hasTable = table => db.listCollections().toArray().then(collections => collections.some(col => col.name === table));
 
 /**
  * Drops a collection within a DB.
@@ -46,7 +46,7 @@ exports.deleteTable = (...args) => this.dropCollection(...args);
  * @param {string} collection Name of the Collection
  * @returns {Promise<Array>}
  */
-exports.getAll = (collection) => this.db.collection(table).find({}, { _id: 0 }).toArray();
+exports.getAll = collection => this.db.collection(collection).find({}, { _id: 0 }).toArray();
 
 /**
  * Retrieves a single Document from a Collection that matches a user determined ID
@@ -58,7 +58,7 @@ exports.get = (collection, id) => db.collection(collection).findOne(resolveQuery
 
 exports.has = (collection, id) => this.get(collection, id).then(res => !!res);
 
-exports.getRandom = (collection) => this.getAll(collection).then(results => results[Math.floor(Math.random() * results.length)]);
+exports.getRandom = collection => this.getAll(collection).then(results => results[Math.floor(Math.random() * results.length)]);
 
 /**
  * Inserts a Document into a Collection using a user provided object.
