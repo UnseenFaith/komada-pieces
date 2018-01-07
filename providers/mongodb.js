@@ -46,11 +46,7 @@ exports.deleteTable = (...args) => this.dropCollection(...args);
  * @param {string} collection Name of the Collection
  * @returns {Promise<Array>}
  */
-exports.getAll = async (collection) => {
-  const data = await db.collection(collection).find({}).toArray();
-  for (let i = 0; i < data.length; i++) { delete data[i]._id; }
-  return data;
-};
+exports.getAll = (collection) => this.db.collection(table).find({}, { _id: 0 }).toArray();
 
 /**
  * Retrieves a single Document from a Collection that matches a user determined ID
@@ -60,16 +56,9 @@ exports.getAll = async (collection) => {
  */
 exports.get = (collection, id) => db.collection(collection).findOne(resolveQuery(id)); // eslint-disable-line quote-props
 
-exports.has = async (...args) => {
-  const results = await this.get(...args);
-  if (!results) return false;
-  return true;
-};
+exports.has = (collection, id) => this.get(collection, id).then(res => !!res);
 
-exports.getRandom = async (...args) => {
-  const results = await this.getAll(...args);
-  return results[Math.floor(Math.random() * results.length)];
-};
+exports.getRandom = (collection) => this.getAll(collection).then(results => results[Math.floor(Math.random() * results.length)]);
 
 /**
  * Inserts a Document into a Collection using a user provided object.
@@ -96,10 +85,7 @@ exports.delete = (collection, id) => db.collection(collection).deleteOne(resolve
  * @param {Object} filter The Filter used to select the document to update
  * @param {Object} updateObj The update operations to be applied to the document
  */
-exports.update = async (collection, filter, updateObj) => {
-  const res = await this.get(collection, filter);
-  await db.collection(collection).updateOne(resolveQuery(filter), { $set: Object.assign(res, updateObj) });
-};
+exports.update = (collection, filter, updateObj) => this.db.collection(collection).updateOne(resolveQuery(filter), { $set: updateObj });
 
 /**
  * Replaces a Document with a new Document specified by the user *
