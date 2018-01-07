@@ -14,7 +14,7 @@ const config = {
 exports.init = async () => {
   try {
     const client = await Mongo.connect(`${config.dbURL}${config.dbName}`);
-    db = await client.db(config.dbName);
+    db = client.db(config.dbName);
   } catch (err) { console.log(err); }
 };
 
@@ -30,7 +30,7 @@ const resolveQuery = query => (query instanceof Object ? query : { id: query });
  */
 exports.createCollection = (name, options = {}) => db.createCollection(name, options);
 exports.createTable = (...args) => this.createCollection(...args);
-exports.hasTable = () => true;
+exports.hasTable = (table) => db.listCollections().toArray().then(collections => collections.some(col => col.name === table));
 
 /**
  * Drops a collection within a DB.
