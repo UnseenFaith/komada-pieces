@@ -8,18 +8,18 @@
  */
 module.exports = async (client, executor, target, guild = null) => {
   if (guild) {
-    const executorMember = await guild.fetchMember(await client.fetchUser(executor.id));
-    const targetMember = await guild.fetchMember(await client.fetchUser(target.id));
+    const executorMember = await guild.members.resolve(await client.users.resolve(executor.id));
+    const targetMember = await guild.members.resolve(await client.users.resolve(target.id));
 
-    return executorMember.highestRole.position > targetMember.highestRole.position;
+    return executorMember.roles.highest.position > targetMember.roles.highest.position;
   }
 
   return false;
 };
 
 
-module.exports = { requiredModules: [] };
-module.exports = {
+module.exports.conf = { requiredModules: [] };
+module.exports.help = {
   name: "hierarchyCheck",
   type: "functions",
   description: "Checks to see that command executor is higher on guild's hierarchy than command target.",
