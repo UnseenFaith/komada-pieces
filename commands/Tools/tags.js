@@ -29,11 +29,11 @@ exports.run = async (client, msg, [action, ...contents]) => {
       const row = await this.provider.getAll("tags");
       // await this.provider.update("tags", row.id, { count: row.count + 1 });
       const tags = []
-      row.forEach(r => {
+      row.forEach((r => {
         if (r.guild === msg.guild.id) {
           tags.push(r.contents)
         }
-      })
+      }))
       return msg.channel.send(tags[Math.floor(Math.random() * tags.length)]);
     }
     default: {
@@ -41,11 +41,11 @@ exports.run = async (client, msg, [action, ...contents]) => {
         const rows = await this.provider.getAll("tags");
         if (rows[0] === undefined) return msg.channel.send("There is no tag available.");
         const tags = []
-        rows.forEach(r => {
+        rows.forEach((r => {
           if (r.guild === msg.guild.id) {
             tags.push(r.id)
           }
-        })
+        }))
         return msg.channel.send(`**List of tags**: \`\`\`${tags.join(" | ")}\`\`\``);
       }
       const row = await this.provider.get("tags", contents);
