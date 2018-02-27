@@ -21,7 +21,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
     case "delete": {
       const row = await this.provider.get("tags", contents);
       if (!row) return msg.reply("this tag doesn't seem to exist.");
-      if (row.guild != msg.guild.id) return msg.reply("this tag doesn't seem to exist.");
+      if (row.guild !== msg.guild.id) return msg.reply("this tag doesn't seem to exist.");
       await this.provider.delete("tags", row.id).catch(e => msg.reply(`I wasn't able to delete the tag because of the following reason: \n${e}`));
       return msg.reply("the tag has been deleted. It's gone. For real, it no longer exists. It's pushing up the daisies.");
     }
@@ -30,7 +30,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
       // await this.provider.update("tags", row.id, { count: row.count + 1 });
       const tags = []
       row.forEach(r => {
-        if (r.guild == msg.guild.id) {
+        if (r.guild === msg.guild.id) {
           tags.push(r.contents)
         }
       })
@@ -42,7 +42,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
         if (rows[0] === undefined) return msg.channel.send("There is no tag available.");
         const tags = []
         rows.forEach(r => {
-          if (r.guild == msg.guild.id) {
+          if (r.guild === msg.guild.id) {
             tags.push(r.id)
           }
         })
@@ -51,7 +51,7 @@ exports.run = async (client, msg, [action, ...contents]) => {
       const row = await this.provider.get("tags", contents);
       if (!row) return msg.reply("tag name not found.");
       await this.provider.update("tags", row.id, { count: row.count + 1 });
-      if (row.guild != msg.guild.id) return msg.channel.send("That tag doesn't exist here")
+      if (row.guild !== msg.guild.id) return msg.channel.send("That tag doesn't exist here")
       return msg.channel.send(row.contents);
     }
   }
